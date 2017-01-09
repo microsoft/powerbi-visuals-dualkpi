@@ -1,0 +1,266 @@
+{
+    "dataRoles": [{
+        "displayName": "Axis",
+        "name": "axis",
+        "kind": "Grouping"
+    }, {
+        "displayName": "Top values",
+        "name": "topvalues",
+        "kind": "Measure",
+        "requiredTypes": [{
+            "numeric": true
+        }, {
+            "integer": true
+        }]
+    }, {
+        "displayName": "Bottom values",
+        "name": "bottomvalues",
+        "kind": "Measure",
+        "requiredTypes": [{
+            "numeric": true
+        }, {
+            "integer": true
+        }]
+    }, {
+        "displayName": "Warning state",
+        "name": "warningstate",
+        "kind": "Measure"
+    }, {
+        "displayName": "Top - % change start date",
+        "name": "toppercentdate",
+        "kind": "Grouping"
+    }, {
+        "displayName": "Bottom - % change start date",
+        "name": "bottompercentdate",
+        "kind": "Grouping"
+    }],
+    "dataViewMappings": [{
+        "conditions": [{
+            "axis": {
+                "max": 1
+            },
+            "topvalues": {
+                "max": 1
+            },
+            "bottomvalues": {
+                "max": 1
+            },
+            "warningstate": {
+                "max": 1
+            },
+            "toppercentdate": {
+                "max": 1
+            },
+            "bottompercentdate": {
+                "max": 1
+            }
+        }],
+        "categorical": {
+            "categories": {
+                "for": {
+                    "in": "axis"
+                },
+                "dataReductionAlgorithm": {
+                    "top": {
+                        "count": 1000
+                    }
+                }
+            },
+            "values": {
+                "select": [{
+                    "bind": {
+                        "to": "axis"
+                    }
+                }, {
+                    "bind": {
+                        "to": "topvalues"
+                    }
+                }, {
+                    "bind": {
+                        "to": "bottomvalues"
+                    }
+                }, {
+                    "bind": {
+                        "to": "warningstate"
+                    }
+                }, {
+                    "bind": {
+                        "to": "toppercentdate"
+                    }
+                }, {
+                    "bind": {
+                        "to": "bottompercentdate"
+                    }
+                }]
+            }
+        }
+    }],
+    "objects": {
+        "dualKpiProperties": {
+            "displayName": "Dual KPI Properties",
+            "properties": {
+                "titleText": {
+                    "displayName": "Title text",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "abbreviateValues": {
+                    "displayName": "Abbreviate values",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "topChartToolTipText": {
+                    "displayName": "Top chart tooltip text",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "bottomChartToolTipText": {
+                    "displayName": "Bottom chart tooltip text",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "warningTooltipText": {
+                    "displayName": "Warning tooltip text",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "showStaleDataWarning": {
+                    "displayName": "Show stale data warning",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "staleDataTooltipText": {
+                    "displayName": "Stale data tooltip text",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "staleDataThreshold": {
+                    "displayName": "Stale data threshold",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "topPercentCalcDate": {
+                    "displayName": "Top - % change start date (mm/dd/yyyy)",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "bottomPercentCalcDate": {
+                    "displayName": "Bottom - % change start date (mm/dd/yyyy)",
+                    "type": {
+                        "text": true
+                    }
+                }
+            }
+        },
+        "dualKpiColors": {
+            "displayName": "Dual KPI Colors",
+            "properties": {
+                "dataColor": {
+                    "displayName": "Data color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "textColor": {
+                    "displayName": "Text color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "opacity": {
+                    "displayName": "Chart opacity",
+                    "type": {
+                        "numeric": true
+                    }
+                }
+            }
+        },
+        "dualKpiAxis": {
+            "displayName": "Dual KPI Axis Settings",
+            "properties": {
+                "topChartAxisMin": {
+                    "displayName": "Top chart axis min",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "topChartAxisMax": {
+                    "displayName": "Top chart axis max",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "bottomChartAxisMin": {
+                    "displayName": "Bottom chart axis min",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "bottomChartAxisMax": {
+                    "displayName": "Bottom chart axis max",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "topChartZeroLine": {
+                    "displayName": "Top chart zero line",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "bottomChartZeroLine": {
+                    "displayName": "Bottom chart zero line",
+                    "type": {
+                        "bool": true
+                    }
+                }
+            }
+        },
+        "dualKpiChart": {
+            "displayName": "Dual KPI Chart Type",
+            "properties": {
+                "topChartType": {
+                    "displayName": "Top chart type",
+                    "type": {
+                        "enumeration": [{
+                            "value": "area",
+                            "displayName": "Area"
+                        }, {
+                            "value": "line",
+                            "displayName": "Line"
+                        }]
+                    }
+                },
+                "bottomChartType": {
+                    "displayName": "Bottom chart type",
+                    "type": {
+                        "enumeration": [{
+                            "value": "area",
+                            "displayName": "Area"
+                        }, {
+                            "value": "line",
+                            "displayName": "Line"
+                        }]
+                    }
+                }
+            }
+        }
+    }
+}

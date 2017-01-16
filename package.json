@@ -1,6 +1,7 @@
 {
-  "name": "duaKpi",
-  "version": "1.1.0",
+  "name": "DualKpi",
+  "displayName": "Dual KPI",
+  "version": "1.1.5",
   "description": "Visual for displaying and comparing two KPI's",
   "author": {
     "name": "Microsoft",

@@ -84,6 +84,7 @@ module powerbi.extensibility.visual {
     };
 
     export type DualKpiSizeClass = "extra-small" | "small" | "medium" | "large";
+    export type DualKpiChartPosition = "top" | "bottom";
 
     export interface IDualKpiOptions {
         element: IChartGroup;
@@ -92,6 +93,7 @@ module powerbi.extensibility.visual {
         chartData: Array<IDualKpiDataPoint>,
         chartTitle: string;
         chartType: string;
+        position: DualKpiChartPosition;
         height: number;
         percentChangeStartPoint: IDualKpiDataPoint;
         showZeroLine: boolean;
@@ -238,6 +240,8 @@ module powerbi.extensibility.visual {
 
         private static OPACITY_MIN: number = 0;
         private static OPACITY_MAX: number = 100;
+
+        private dispatch: d3.Dispatch = d3.dispatch("onDualKpiMouseMove", "onDualKpiMouseOut");
 
         private titleSize: number = 0;
 
@@ -514,7 +518,8 @@ module powerbi.extensibility.visual {
                     tooltipText: data.topChartToolTipText,
                     top: 0,
                     valueAsPercent: data.topValueAsPercent,
-                    width: chartWidth
+                    width: chartWidth,
+                    position: "top"
                 });
             }
 
@@ -533,7 +538,8 @@ module powerbi.extensibility.visual {
                     tooltipText: data.bottomChartToolTipText,
                     top: chartHeight + chartSpaceBetween,
                     valueAsPercent: data.bottomValueAsPercent,
-                    width: chartWidth
+                    width: chartWidth,
+                    position: "bottom"
                 });
             }
 
@@ -1298,7 +1304,9 @@ module powerbi.extensibility.visual {
             let hoverDataContainer: IHoverDataContainer = options.element.hoverDataContainer;
             this.updateHoverDataContainer(hoverDataContainer, chartBottom, chartLeft, calcWidth);
 
-            let onAreaMouseMove = (leftPosition, topPosition: number) => {
+            let dispatch: any = this.dispatch;
+
+            dispatch.on("onDualKpiMouseMove." + options.position, (leftPosition: number) => {
                 hoverLine.classed("hidden", false);
                 hoverLine.attr("transform", "translate(" + leftPosition + ",0)");
 
@@ -1311,19 +1319,23 @@ module powerbi.extensibility.visual {
                 } else {
                     this.hideHoverData(hoverDataContainer, hoverLine);
                 }
-            };
+            });
 
-            let onMousemove = function (e: any) {
+            dispatch.on("onDualKpiMouseOut." + options.position, () => {
+                this.hideHoverData(hoverDataContainer, hoverLine);
+            });
+
+            let onMouseMove = function (e: any) {
                 let leftPosition: number,
                     topPosition: number;
                 [leftPosition, topPosition] = d3.mouse(this);
 
-                onAreaMouseMove(leftPosition, topPosition);
+                dispatch.onDualKpiMouseMove(leftPosition);
             }
 
-            let onMousemout = (e: any) => {
-                this.hideHoverData(hoverDataContainer, hoverLine);
-            }
+            let onMouseOut = function (e: any) {
+                dispatch.onDualKpiMouseOut();
+            };
 
             let areaRect: Selection<SVGElement> = chartGroup.areaRect;
             areaRect.attr({
@@ -1331,11 +1343,11 @@ module powerbi.extensibility.visual {
                 "height": calcHeight
             });
 
-            areaRect.on("mousemove", onMousemove);
-            areaRect.on("touchmove", onMousemove);
-            areaRect.on("touchstart", onMousemove);
+            areaRect.on("mousemove", onMouseMove);
+            areaRect.on("touchmove", onMouseMove);
+            areaRect.on("touchstart", onMouseMove);
 
-            areaRect.on("mouseout", onMousemout);
+            areaRect.on("mouseout", onMouseOut);
 
             this.addOverlayText(options, latestValue, calcHeight, calcWidth);
         }

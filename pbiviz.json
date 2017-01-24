@@ -4,7 +4,7 @@
     "displayName": "Dual KPI",
     "guid": "PBI_CV_3C80B1F2_09AF_4123_8E99_C3CBC46B23E0",
     "visualClassName": "DualKpi",
-    "version": "1.1.5",
+    "version": "1.1.6",
     "description": "Visual for displaying and comparing two KPI's",
     "supportUrl": "http://community.powerbi.com",
     "gitHubUrl": "https://github.com/Microsoft/powerbi-visuals-dualkpi"

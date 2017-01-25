@@ -142,7 +142,6 @@ module powerbi.extensibility.visual {
     export interface IChartGroup {
         group: Selection;
         area: Selection;
-        areaRect: Selection;
         yAxis: Selection;
         hoverLine: Selection;
         hoverDataContainer: IHoverDataContainer;
@@ -249,7 +248,7 @@ module powerbi.extensibility.visual {
         private static OPACITY_MAX: number = 100;
 
         private titleSize: number = 0;
-        private dispatch: d3.Dispatch = d3.dispatch("onDualKpiMouseMove", "onDualKpiMouseOut");
+        private dispatch: any;
 
         constructor(options: VisualConstructorOptions) {
             this.init(options);
@@ -264,8 +263,31 @@ module powerbi.extensibility.visual {
             this.commaNumberFormatter = d3.format(",");
             this.timeFormatter = d3.time.format("%m/%d/%y");
             this.dataBisector = d3.bisector((d: IDualKpiDataPoint) => { return d.date; }).left;
+            this.dispatch = d3.dispatch("onDualKpiMouseMove", "onDualKpiMouseOut");
 
             this.initContainer();
+            this.initMouseEvents();
+        }
+
+        private initMouseEvents(): void {
+            let dispatch = this.dispatch;
+            let target = this.target;
+            let targetElement = d3.select(target);
+
+            let onMouseMove = function (e: any) {
+                dispatch.onDualKpiMouseMove(d3.mouse(target));
+            };
+
+            targetElement.on("mousemove", onMouseMove);
+            targetElement.on("touchmove", onMouseMove);
+            targetElement.on("touchstart", onMouseMove);
+
+            let onMouseOut = function (e: any) {
+                dispatch.onDualKpiMouseOut();
+            };
+
+            targetElement.on("mouseout", onMouseOut);
+            targetElement.on("touchleave", onMouseOut);
         }
 
         private initContainer(): void {
@@ -356,12 +378,6 @@ module powerbi.extensibility.visual {
                 .append("g")
                 .attr("class", "axis");
 
-            var areaRect = chartGroup
-                .append("rect")
-                .style("pointer-events", "all")
-                .attr("fill", "transparent")
-                .attr("class", "areaRect");
-
             let hoverLine = chartGroup
                 .append("rect")
                 .attr("class", "hoverLine");
@@ -373,12 +389,11 @@ module powerbi.extensibility.visual {
                 .append("path")
                 .attr("class", "zero-axis");
 
-            this.initMouseEvents(hoverDataContainer, hoverLine);
+            //this.initMouseClearEvents(hoverDataContainer, hoverLine);
 
             return {
                 group: chartGroup,
                 area: chartArea,
-                areaRect: areaRect,
                 yAxis: yAxis,
                 hoverLine,
                 hoverDataContainer: hoverDataContainer,
@@ -423,39 +438,12 @@ module powerbi.extensibility.visual {
             };
         }
 
-        private initMouseEvents(hoverDataContainer: IHoverDataContainer, hoverLine: Selection): void {
-            let target = this.target;
-
-            let mouseout = (e: MouseEvent) => {
-                this.hideHoverData(hoverDataContainer, hoverLine);
-            };
-
-            target.addEventListener("mouseout", mouseout, true);
-            target.addEventListener("touchleave", mouseout, true);
-
-            this.addClearEvents(() => {
-                target.removeEventListener("mouseout", mouseout);
-                target.removeEventListener("touchleave", mouseout);
-            });
-        }
-
         private clear() {
             this.svgRoot.classed("hidden", true);
         }
 
-        private clearEvents() {
-            this.eventListeners.map((event: any) => {
-                event.call();
-            });
-        }
-
-        private addClearEvents(func: any) {
-            this.eventListeners.push(func);
-        }
-
         public update(options: VisualUpdateOptions) {
             this.svgRoot.classed("hidden", true);
-            this.clearEvents();
 
             let dataView: DataView = this.dataView = options.dataViews && options.dataViews[0];
 
@@ -1318,9 +1306,10 @@ module powerbi.extensibility.visual {
             let hoverDataContainer: IHoverDataContainer = options.element.hoverDataContainer;
             this.updateHoverDataContainer(hoverDataContainer, chartBottom, chartLeft, calcWidth);
 
-            let dispatch: any = this.dispatch;
+            this.dispatch.on("onDualKpiMouseMove." + options.position, ([leftPosition, topPosition]: number[]) => {
+                let areaScale: ElementScale = DualKpi.getScale(target);
+                leftPosition = leftPosition / areaScale.x - margin.left - targetPadding;
 
-            dispatch.on("onDualKpiMouseMove." + options.position, (leftPosition: number) => {
                 hoverLine.classed("hidden", false);
                 hoverLine.attr("transform", "translate(" + leftPosition + ",0)");
 
@@ -1328,45 +1317,19 @@ module powerbi.extensibility.visual {
                 let i = this.dataBisector(chartData, x, 1);
                 let dataPoint = chartData[i];
 
-                if ((leftPosition >= 0) && dataPoint) {
+                if ((leftPosition > 0) &&
+                    (leftPosition < options.width) &&
+                    (topPosition < (options.height * 2 + 15)) &&
+                    dataPoint) {
                     this.showHoverData(hoverDataContainer, dataPoint, latestValue, options.valueAsPercent, options.abbreviateValue);
                 } else {
                     this.hideHoverData(hoverDataContainer, hoverLine);
                 }
             });
 
-            dispatch.on("onDualKpiMouseOut." + options.position, () => {
+            this.dispatch.on("onDualKpiMouseOut." + options.position, () => {
                 this.hideHoverData(hoverDataContainer, hoverLine);
             });
-
-            let onMouseMove = function (e: any) {
-                let leftPosition: number,
-                    topPosition: number;
-                [leftPosition, topPosition] = d3.mouse(target);
-
-                let areaScale: ElementScale = DualKpi.getScale(target);
-                leftPosition = leftPosition / areaScale.x - margin.left - targetPadding;
-
-                console.log('onMouse MOVE');
-                dispatch.onDualKpiMouseMove(leftPosition);
-            };
-
-            let onMouseOut = function (e: any) {
-                console.log('onMouseOut');
-                dispatch.onDualKpiMouseOut();
-            };
-
-            let areaRect: Selection = chartGroup.areaRect;
-            areaRect.attr({
-                "width": calcWidth,
-                "height": calcHeight
-            });
-
-            let targetElement = d3.select(target);
-            targetElement.on("mousemove", onMouseMove);
-            targetElement.on("touchmove", onMouseMove);
-            targetElement.on("touchstart", onMouseMove);
-            targetElement.on("mouseout", onMouseOut);
 
             this.addOverlayText(options, latestValue, calcHeight, calcWidth);
         }

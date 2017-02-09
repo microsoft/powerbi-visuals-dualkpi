@@ -286,8 +286,8 @@ module powerbi.extensibility.visual {
                 dispatch.onDualKpiMouseOut();
             };
 
-            targetElement.on("mouseout", onMouseOut);
-            targetElement.on("touchleave", onMouseOut);
+            targetElement.on("mouseout", onMouseMove);
+            targetElement.on("touchleave", onMouseMove);
         }
 
         private initContainer(): void {
@@ -297,9 +297,7 @@ module powerbi.extensibility.visual {
             let svgRoot = this.svgRoot = d3.select(svgElem);
 
             svgRoot
-                .attr("class", "dualKpi")
-                .attr("style", "-webkit-tap-highlight-color: transparent;")
-                .classed("hidden", true);
+                .attr("class", "dualKpi");
 
             this.chartGroupTop = this.createChartGroup(svgRoot);
             this.chartGroupBottom = this.createChartGroup(svgRoot);
@@ -379,7 +377,7 @@ module powerbi.extensibility.visual {
                 .attr("class", "axis");
 
             let hoverLine = chartGroup
-                .append("rect")
+                .append("line")
                 .attr("class", "hoverLine");
 
             let hoverDataContainer: IHoverDataContainer = this.createHoverDataContainer(chartGroup);
@@ -439,12 +437,9 @@ module powerbi.extensibility.visual {
         }
 
         private clear() {
-            this.svgRoot.classed("hidden", true);
         }
 
         public update(options: VisualUpdateOptions) {
-            this.svgRoot.classed("hidden", true);
-
             let dataView: DataView = this.dataView = options.dataViews && options.dataViews[0];
 
             if (!dataView ||
@@ -544,7 +539,6 @@ module powerbi.extensibility.visual {
 
             if ((data.topValues.length > 0) || (data.bottomValues.length > 0)) {
                 this.drawBottomContainer(chartWidth, chartHeight, chartTitleSpace, chartSpaceBetween, iconOffset);
-                this.svgRoot.classed("hidden", false);
             }
         }
 
@@ -1034,7 +1028,7 @@ module powerbi.extensibility.visual {
             hoverDataContainer.container.classed("invisible", true);
             this.bottomContainer.bottomContainer.classed("hidden", false);
             if (hoverLine) {
-                hoverLine.classed("hidden", true);
+                hoverLine.classed("invisible", true);
             }
         }
 
@@ -1293,11 +1287,14 @@ module powerbi.extensibility.visual {
             /* Add elements for hover behavior ******************************************************/
             let hoverLine: Selection = chartGroup.hoverLine;
             hoverLine
-                .classed("hidden", true)
+                .classed("invisible", true)
                 .attr({
-                    "width": 1,
-                    "height": calcHeight,
-                    "fill": "#777"
+                    "x1": 0,
+                    "x2": 0,
+                    "y1": 0,
+                    "y2": calcHeight,
+                    "stroke-width": 1,
+                    "stroke": "#777"
                 });
 
             let chartBottom = margin.top + calcHeight;
@@ -1308,19 +1305,23 @@ module powerbi.extensibility.visual {
 
             this.dispatch.on("onDualKpiMouseMove." + options.position, ([leftPosition, topPosition]: number[]) => {
                 let areaScale: ElementScale = DualKpi.getScale(target);
-                leftPosition = leftPosition / areaScale.x - margin.left - targetPadding;
+                let maxWidth: number = options.width - margin.left;
 
-                hoverLine.classed("hidden", false);
-                hoverLine.attr("transform", "translate(" + leftPosition + ",0)");
+                leftPosition = leftPosition / areaScale.x - margin.left - targetPadding;
 
                 let x = xScale.invert(leftPosition);
                 let i = this.dataBisector(chartData, x, 1);
                 let dataPoint = chartData[i];
 
                 if ((leftPosition > 0) &&
-                    (leftPosition < options.width) &&
+                    (topPosition > 0) &&
+                    (leftPosition < maxWidth) &&
                     (topPosition < (options.height * 2 + 15)) &&
                     dataPoint) {
+
+                    hoverLine.attr("transform", "translate(" + leftPosition + ", 0)");
+                    hoverLine.classed("invisible", false);
+
                     this.showHoverData(hoverDataContainer, dataPoint, latestValue, options.valueAsPercent, options.abbreviateValue);
                 } else {
                     this.hideHoverData(hoverDataContainer, hoverLine);

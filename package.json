@@ -1,8 +1,8 @@
 {
   "name": "DualKpi",
   "displayName": "Dual KPI",
-  "version": "1.1.6",
-  "description": "Visual for displaying and comparing two KPI's",
+  "version": "1.2.17",
+  "description": "Dual KPI efficiently visualizes two measures over time. It shows their trend based on a joint timeline, while absolute values may use different scales, for example Profit and Market share or Sales and Profit. Each KPI can be visualized as line chart or area chart. The visual has dynamic behavior and can show historical value and the change from the latest value when you hover over it. It also has small icons and labels to convey KPI definitions and alerts about data freshness. Customize colors, titles, axis properties, tooltips, and more, to create visually appealing and functional executive dashboards.",
   "author": {
     "name": "Microsoft",
     "email": "pbicvsupport@microsoft.com"
@@ -16,7 +16,7 @@
     "dual-kpi"
   ],
   "scripts": {
-    "postinstall": "typings install && pbiviz update 1.3.0",
+    "postinstall": "typings install && pbiviz update 1.4.0",
     "typings": "typings",
     "pbiviz": "pbiviz",
     "start": "pbiviz start",
@@ -28,7 +28,7 @@
   "license": "MIT",
   "devDependencies": {
     "d3": "3.5.5",
-    "powerbi-visuals-tools": "1.3.0",
+    "powerbi-visuals-tools": "1.4.0",
     "tslint": "4.0.2",
     "typings": "2.0.0"
   },

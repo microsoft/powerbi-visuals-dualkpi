@@ -1,0 +1,194 @@
+/*
+ *  Power BI Visualizations
+ *
+ *  Copyright (c) Microsoft Corporation
+ *  All rights reserved.
+ *  MIT License
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the ""Software""), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+@import (less) "node_modules/powerbi-visuals-utils-formattingutils/lib/index.css";
+
+@regularFontFamily: helvetica, arial, sans-serif;
+@regularSecondaryFontFamily: helvetica, arial, sans-serif;
+@lightSecondaryFontFamily: helvetica, arial, sans-serif;
+
+.dualKpi {
+    -webkit-tap-highlight-color: transparent;
+
+    .mouseover-capture-rect {
+        fill: white;
+        stroke: none;
+    }
+
+    .axis{
+        .tick {
+            line {
+                stroke: #dcdcdc;
+            }
+
+            text {
+                font-family: @regularFontFamily;
+                font-size: 10px;
+                fill: #777;
+
+            }
+        }
+        path {
+            stroke-width: 1;
+            stroke: #aaa;
+            fill: none;
+        }
+    }
+
+    .zero-axis{
+        stroke-width: 1;
+        stroke: #aaa;
+        fill: none;
+    }
+
+    .axis.medium, .axis.large {
+        text {
+            font-size: 13px;
+        }
+    }
+
+    .data-title {
+        font-family: @regularSecondaryFontFamily;
+        font-size: 10px;
+        text-transform: uppercase;
+    }
+
+    .data-title.small {
+        font-size: 13px;
+    }
+
+    .data-title.medium {
+        font-size: 18px;
+    }
+
+    .data-title.large {
+        font-size: 20px;
+    }
+
+    .data-value {
+        font-family: @regularSecondaryFontFamily;
+        font-size: 14px;
+        text-transform: uppercase;
+    }
+
+    .data-value.small {
+        font-family: @lightSecondaryFontFamily;
+        font-size: 26px;
+    }
+
+    .data-value.medium {
+        font-family: @lightSecondaryFontFamily;
+        font-size: 32px
+    }
+
+    .data-value.large {
+        font-family: @lightSecondaryFontFamily;
+        font-size: 40px;
+    }
+
+    .hover-text {
+        font-family: @regularSecondaryFontFamily;
+        font-size: 12px;
+    }
+
+    .hover-text.small {
+        font-size: 14px;
+    }
+
+    .hover-text.medium {
+        font-size: 18px
+    }
+
+    .hover-text.large {
+        font-size: 20px;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .invisible{
+        visibility: hidden;
+    }
+
+    .title{
+        font-family: @regularFontFamily;
+        font-size: 12px;
+        fill: #212121;
+    }
+
+    .title.small {
+        font-size: 14px;
+    }
+
+    .title.medium {
+        font-size: 18px
+    }
+
+    .title.large {
+        font-size: 32px;
+    }
+
+    .date-range-text{
+        font-family: @regularFontFamily;
+        font-style: italic;
+        font-size: 10px;
+        fill: #777;
+    }
+
+    .date-range-text.small {
+        font-size: 12px;
+    }
+
+    .date-range-text.medium {
+        font-size: 16px;
+    }
+
+    .date-range-text.large{
+        font-size: 20px;
+    }
+}
+
+.mobile-tooltip {
+    background: #333;
+    color: white;
+    font-size: 11px;
+    font-family: @regularFontFamily;
+    font-weight: bold;
+    padding: 12px;
+    max-width: 220px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.mobile-tooltip.hidden {
+    display: none;
+}
+
+.hidden {
+    display: none;
+}

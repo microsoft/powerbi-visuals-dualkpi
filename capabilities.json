@@ -1,10 +1,12 @@
 {
     "dataRoles": [{
         "displayName": "Axis",
+        "displayNameKey": "Visual_Axis",
         "name": "axis",
         "kind": "Grouping"
     }, {
         "displayName": "Top values",
+        "displayNameKey": "Visual_TopValues",
         "name": "topvalues",
         "kind": "Measure",
         "requiredTypes": [{
@@ -14,6 +16,7 @@
         }]
     }, {
         "displayName": "Bottom values",
+        "displayNameKey": "Visual_BottomValues",
         "name": "bottomvalues",
         "kind": "Measure",
         "requiredTypes": [{
@@ -23,14 +26,17 @@
         }]
     }, {
         "displayName": "Warning state",
+        "displayNameKey": "Visual_WarningState",
         "name": "warningstate",
         "kind": "Measure"
     }, {
         "displayName": "Top - % change start date",
+        "displayNameKey": "Visual_TopPercentDate",
         "name": "toppercentdate",
         "kind": "Grouping"
     }, {
         "displayName": "Bottom - % change start date",
+        "displayNameKey": "Visual_BottomPercentDate",
         "name": "bottompercentdate",
         "kind": "Grouping"
     }],

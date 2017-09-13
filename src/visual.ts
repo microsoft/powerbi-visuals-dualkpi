@@ -891,8 +891,8 @@ module powerbi.extensibility.visual {
             data.bottomValueAsPercent = bottomValueFormatSymbol === "%" ? true : false;
 
             // if percent dates are in data use that, otherwise get from formatting pane/default values
-            data.topPercentCalcDate = topPercentDateCol > -1 && rows[0] ? new Date(rows[0][topPercentDateCol]) : new Date(DualKpi.getTopPercentCalcDate(dataView));
-            data.bottomPercentCalcDate = bottomPercentDateCol > -1 && rows[0] ? new Date(rows[0][bottomPercentDateCol]) : new Date(DualKpi.getBottomPercentCalcDate(dataView));
+            data.topPercentCalcDate = topPercentDateCol > -1 && rows[0] && rows[0][topPercentDateCol] ? new Date(rows[0][topPercentDateCol]) : new Date(DualKpi.getTopPercentCalcDate(dataView));
+            data.bottomPercentCalcDate = bottomPercentDateCol > -1 && rows[0] && rows[0][bottomPercentDateCol] ? new Date(rows[0][bottomPercentDateCol]) : new Date(DualKpi.getBottomPercentCalcDate(dataView));
 
             for (let i: number = 0; i < rows.length; i++) {
                 let date = null;
@@ -935,6 +935,8 @@ module powerbi.extensibility.visual {
                 data.warningState = rows[rows.length - 1][warningStateCol];
             }
 
+            data .topValues= _.sortBy(data.topValues, "date");
+            data .bottomValues= _.sortBy(data.bottomValues, "date");
             return data;
         }
 

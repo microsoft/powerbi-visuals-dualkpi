@@ -24,7 +24,7 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual {
+namespace powerbi.extensibility.visual {
 
     import textMeasurementService = powerbi.extensibility.utils.formatting.textMeasurementService;
 
@@ -387,7 +387,7 @@ module powerbi.extensibility.visual {
                 .append("path")
                 .attr("class", "zero-axis");
 
-            //this.initMouseClearEvents(hoverDataContainer, hoverLine);
+            // this.initMouseClearEvents(hoverDataContainer, hoverLine);
 
             return {
                 group: chartGroup,
@@ -739,7 +739,7 @@ module powerbi.extensibility.visual {
         }
 
         private static percentFormatter(value: number, showPlusMinus?: boolean): string {
-            var prefix = value >= 0 ? "+" : "",
+            let prefix = value >= 0 ? "+" : "",
                 valueString = (Math.floor(value * 10) / 10) + "%";
 
             if (showPlusMinus) {
@@ -805,7 +805,7 @@ module powerbi.extensibility.visual {
             ];
 
             let symbolMatcher: RegExp = new RegExp(symbolPatterns.join("|"), "g");
-            //let symbols = [];
+            // let symbols = [];
             let match = symbolMatcher.exec(format);
 
             if (!match) {
@@ -935,8 +935,8 @@ module powerbi.extensibility.visual {
                 data.warningState = rows[rows.length - 1][warningStateCol];
             }
 
-            data .topValues= _.sortBy(data.topValues, "date");
-            data .bottomValues= _.sortBy(data.bottomValues, "date");
+            data.topValues = _.sortBy(data.topValues, "date");
+            data.bottomValues = _.sortBy(data.bottomValues, "date");
             return data;
         }
 
@@ -1064,7 +1064,7 @@ module powerbi.extensibility.visual {
         }
 
         private drawBottomContainer(chartWidth: number, chartHeight: number, chartTitleSpace: number, chartSpaceBetween: number, iconOffset: number): void {
-            //let warningIconShowing = false;
+            // let warningIconShowing = false;
             let infoIconShowing = false;
 
             let chartTitleElement = this.bottomContainer.chartTitleElement
@@ -1107,7 +1107,7 @@ module powerbi.extensibility.visual {
 
                 let dayRangeLeft = chartWidth - 8;
                 if (infoIconShowing) {
-                    dayRangeLeft -= (iconWidth);// width of icon + 8px padding
+                    dayRangeLeft -= (iconWidth); // width of icon + 8px padding
                 }
                 dayRangeElement.attr("transform", "translate(" + (dayRangeLeft) + ",0)");
             }
@@ -1421,7 +1421,7 @@ module powerbi.extensibility.visual {
             overlayRect
                 .attr("width", dataWidth)
                 .attr("height", dataHeight)
-                .attr("transform", "translate(" + (dataTitleHorzCentering - (dataWidth/2)) + "," + (-dataValueHeight) + ")");
+                .attr("transform", "translate(" + (dataTitleHorzCentering - (dataWidth / 2)) + "," + (-dataValueHeight) + ")");
 
             overlayRect.on("touchstart", () => this.showMobileTooltip(overlayTooltipText));
             overlayRect.on("mousemove", () => {

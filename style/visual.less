@@ -23,6 +23,7 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+
 @import (less) "node_modules/powerbi-visuals-utils-formattingutils/lib/index.css";
 
 @regularFontFamily: helvetica, arial, sans-serif;
@@ -70,9 +71,11 @@
     }
 
     .data-title {
-        font-family: @regularSecondaryFontFamily;
-        font-size: 10px;
         text-transform: uppercase;
+    }
+
+    .data-title.extra-small {
+        font-size: 12px;
     }
 
     .data-title.small {
@@ -88,28 +91,30 @@
     }
 
     .data-value {
-        font-family: @regularSecondaryFontFamily;
-        font-size: 14px;
         text-transform: uppercase;
     }
 
+    .data-value.extra-small {
+        font-size: 18px;
+    }
+
     .data-value.small {
-        font-family: @lightSecondaryFontFamily;
         font-size: 26px;
     }
 
     .data-value.medium {
-        font-family: @lightSecondaryFontFamily;
         font-size: 32px
     }
 
     .data-value.large {
-        font-family: @lightSecondaryFontFamily;
         font-size: 40px;
     }
 
     .hover-text {
-        font-family: @regularSecondaryFontFamily;
+        font-size: 11px;
+    }
+
+    .hover-text.extra-small {
         font-size: 12px;
     }
 
@@ -139,6 +144,10 @@
         fill: #212121;
     }
 
+    .title.extra-small {
+        font-size: 13px;
+    }
+
     .title.small {
         font-size: 14px;
     }
@@ -151,11 +160,15 @@
         font-size: 32px;
     }
 
-    .date-range-text{
+    .date-range-text {
         font-family: @regularFontFamily;
         font-style: italic;
-        font-size: 10px;
+        font-size: 11px;
         fill: #777;
+    }
+
+    .date-range-text.extra-small {
+        font-size: 11px;
     }
 
     .date-range-text.small {

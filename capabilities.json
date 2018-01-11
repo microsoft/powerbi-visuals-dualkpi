@@ -106,6 +106,18 @@
             "displayName": "Dual KPI Properties",
             "displayNameKey": "Visual_DualKpiProperties",
             "properties": {
+                "topChartShow": {
+                    "displayName": "Show top chart",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "bottomChartShow": {
+                    "displayName": "Show bottom chart",
+                    "type": {
+                        "bool": true
+                    }
+                },
                 "titleText": {
                     "displayName": "Title text",
                     "displayNameKey": "Visual_DualKpiProperties_TitleText",
@@ -120,6 +132,36 @@
                         "bool": true
                     }
                 },
+                "abbreviateHoverValues": {
+                    "displayName": "Abbreviate hover values only",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "shortKpiTooltip": {
+                    "displayName": "Short KPI tooltip",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "hoverDataPercentType": {
+                    "displayName": "Variance type",
+                    "type": { 
+                        "enumeration": [{
+                            "value": "lastDate",
+                            "displayName": "Last date",
+                            "displayNameKey": "Visual_DualKpiProperties_HoverDataPercentType_LastDate"
+                        }, {
+                            "value": "firstDate",
+                            "displayName": "First date",
+                            "displayNameKey": "Visual_DualKpiProperties_HoverDataPercentType_FirstDate"
+                        }, {
+                            "value": "previousDate",
+                            "displayName": "Previous date",
+                            "displayNameKey": "Visual_DualKpiProperties_HoverDataPercentType_PreviousDate"
+                        }]
+                    }
+                },  
                 "topChartToolTipText": {
                     "displayName": "Top chart tooltip text",
                     "displayNameKey": "Visual_DualKpiProperties_TopChartToolTipText",
@@ -178,6 +220,310 @@
                 }
             }
         },
+        "dualKpiValues": {
+            "displayName": "Dual KPI Values",
+            "properties": {
+                "show": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "showKpiValuesTop": {
+                    "displayName": "Show top chart KPI values",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "topChartDefaultKpiValue": {
+                    "displayName": "Top chart default KPI text",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "showKpiValuesBottom": {
+                    "displayName": "Show bottom chart KPI values",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "bottomChartDefaultKpiValue": {
+                    "displayName": "Bottom chart default KPI text",
+                    "type": {
+                        "text": true
+                    }
+                }
+            }
+        },
+        "dualKpiTitleFormatting": {
+            "displayName": "Dual KPI Title formatting",
+            "properties": {
+                "fontSizeAutoFormatting": {
+                    "displayName": "Auto text size",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fontSize": {
+                    "displayName": "Value text size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                },
+                "isBold": {
+                    "displayName": "Bold",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "isItalic": {
+                    "displayName": "Italic",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fontFamily": {
+                    "displayName": "Font family",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "displayName": "Default",
+                                "description": "helvetica, arial, sans-serif",
+                                "value": "helvetica, arial, sans-serif"
+                            },
+                            {
+                                "displayName": "Arial",
+                                "value": "Arial"
+                            },
+                            {
+                                "displayName": "Arial Black",
+                                "value": "\"Arial Black\""
+                            },
+                            {
+                                "displayName": "Arial Unicode MS",
+                                "value": "\"Arial Unicode MS\""
+                            },
+                            {
+                                "displayName": "Calibri",
+                                "value": "Calibri"
+                            },
+                            {
+                                "displayName": "Cambria",
+                                "value": "Cambria"
+                            },
+                            {
+                                "displayName": "Cambria Math",
+                                "value": "\"Cambria Math\""
+                            },
+                            {
+                                "displayName": "Candara",
+                                "value": "Candara"
+                            },
+                            {
+                                "displayName": "Comic Sans MS",
+                                "value": "\"Comic Sans MS\""
+                            },
+                            {
+                                "displayName": "Consolas",
+                                "value": "Consolas"
+                            },
+                            {
+                                "displayName": "Constantia",
+                                "value": "Constantia"
+                            },
+                            {
+                                "displayName": "Corbel",
+                                "value": "Corbel"
+                            },
+                            {
+                                "displayName": "Courier New",
+                                "value": "\"Courier New\""
+                            },
+                            {
+                                "displayName": "Georgia",
+                                "value": "Georgia"
+                            },
+                            {
+                                "displayName": "Lucida Sans Unicode",
+                                "value": "\"Lucida Sans Unicode\""
+                            },
+                            {
+                                "displayName": "Segoe (Bold)",
+                                "value": "\"Segoe UI Bold\", wf_segoe-ui_bold, helvetica, arial, sans-serif"
+                            },
+                            {
+                                "displayName": "Segoe UI",
+                                "value": "\"Segoe UI\", wf_segoe-ui_normal, helvetica, arial, sans-serif"
+                            },
+                            {
+                                "displayName": "Segoe UI Light",
+                                "value": "\"Segoe UI Light\", wf_segoe-ui_bold, helvetica, arial, sans-serif"
+                            },
+                            {
+                                "displayName": "Symbol",
+                                "value": "Symbol"
+                            },
+                            {
+                                "displayName": "Tahoma",
+                                "value": "Tahoma"
+                            },
+                            {
+                                "displayName": "Times New Roman",
+                                "value": "\"Times New Roman\""
+                            },
+                            {
+                                "displayName": "Trebuchet MS",
+                                "value": "\"Trebuchet MS\""
+                            },
+                            {
+                                "displayName": "Verdana",
+                                "value": "Verdana"
+                            },
+                            {
+                                "displayName": "Wingdings",
+                                "value": "Wingdings"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        "dualKpiValueFormatting": {
+            "displayName": "Dual KPI Value formatting",
+            "properties": {
+                "fontSizeAutoFormatting": {
+                    "displayName": "Auto text size",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fontSize": {
+                    "displayName": "Value text size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                },
+                "isBold": {
+                    "displayName": "Bold",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "isItalic": {
+                    "displayName": "Italic",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fontFamily": {
+                    "displayName": "Font family",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "displayName": "Default",
+                                "description": "helvetica, arial, sans-serif",
+                                "value": "helvetica, arial, sans-serif"
+                            },
+                            {
+                                "displayName": "Arial",
+                                "value": "Arial"
+                            },
+                            {
+                                "displayName": "Arial Black",
+                                "value": "\"Arial Black\""
+                            },
+                            {
+                                "displayName": "Arial Unicode MS",
+                                "value": "\"Arial Unicode MS\""
+                            },
+                            {
+                                "displayName": "Calibri",
+                                "value": "Calibri"
+                            },
+                            {
+                                "displayName": "Cambria",
+                                "value": "Cambria"
+                            },
+                            {
+                                "displayName": "Cambria Math",
+                                "value": "\"Cambria Math\""
+                            },
+                            {
+                                "displayName": "Candara",
+                                "value": "Candara"
+                            },
+                            {
+                                "displayName": "Comic Sans MS",
+                                "value": "\"Comic Sans MS\""
+                            },
+                            {
+                                "displayName": "Consolas",
+                                "value": "Consolas"
+                            },
+                            {
+                                "displayName": "Constantia",
+                                "value": "Constantia"
+                            },
+                            {
+                                "displayName": "Corbel",
+                                "value": "Corbel"
+                            },
+                            {
+                                "displayName": "Courier New",
+                                "value": "\"Courier New\""
+                            },
+                            {
+                                "displayName": "Georgia",
+                                "value": "Georgia"
+                            },
+                            {
+                                "displayName": "Lucida Sans Unicode",
+                                "value": "\"Lucida Sans Unicode\""
+                            },
+                            {
+                                "displayName": "Segoe (Bold)",
+                                "value": "\"Segoe UI Bold\", wf_segoe-ui_bold, helvetica, arial, sans-serif"
+                            },
+                            {
+                                "displayName": "Segoe UI",
+                                "value": "\"Segoe UI\", wf_segoe-ui_normal, helvetica, arial, sans-serif"
+                            },
+                            {
+                                "displayName": "Segoe UI Light",
+                                "value": "\"Segoe UI Light\", wf_segoe-ui_bold, helvetica, arial, sans-serif"
+                            },
+                            {
+                                "displayName": "Symbol",
+                                "value": "Symbol"
+                            },
+                            {
+                                "displayName": "Tahoma",
+                                "value": "Tahoma"
+                            },
+                            {
+                                "displayName": "Times New Roman",
+                                "value": "\"Times New Roman\""
+                            },
+                            {
+                                "displayName": "Trebuchet MS",
+                                "value": "\"Trebuchet MS\""
+                            },
+                            {
+                                "displayName": "Verdana",
+                                "value": "Verdana"
+                            },
+                            {
+                                "displayName": "Wingdings",
+                                "value": "Wingdings"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
         "dualKpiColors": {
             "displayName": "Dual KPI Colors",
             "displayNameKey": "Visual_DualKpiColors",
@@ -207,6 +553,43 @@
                 "opacity": {
                     "displayName": "Chart opacity",
                     "displayNameKey": "Visual_DualKpiColors_Opacity",
+                    "type": {
+                        "numeric": true
+                    }
+                }
+            }
+        },
+        "dualKpiColorsBottom": {
+            "displayName": "Dual KPI Bottom Chart Colors",
+            "properties": {
+                "matchTopChartOptions": {
+                    "displayName": "Match top chart settings",
+                    "type": {
+                        "bool": true
+                    }
+                },                        
+                "dataColor": {
+                    "displayName": "Data color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "textColor": {
+                    "displayName": "Text color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "opacity": {
+                    "displayName": "Chart opacity",
                     "type": {
                         "numeric": true
                     }

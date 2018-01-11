@@ -24,9 +24,10 @@
  *  THE SOFTWARE.
  */
 
-namespace powerbi.extensibility.visual {
+module powerbi.extensibility.visual {
 
     import textMeasurementService = powerbi.extensibility.utils.formatting.textMeasurementService;
+    import IVisual = powerbi.extensibility.IVisual;
 
     export interface Selection extends d3.Selection<SVGElement> {
     };
@@ -42,6 +43,8 @@ namespace powerbi.extensibility.visual {
     }
 
     export interface IDualKpiData {
+
+        settings: DualKpiSettings;
         // data bound
         topChartName: string;
         bottomChartName: string;
@@ -49,33 +52,10 @@ namespace powerbi.extensibility.visual {
         bottomValues: Array<IDualKpiDataPoint>;
         topValueAsPercent: boolean;
         bottomValueAsPercent: boolean;
-        warningState: number;
 
-        // formatting pane
-        title: string;
-        abbreviateValues: boolean;
-        topChartToolTipText: string;
-        bottomChartToolTipText: string;
-        warningTooltipText: string;
-        showStaleDataWarning: boolean;
-        staleDataTooltipText: string;
-        staleDataThreshold: number;
         topPercentCalcDate: Date;
         bottomPercentCalcDate: Date;
-
-        dataColor: string;
-        textColor: string;
-        opacity: number;
-
-        topChartAxisMin: number;
-        topChartAxisMax: number;
-        bottomChartAxisMin: number;
-        bottomChartAxisMax: number;
-        topChartZeroLine: boolean;
-        bottomChartZeroLine: boolean;
-
-        topChartType: string;
-        bottomChartType: string;
+        warningState: number;
     }
 
     export interface IAxisConfig {
@@ -84,23 +64,25 @@ namespace powerbi.extensibility.visual {
     };
 
     export enum DualKpiSize {
+        supersmall,
         extrasmall,
         small,
         medium,
         large
     };
 
-    export type DualKpiSizeClass = "extra-small" | "small" | "medium" | "large";
-    export type DualKpiChartPosition = "top" | "bottom";
+    export type DualKpiSizeClass = "super-small" | "extra-small" | "small" | "medium" | "large";
 
     export interface IDualKpiOptions {
         element: IChartGroup;
         abbreviateValue: boolean;
+        abbreviateHoverValue: boolean;
         axisConfig: IAxisConfig;
+        hoverDataPercentType: PercentType;
         chartData: Array<IDualKpiDataPoint>;
         chartTitle: string;
         chartType: string;
-        position: DualKpiChartPosition;
+        position: DualKpiChartPositionType;
         height: number;
         percentChangeStartPoint: IDualKpiDataPoint;
         showZeroLine: boolean;
@@ -108,6 +90,19 @@ namespace powerbi.extensibility.visual {
         top: number;
         valueAsPercent: boolean;
         width: number;
+        showTextOverlay: boolean;
+        showDefaultTextOverlay: boolean;
+        defaultTextOverlay: string;
+        titleFontSize: number;
+        valueFontSize: number;
+        fontSizeAutoFormattingTitle: boolean;
+        fontSizeAutoFormattingValue: boolean;
+        isBoldTitle: boolean;
+        isBoldValue: boolean;
+        isItalicTitle: boolean;
+        isItalicValue: boolean;
+        fontFamilyTitle: string;
+        fontFamilyValue: string;
     }
 
     export interface IGroup {
@@ -178,33 +173,6 @@ namespace powerbi.extensibility.visual {
             bottomChartType: "area"
         };
 
-        private static properties = {
-            titleText: { objectName: "dualKpiProperties", propertyName: "titleText" },
-            abbreviateValues: { objectName: "dualKpiProperties", propertyName: "abbreviateValues" },
-            topChartToolTipText: { objectName: "dualKpiProperties", propertyName: "topChartToolTipText" },
-            bottomChartToolTipText: { objectName: "dualKpiProperties", propertyName: "bottomChartToolTipText" },
-            warningTooltipText: { objectName: "dualKpiProperties", propertyName: "warningTooltipText" },
-            showStaleDataWarning: { objectName: "dualKpiProperties", propertyName: "showStaleDataWarning" },
-            staleDataTooltipText: { objectName: "dualKpiProperties", propertyName: "staleDataTooltipText" },
-            staleDataThreshold: { objectName: "dualKpiProperties", propertyName: "staleDataThreshold" },
-            topPercentCalcDate: { objectName: "dualKpiProperties", propertyName: "topPercentCalcDate" },
-            bottomPercentCalcDate: { objectName: "dualKpiProperties", propertyName: "bottomPercentCalcDate" },
-
-            dataColor: { objectName: "dualKpiColors", propertyName: "dataColor" },
-            textColor: { objectName: "dualKpiColors", propertyName: "textColor" },
-            opacity: { objectName: "dualKpiColors", propertyName: "opacity" },
-
-            topChartAxisMin: { objectName: "dualKpiAxis", propertyName: "topChartAxisMin" },
-            topChartAxisMax: { objectName: "dualKpiAxis", propertyName: "topChartAxisMax" },
-            bottomChartAxisMin: { objectName: "dualKpiAxis", propertyName: "bottomChartAxisMin" },
-            bottomChartAxisMax: { objectName: "dualKpiAxis", propertyName: "bottomChartAxisMax" },
-            topChartZeroLine: { objectName: "dualKpiAxis", propertyName: "topChartZeroLine" },
-            bottomChartZeroLine: { objectName: "dualKpiAxis", propertyName: "bottomChartZeroLine" },
-
-            topChartType: { objectName: "dualKpiChart", propertyName: "topChartType" },
-            bottomChartType: { objectName: "dualKpiChart", propertyName: "bottomChartType" }
-        };
-
         private dataView: DataView;
         private data: IDualKpiData;
         private target: HTMLElement;
@@ -231,6 +199,7 @@ namespace powerbi.extensibility.visual {
         private axisNumberFormatter;
 
         private static DefaultTitleSizes = {
+            "super-small": 10,
             "extra-small": 10,
             "small": 12,
             "medium": 14,
@@ -238,11 +207,14 @@ namespace powerbi.extensibility.visual {
         };
 
         private static DefaultValueSizes = {
+            "super-small": 14,
             "extra-small": 14,
             "small": 26,
             "medium": 32,
             "large": 40
         };
+
+        private static INVISIBLE: string = "invisible";
 
         private static OPACITY_MIN: number = 0;
         private static OPACITY_MAX: number = 100;
@@ -299,8 +271,8 @@ namespace powerbi.extensibility.visual {
             svgRoot
                 .attr("class", "dualKpi");
 
-            this.chartGroupTop = this.createChartGroup(svgRoot);
-            this.chartGroupBottom = this.createChartGroup(svgRoot);
+            this.chartGroupTop = this.createChartGroup(svgRoot, DualKpiChartPositionType.top);
+            this.chartGroupBottom = this.createChartGroup(svgRoot, DualKpiChartPositionType.bottom);
 
             this.bottomContainer = this.createBottomContainer(svgRoot);
 
@@ -363,10 +335,11 @@ namespace powerbi.extensibility.visual {
             };
         }
 
-        private createChartGroup(svgRoot: Selection): IChartGroup {
+        private createChartGroup(svgRoot: Selection, type: DualKpiChartPositionType): IChartGroup {
             let chartGroup: Selection = svgRoot
                 .append("g")
-                .attr("class", "chartGroup");
+                .attr("class", "chartGroup")
+                .classed(type === DualKpiChartPositionType.top ? "chartGroupTop" : "chartGroupBottom", true);
 
             let chartArea = chartGroup
                 .append("path")
@@ -386,8 +359,6 @@ namespace powerbi.extensibility.visual {
             let zeroAxis = chartGroup
                 .append("path")
                 .attr("class", "zero-axis");
-
-            // this.initMouseClearEvents(hoverDataContainer, hoverLine);
 
             return {
                 group: chartGroup,
@@ -436,7 +407,27 @@ namespace powerbi.extensibility.visual {
             };
         }
 
-        private clear() {
+        private static getChartSize(viewport: IViewport): DualKpiSize {
+            const height: number = viewport.height,
+                width: number = viewport.width;
+
+            if (width < 215 || height < 110) {
+                return DualKpiSize.supersmall;
+            }
+
+            if (width < 245 || height < 130) {
+                return DualKpiSize.extrasmall;
+            }
+
+            if (width < 350 || height < 280) {
+                return DualKpiSize.small;
+            }
+
+            if (width < 450 || height < 450) {
+                return DualKpiSize.medium;
+            }
+
+            return DualKpiSize.large;
         }
 
         public update(options: VisualUpdateOptions) {
@@ -446,7 +437,8 @@ namespace powerbi.extensibility.visual {
                 !dataView.metadata ||
                 !dataView.metadata.columns) {
 
-                this.clear();
+                this.displayRootElement(false);
+
                 return;
             }
 
@@ -457,30 +449,46 @@ namespace powerbi.extensibility.visual {
                 chartWidth = availableWidth,
                 chartSpaceBetween, chartTitleSpace, iconOffset;
 
-            if (availableHeight >= 450) {
-                this.size = DualKpiSize.large;
-                this.sizeCssClass = "large";
-                iconOffset = -1;
-                chartSpaceBetween = 25;
-                chartTitleSpace = 46;
-            } else if (availableHeight >= 280) {
-                this.size = DualKpiSize.medium;
-                this.sizeCssClass = "medium";
-                iconOffset = -8;
-                chartSpaceBetween = 20;
-                chartTitleSpace = 30;
-            } else if (availableHeight >= 120) {
-                this.size = DualKpiSize.small;
-                this.sizeCssClass = "small";
-                iconOffset = -6;
-                chartSpaceBetween = 15;
-                chartTitleSpace = 22;
-            } else {
-                this.size = DualKpiSize.extrasmall;
-                this.sizeCssClass = "extra-small";
-                iconOffset = -8;
-                chartSpaceBetween = 6;
-                chartTitleSpace = 18;
+            let size: DualKpiSize = DualKpi.getChartSize({ height: availableHeight, width: availableWidth });
+
+            switch (size) {
+                case DualKpiSize.large:
+                    this.size = DualKpiSize.large;
+                    this.sizeCssClass = "large";
+                    iconOffset = -1;
+                    chartSpaceBetween = 25;
+                    chartTitleSpace = 46;
+                    break;
+                case DualKpiSize.medium:
+                    this.size = DualKpiSize.medium;
+                    this.sizeCssClass = "medium";
+                    iconOffset = -8;
+                    chartSpaceBetween = 20;
+                    chartTitleSpace = 30;
+                    break;
+                case DualKpiSize.small:
+                    this.size = DualKpiSize.small;
+                    this.sizeCssClass = "small";
+                    iconOffset = -6;
+                    chartSpaceBetween = 15;
+                    chartTitleSpace = 22;
+                    break;
+                case DualKpiSize.extrasmall:
+                    this.size = DualKpiSize.extrasmall;
+                    this.sizeCssClass = "extra-small";
+                    iconOffset = -8;
+                    chartSpaceBetween = 12;
+                    chartTitleSpace = 20;
+                    break;
+                case DualKpiSize.supersmall:
+                    this.size = DualKpiSize.supersmall;
+                    this.sizeCssClass = "super-small";
+                    iconOffset = -8;
+                    chartSpaceBetween = 10;
+                    chartTitleSpace = 18;
+                    break;
+                default:
+                    break;
             }
 
             this.titleSize = DualKpi.DefaultTitleSizes[this.sizeCssClass];
@@ -491,55 +499,116 @@ namespace powerbi.extensibility.visual {
             });
 
             let chartHeight = (availableHeight - (chartSpaceBetween + chartTitleSpace)) / 2;
-            let topChartAxisConfig = { min: data.topChartAxisMin, max: data.topChartAxisMax };
-            let bottomChartAxisConfig = { min: data.bottomChartAxisMin, max: data.bottomChartAxisMax };
+            let topChartAxisConfig = { min: data.settings.dualKpiAxis.topChartAxisMin, max: data.settings.dualKpiAxis.topChartAxisMax };
+            let bottomChartAxisConfig = { min: data.settings.dualKpiAxis.bottomChartAxisMin, max: data.settings.dualKpiAxis.bottomChartAxisMax };
 
             let topChartPercentChangeStartPoint = DualKpi.getPercentChangeStartPoint(data.topValues, data.topPercentCalcDate);
             let bottomChartPercentChangeStartPoint = DualKpi.getPercentChangeStartPoint(data.bottomValues, data.bottomPercentCalcDate);
 
-            // draw top chart
-            if (data.topValues.length > 0) {
-                this.drawChart({
-                    element: this.chartGroupTop,
-                    abbreviateValue: data.abbreviateValues,
-                    axisConfig: topChartAxisConfig,
-                    chartData: data.topValues,
-                    chartTitle: data.topChartName,
-                    chartType: data.topChartType,
-                    height: chartHeight,
-                    percentChangeStartPoint: topChartPercentChangeStartPoint,
-                    showZeroLine: data.topChartZeroLine,
-                    tooltipText: data.topChartToolTipText,
-                    top: 0,
-                    valueAsPercent: data.topValueAsPercent,
-                    width: chartWidth,
-                    position: "top"
-                });
+            const wasDataSetRendered: boolean = data.topValues.length > 0 || data.bottomValues.length > 0;
+
+            this.displayRootElement(wasDataSetRendered);
+
+            if (data.settings.dualKpiProperties.topChartShow) {
+                this.chartGroupTop.group.classed(DualKpi.INVISIBLE, false);
+                this.chartGroupTop.hoverDataContainer.container.classed(DualKpi.INVISIBLE, true);
+
+                if (data.topValues.length > 0) {
+                    this.drawChart({
+                        element: this.chartGroupTop,
+                        abbreviateValue: data.settings.dualKpiProperties.abbreviateValues,
+                        abbreviateHoverValue: data.settings.dualKpiProperties.abbreviateHoverValues,
+                        hoverDataPercentType: data.settings.dualKpiProperties.hoverDataPercentType,
+                        axisConfig: topChartAxisConfig,
+                        chartData: data.topValues,
+                        chartTitle: data.topChartName,
+                        chartType: data.settings.dualKpiChart.topChartType,
+                        height: data.settings.dualKpiProperties.bottomChartShow && data.settings.dualKpiProperties.topChartShow ? chartHeight : chartHeight * 2 + chartSpaceBetween,
+                        percentChangeStartPoint: topChartPercentChangeStartPoint,
+                        showZeroLine: data.settings.dualKpiAxis.topChartZeroLine,
+                        tooltipText: data.settings.dualKpiProperties.topChartToolTipText,
+                        top: 0,
+                        valueAsPercent: data.topValueAsPercent,
+                        width: chartWidth,
+                        position: DualKpiChartPositionType["top"],
+                        showTextOverlay: data.settings.dualKpiValues.show,
+                        showDefaultTextOverlay: !data.settings.dualKpiValues.showKpiValuesTop,
+                        defaultTextOverlay: data.settings.dualKpiValues.topChartDefaultKpiValue,
+                        fontSizeAutoFormattingTitle: data.settings.dualKpiTitleFormatting.fontSizeAutoFormatting,
+                        fontSizeAutoFormattingValue: data.settings.dualKpiValueFormatting.fontSizeAutoFormatting,
+                        titleFontSize: data.settings.dualKpiTitleFormatting.fontSize,
+                        valueFontSize: data.settings.dualKpiValueFormatting.fontSize,
+                        isBoldTitle: data.settings.dualKpiTitleFormatting.isBold,
+                        isBoldValue: data.settings.dualKpiValueFormatting.isBold,
+                        isItalicTitle: data.settings.dualKpiTitleFormatting.isItalic,
+                        isItalicValue: data.settings.dualKpiValueFormatting.isItalic,
+                        fontFamilyTitle: data.settings.dualKpiTitleFormatting.fontFamily,
+                        fontFamilyValue: data.settings.dualKpiValueFormatting.fontFamily
+                    });
+                }
+            } else {
+                this.chartGroupTop.group.classed(DualKpi.INVISIBLE, true);
+                this.chartGroupTop.hoverDataContainer.container.classed(DualKpi.INVISIBLE, true);
             }
 
-            // draw bottom chart
-            if (data.bottomValues.length > 0) {
-                this.drawChart({
-                    element: this.chartGroupBottom,
-                    abbreviateValue: data.abbreviateValues,
-                    axisConfig: bottomChartAxisConfig,
-                    chartData: data.bottomValues,
-                    chartTitle: data.bottomChartName,
-                    chartType: data.bottomChartType,
-                    height: chartHeight,
-                    percentChangeStartPoint: bottomChartPercentChangeStartPoint,
-                    showZeroLine: data.bottomChartZeroLine,
-                    tooltipText: data.bottomChartToolTipText,
-                    top: chartHeight + chartSpaceBetween,
-                    valueAsPercent: data.bottomValueAsPercent,
-                    width: chartWidth,
-                    position: "bottom"
-                });
+            if (data.settings.dualKpiProperties.bottomChartShow) {
+                // draw bottom chart
+                this.chartGroupBottom.group.classed(DualKpi.INVISIBLE, false);
+                this.chartGroupBottom.hoverDataContainer.container.classed(DualKpi.INVISIBLE, true);
+
+                if (data.bottomValues.length > 0) {
+                    this.drawChart({
+                        element: this.chartGroupBottom,
+                        abbreviateValue: data.settings.dualKpiProperties.abbreviateValues,
+                        abbreviateHoverValue: data.settings.dualKpiProperties.abbreviateHoverValues,
+                        hoverDataPercentType: data.settings.dualKpiProperties.hoverDataPercentType,
+                        axisConfig: bottomChartAxisConfig,
+                        chartData: data.bottomValues,
+                        chartTitle: data.bottomChartName,
+                        chartType: data.settings.dualKpiChart.bottomChartType,
+                        height: data.settings.dualKpiProperties.bottomChartShow && data.settings.dualKpiProperties.topChartShow ? chartHeight : chartHeight * 2 + chartSpaceBetween,
+                        percentChangeStartPoint: bottomChartPercentChangeStartPoint,
+                        showZeroLine: data.settings.dualKpiAxis.bottomChartZeroLine,
+                        tooltipText: data.settings.dualKpiProperties.bottomChartToolTipText,
+                        top: data.settings.dualKpiProperties.bottomChartShow && data.settings.dualKpiProperties.topChartShow ? chartHeight + chartSpaceBetween : 0,
+                        valueAsPercent: data.bottomValueAsPercent,
+                        width: chartWidth,
+                        position: DualKpiChartPositionType["bottom"],
+                        showTextOverlay: data.settings.dualKpiValues.show,
+                        showDefaultTextOverlay: !data.settings.dualKpiValues.showKpiValuesBottom,
+                        defaultTextOverlay: data.settings.dualKpiValues.bottomChartDefaultKpiValue,
+                        fontSizeAutoFormattingTitle: data.settings.dualKpiTitleFormatting.fontSizeAutoFormatting,
+                        fontSizeAutoFormattingValue: data.settings.dualKpiValueFormatting.fontSizeAutoFormatting,
+                        titleFontSize: data.settings.dualKpiTitleFormatting.fontSize,
+                        valueFontSize: data.settings.dualKpiValueFormatting.fontSize,
+                        isBoldTitle: data.settings.dualKpiTitleFormatting.isBold,
+                        isBoldValue: data.settings.dualKpiValueFormatting.isBold,
+                        isItalicTitle: data.settings.dualKpiTitleFormatting.isItalic,
+                        isItalicValue: data.settings.dualKpiValueFormatting.isItalic,
+                        fontFamilyTitle: data.settings.dualKpiTitleFormatting.fontFamily,
+                        fontFamilyValue: data.settings.dualKpiValueFormatting.fontFamily
+                    });
+                }
+            } else {
+                this.chartGroupBottom.group.classed(DualKpi.INVISIBLE, true);
+                this.chartGroupBottom.hoverDataContainer.container.classed(DualKpi.INVISIBLE, true);
             }
 
-            if ((data.topValues.length > 0) || (data.bottomValues.length > 0)) {
+            if (wasDataSetRendered) {
                 this.drawBottomContainer(chartWidth, chartHeight, chartTitleSpace, chartSpaceBetween, iconOffset);
             }
+        }
+
+        private displayRootElement(isRootElementVisible: boolean = true): void {
+            if (!this.svgRoot) {
+                return;
+            }
+
+            const display: string = isRootElementVisible
+                ? null
+                : "none";
+
+            this.svgRoot.style("display", display);
         }
 
         private updateViewport(viewport: IViewport): void {
@@ -554,87 +623,39 @@ namespace powerbi.extensibility.visual {
         }
 
         public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstance[] {
-            let instances: VisualObjectInstance[] = [];
+            const instances: VisualObjectInstance[] = (DualKpiSettings.enumerateObjectInstances(this.data.settings || DualKpiSettings.getDefault(), options) as VisualObjectInstanceEnumerationObject).instances;
+
             switch (options.objectName) {
-                case "dualKpiProperties":
-                    let dualKpiProperties: VisualObjectInstance = {
-                        objectName: "dualKpiProperties",
-                        displayName: "Dual KPI Properties",
-                        selector: null,
-                        properties: {
-                            titleText: DualKpi.getTitleText(this.dataView),
-                            abbreviateValues: DualKpi.getAbbreviateValues(this.dataView),
-                            topChartToolTipText: DualKpi.getTopChartToolTipText(this.dataView),
-                            bottomChartToolTipText: DualKpi.getBottomChartToolTipText(this.dataView),
-                            warningTooltipText: DualKpi.getWarningTooltipText(this.dataView),
-                            showStaleDataWarning: DualKpi.getShowStaleDataWarning(this.dataView),
-                            staleDataTooltipText: DualKpi.getStaleDataTooltipText(this.dataView),
-                            staleDataThreshold: DualKpi.getStaleDataThreshold(this.dataView),
-                            topPercentCalcDate: DualKpi.getTopPercentCalcDate(this.dataView),
-                            bottomPercentCalcDate: DualKpi.getBottomPercentCalcDate(this.dataView)
-                        }
-                    };
-                    instances.push(dualKpiProperties);
-                    break;
-                case "dualKpiColors":
-                    let dualKpiColors: VisualObjectInstance = {
-                        objectName: "dualKpiColors",
-                        displayName: "Dual KPI Colors",
-                        selector: null,
-                        properties: {
-                            dataColor: DualKpi.getDataColor(this.dataView),
-                            textColor: DualKpi.getTextColor(this.dataView),
-                            opacity: DualKpi.getOpacity(this.dataView)
-                        }
-                    };
-                    instances.push(dualKpiColors);
-                    break;
-                case "dualKpiAxis":
-                    let dualKpiAxis: VisualObjectInstance = {
-                        objectName: "dualKpiAxis",
-                        displayName: "Dual KPI Axis Settings",
-                        selector: null,
-                        properties: {
-                            topChartAxisMin: DualKpi.getTopChartAxisMin(this.dataView),
-                            topChartAxisMax: DualKpi.getTopChartAxisMax(this.dataView),
-                            bottomChartAxisMin: DualKpi.getBottomChartAxisMin(this.dataView),
-                            bottomChartAxisMax: DualKpi.getBottomChartAxisMax(this.dataView),
-                            topChartZeroLine: DualKpi.getTopChartZeroLine(this.dataView),
-                            bottomChartZeroLine: DualKpi.getBottomChartZeroLine(this.dataView)
-                        }
-                    };
-                    instances.push(dualKpiAxis);
-                    break;
-                case "dualKpiChart":
-                    let dualKpiChart: VisualObjectInstance = {
-                        objectName: "dualKpiChart",
-                        displayName: "Dual KPI Chart Types",
-                        selector: null,
-                        properties: {
-                            topChartType: DualKpi.getTopChartType(this.dataView),
-                            bottomChartType: DualKpi.getBottomChartType(this.dataView)
-                        }
-                    };
-                    instances.push(dualKpiChart);
-                    break;
-            }
-            return instances;
-        }
+                case "dualKpiColorsBottom": {
+                    if (this.data.settings.dualKpiColorsBottom.matchTopChartOptions
+                            && instances
+                            && instances[0]
+                            && instances[0].properties
+                    ) {
+                        delete instances[0].properties["dataColor"];
+                        delete instances[0].properties["textColor"];
+                        delete instances[0].properties["opacity"];
+                    }
 
-        private static getValue<T>(objects: DataViewObjects, property: any, defaultValue?: T): T {
-            if (!objects || !objects[property.objectName]) {
-                return defaultValue;
+                    break;
+                }
+                case "dualKpiTitleFormatting": {
+                    if (this.data.settings.dualKpiTitleFormatting.fontSizeAutoFormatting) {
+                        delete instances[0].properties["fontSize"];
+                    }
+
+                    break;
+                }
+                case "dualKpiValueFormatting": {
+                    if (this.data.settings.dualKpiValueFormatting.fontSizeAutoFormatting) {
+                        delete instances[0].properties["fontSize"];
+                    }
+
+                    break;
+                }
             }
 
-            let objectOrMap = objects[property.objectName];
-            let object = <DataViewObject>objectOrMap;
-            let propertyValue = <T>object[property.propertyName];
-
-            if (propertyValue === undefined) {
-                return defaultValue;
-            }
-
-            return propertyValue;
+            return instances || [];
         }
 
         private static validateOpacity(opacity: number): number {
@@ -645,91 +666,6 @@ namespace powerbi.extensibility.visual {
             } else {
                 return opacity;
             }
-        }
-
-        private static getTitleText(dataView: DataView): string {
-            return dataView && dataView.metadata && DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.titleText, DualKpi.defaultValues.titleText);
-        }
-
-        private static getAbbreviateValues(dataView: DataView): boolean {
-            return dataView && dataView.metadata && DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.abbreviateValues, DualKpi.defaultValues.abbreviateValues);
-        }
-
-        private static getTopChartToolTipText(dataView: DataView): string {
-            return dataView && dataView.metadata && DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.topChartToolTipText, DualKpi.defaultValues.topChartToolTipText);
-        }
-
-        private static getBottomChartToolTipText(dataView: DataView): string {
-            return dataView && dataView.metadata && DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.bottomChartToolTipText, DualKpi.defaultValues.bottomChartToolTipText);
-        }
-
-        private static getWarningTooltipText(dataView: DataView): string {
-            return dataView && dataView.metadata && DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.warningTooltipText, DualKpi.defaultValues.warningTooltipText);
-        }
-
-        private static getShowStaleDataWarning(dataView: DataView): boolean {
-            return dataView && dataView.metadata && DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.showStaleDataWarning, DualKpi.defaultValues.showStaleDataWarning);
-        }
-
-        private static getStaleDataTooltipText(dataView: DataView): string {
-            return dataView && dataView.metadata && DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.staleDataTooltipText, DualKpi.defaultValues.staleDataTooltipText);
-        }
-
-        private static getStaleDataThreshold(dataView: DataView): number {
-            return dataView && dataView.metadata && DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.staleDataThreshold, DualKpi.defaultValues.staleDataThreshold);
-        }
-
-        private static getTopPercentCalcDate(dataView: DataView): string {
-            return dataView && dataView.metadata && DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.topPercentCalcDate, DualKpi.defaultValues.topPercentCalcDate);
-        }
-
-        private static getBottomPercentCalcDate(dataView: DataView): string {
-            return dataView && dataView.metadata && DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.bottomPercentCalcDate, DualKpi.defaultValues.bottomPercentCalcDate);
-        }
-
-        private static getDataColor(dataView: DataView): Fill {
-            return dataView && dataView.metadata && DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.dataColor, { solid: { color: DualKpi.defaultValues.dataColor } });
-        }
-
-        private static getTextColor(dataView: DataView): Fill {
-            return dataView && dataView.metadata && DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.textColor, { solid: { color: DualKpi.defaultValues.textColor } });
-        }
-
-        private static getOpacity(dataView: DataView): number {
-            return dataView && dataView.metadata &&
-                this.validateOpacity(DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.opacity, DualKpi.defaultValues.opacity));
-        }
-
-        private static getTopChartAxisMin(dataView: DataView): number {
-            return dataView && dataView.metadata && DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.topChartAxisMin, DualKpi.defaultValues.topChartAxisMin);
-        }
-
-        private static getTopChartAxisMax(dataView: DataView): number {
-            return dataView && dataView.metadata && DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.topChartAxisMax, DualKpi.defaultValues.topChartAxisMax);
-        }
-
-        private static getBottomChartAxisMin(dataView: DataView): number {
-            return dataView && dataView.metadata && DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.bottomChartAxisMin, DualKpi.defaultValues.bottomChartAxisMin);
-        }
-
-        private static getBottomChartAxisMax(dataView: DataView): number {
-            return dataView && dataView.metadata && DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.bottomChartAxisMax, DualKpi.defaultValues.bottomChartAxisMax);
-        }
-
-        private static getTopChartZeroLine(dataView: DataView): boolean {
-            return dataView && dataView.metadata && DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.topChartZeroLine, DualKpi.defaultValues.topChartZeroLine);
-        }
-
-        private static getBottomChartZeroLine(dataView: DataView): boolean {
-            return dataView && dataView.metadata && DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.bottomChartZeroLine, DualKpi.defaultValues.bottomChartZeroLine);
-        }
-
-        private static getTopChartType(dataView: DataView): string {
-            return dataView && dataView.metadata && DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.topChartType, DualKpi.defaultValues.topChartType);
-        }
-
-        private static getBottomChartType(dataView: DataView): string {
-            return dataView && dataView.metadata && DualKpi.getValue(dataView.metadata.objects, DualKpi.properties.bottomChartType, DualKpi.defaultValues.bottomChartType);
         }
 
         private static getDaysBetween(date1: Date, date2: Date): number {
@@ -805,7 +741,7 @@ namespace powerbi.extensibility.visual {
             ];
 
             let symbolMatcher: RegExp = new RegExp(symbolPatterns.join("|"), "g");
-            // let symbols = [];
+
             let match = symbolMatcher.exec(format);
 
             if (!match) {
@@ -816,39 +752,22 @@ namespace powerbi.extensibility.visual {
             }
         }
 
+        private static parseSettings(dataView: DataView): DualKpiSettings {
+            let settings: DualKpiSettings = DualKpiSettings.parse<DualKpiSettings>(dataView);
+
+            settings.dualKpiColors.opacity = DualKpi.validateOpacity(settings.dualKpiColors.opacity);
+            settings.dualKpiColorsBottom.opacity = DualKpi.validateOpacity(settings.dualKpiColorsBottom.opacity);
+
+            return settings;
+        }
+
         private static converter(dataView: DataView): IDualKpiData {
             let data = {} as IDualKpiData;
             let topValueFormatSymbol = "";
             let bottomValueFormatSymbol = "";
-            data.topChartName = "";
-            data.bottomChartName = "";
+            data.settings = DualKpi.parseSettings(dataView);
             data.topValues = [];
             data.bottomValues = [];
-            data.warningState = 0;
-
-            // get formatting pane values
-            data.title = DualKpi.getTitleText(dataView);
-            data.abbreviateValues = DualKpi.getAbbreviateValues(dataView);
-            data.topChartToolTipText = DualKpi.getTopChartToolTipText(dataView);
-            data.bottomChartToolTipText = DualKpi.getBottomChartToolTipText(dataView);
-            data.warningTooltipText = DualKpi.getWarningTooltipText(dataView);
-            data.showStaleDataWarning = DualKpi.getShowStaleDataWarning(dataView);
-            data.staleDataTooltipText = DualKpi.getStaleDataTooltipText(dataView);
-            data.staleDataThreshold = DualKpi.getStaleDataThreshold(dataView);
-
-            data.dataColor = DualKpi.getDataColor(dataView).solid.color;
-            data.textColor = DualKpi.getTextColor(dataView).solid.color;
-            data.opacity = DualKpi.getOpacity(dataView);
-
-            data.topChartAxisMin = DualKpi.getTopChartAxisMin(dataView);
-            data.topChartAxisMax = DualKpi.getTopChartAxisMax(dataView);
-            data.bottomChartAxisMin = DualKpi.getBottomChartAxisMin(dataView);
-            data.bottomChartAxisMax = DualKpi.getBottomChartAxisMax(dataView);
-            data.topChartZeroLine = DualKpi.getTopChartZeroLine(dataView);
-            data.bottomChartZeroLine = DualKpi.getBottomChartZeroLine(dataView);
-
-            data.topChartType = DualKpi.getTopChartType(dataView);
-            data.bottomChartType = DualKpi.getBottomChartType(dataView);
 
             let axisCol = -1, topValuesCol = -1, bottomValuesCol = -1, warningStateCol = -1,
                 topPercentDateCol = -1, bottomPercentDateCol = -1,
@@ -891,8 +810,8 @@ namespace powerbi.extensibility.visual {
             data.bottomValueAsPercent = bottomValueFormatSymbol === "%" ? true : false;
 
             // if percent dates are in data use that, otherwise get from formatting pane/default values
-            data.topPercentCalcDate = topPercentDateCol > -1 && rows[0] && rows[0][topPercentDateCol] ? new Date(rows[0][topPercentDateCol]) : new Date(DualKpi.getTopPercentCalcDate(dataView));
-            data.bottomPercentCalcDate = bottomPercentDateCol > -1 && rows[0] && rows[0][bottomPercentDateCol] ? new Date(rows[0][bottomPercentDateCol]) : new Date(DualKpi.getBottomPercentCalcDate(dataView));
+            data.topPercentCalcDate = topPercentDateCol > -1 && rows[0] ? new Date(rows[0][topPercentDateCol]) : new Date(data.settings.dualKpiProperties.topPercentCalcDate);
+            data.bottomPercentCalcDate = bottomPercentDateCol > -1 && rows[0] ? new Date(rows[0][bottomPercentDateCol]) : new Date(data.settings.dualKpiProperties.bottomPercentCalcDate);
 
             for (let i: number = 0; i < rows.length; i++) {
                 let date = null;
@@ -943,7 +862,7 @@ namespace powerbi.extensibility.visual {
         private createHoverDataContainer(chartGroup: Selection): IHoverDataContainer {
             let hoverDataContainer = chartGroup.append("g")
                 .attr("class", "hover-data-container")
-                .classed("invisible", true);
+                .classed(DualKpi.INVISIBLE, true);
 
             let date = hoverDataContainer.append("text")
                 .attr("class", "hover-text date")
@@ -967,20 +886,27 @@ namespace powerbi.extensibility.visual {
             };
         }
 
-        private updateHoverDataContainer(hoverDataContainer: IHoverDataContainer, chartBottom: number, chartLeft: number, chartWidth: number): void {
+        private updateHoverDataContainer(hoverDataContainer: IHoverDataContainer, chartBottom: number, chartLeft: number, chartWidth: number, isTopChart: boolean): void {
+            const textColor: string = isTopChart ? this.data.settings.dualKpiColors.textColor : this.data.settings.dualKpiColorsBottom.textColor;
             let hoverDate: Selection = hoverDataContainer.date;
+            let centerX = chartWidth / 2;
+
+            if (chartWidth < 300) {
+                centerX *= 0.85;
+            }
+
             hoverDate
                 .attr("class", "hover-text date")
                 .classed(this.sizeCssClass, true)
-                .attr("fill", this.data.textColor)
+                .attr("fill", textColor)
                 .text("0");
 
             let hoverValue: Selection = hoverDataContainer.text;
             hoverValue
                 .attr("class", "hover-text value")
                 .classed(this.sizeCssClass, true)
-                .attr("transform", "translate(" + (chartWidth / 2) + ",0)")
-                .attr("fill", this.data.textColor)
+                .attr("transform", `translate(${centerX},0)`)
+                .attr("fill", textColor)
                 .text("0");
 
             let hoverPercent: Selection = hoverDataContainer.percent;
@@ -988,14 +914,14 @@ namespace powerbi.extensibility.visual {
                 .attr("class", "hover-text percent")
                 .classed(this.sizeCssClass, true)
                 .text("0")
-                .attr("fill", this.data.textColor)
+                .attr("fill", textColor)
                 .attr("transform", "translate(" + (chartWidth) + ",0)");
 
             hoverDataContainer.container
                 .attr("transform", "translate(" + 0 + "," + (chartBottom + this.titleSize - 2) + ")");
         }
 
-        private showHoverData(hoverDataContainer: IHoverDataContainer, dataPoint: IDualKpiDataPoint, latestValue: number, valueAsPercent: boolean, abbreviateValue: boolean) {
+        private showHoverData(hoverDataContainer: IHoverDataContainer, dataPoint: IDualKpiDataPoint, latestValue: number, hoverDataPercentType: PercentType, valueAsPercent: boolean, abbreviateValue: boolean) {
             let hoverDate: Selection = hoverDataContainer.date;
             hoverDate
                 .datum(dataPoint)
@@ -1017,20 +943,26 @@ namespace powerbi.extensibility.visual {
                 .datum(dataPoint)
                 .text((d: IDualKpiDataPoint) => {
                     if (valueAsPercent) {
-                        return DualKpi.percentFormatter(latestValue - d.value) + " since";
+                        let value: number = hoverDataPercentType === PercentType.lastDate ? latestValue - d.value
+                                                : d.value - latestValue;
+
+                        return DualKpi.percentFormatter(value);
                     }
-                    return DualKpi.getPercentChange(d.value, latestValue) + " since";
+                    let leftValue: number = hoverDataPercentType === PercentType.lastDate ? d.value : latestValue,
+                        rightValue: number = hoverDataPercentType === PercentType.lastDate ? latestValue : d.value;
+
+                    return DualKpi.getPercentChange(leftValue, rightValue);
                 });
 
             this.bottomContainer.bottomContainer.classed("hidden", true);
-            hoverDataContainer.container.classed("invisible", false);
+            hoverDataContainer.container.classed(DualKpi.INVISIBLE, false);
         }
 
         private hideHoverData(hoverDataContainer: IHoverDataContainer, hoverLine?: Selection) {
-            hoverDataContainer.container.classed("invisible", true);
+            hoverDataContainer.container.classed(DualKpi.INVISIBLE, true);
             this.bottomContainer.bottomContainer.classed("hidden", false);
             if (hoverLine) {
-                hoverLine.classed("invisible", true);
+                hoverLine.classed(DualKpi.INVISIBLE, true);
             }
         }
 
@@ -1055,7 +987,7 @@ namespace powerbi.extensibility.visual {
             // prevent hide from being called, and prevent hover interaction from occuring on same event
             (d3.event as TouchEvent).stopPropagation();
 
-            this.mobileTooltip.html(message);
+            this.mobileTooltip.text(message);
             this.mobileTooltip.classed("hidden", false);
         }
 
@@ -1064,19 +996,18 @@ namespace powerbi.extensibility.visual {
         }
 
         private drawBottomContainer(chartWidth: number, chartHeight: number, chartTitleSpace: number, chartSpaceBetween: number, iconOffset: number): void {
-            // let warningIconShowing = false;
             let infoIconShowing = false;
 
             let chartTitleElement = this.bottomContainer.chartTitleElement
                 .attr("class", "title")
                 .classed(this.sizeCssClass, true)
-                .text(this.data.title);
+                .text(this.data.settings.dualKpiProperties.titleText);
 
             let iconWidth = 22;
             let iconScaleTransform = "";
             let iconY = (-chartTitleSpace + (chartTitleSpace / 2) + iconOffset);
 
-            if (this.size === DualKpiSize.small || this.size === DualKpiSize.extrasmall) {
+            if (this.size === DualKpiSize.small || this.size === DualKpiSize.extrasmall || this.size === DualKpiSize.supersmall) {
                 iconScaleTransform = "scale(0.75)";
                 iconWidth = 16;
             }
@@ -1090,7 +1021,7 @@ namespace powerbi.extensibility.visual {
             if (this.data.topValues.length > 0) {
                 let today = new Date();
                 let dataDaysOld = DualKpi.getDaysBetween(this.data.topValues[this.data.topValues.length - 1].date, today);
-                if (dataDaysOld >= this.data.staleDataThreshold && this.data.showStaleDataWarning) {
+                if (dataDaysOld >= this.data.settings.dualKpiProperties.staleDataThreshold && this.data.settings.dualKpiProperties.showStaleDataWarning) {
                     infoIconShowing = true;
                     this.createInfoMessage(iconY, iconScaleTransform, iconWidth, chartWidth, dataDaysOld);
                 } else {
@@ -1113,7 +1044,7 @@ namespace powerbi.extensibility.visual {
             }
 
             this.bottomContainer.bottomContainer.attr("transform", "translate(5," + (this.viewport.height - 5) + ")");
-            this.bottomContainer.bottomContainer.classed("invisible", false);
+            this.bottomContainer.bottomContainer.classed(DualKpi.INVISIBLE, false);
         }
 
         private createWarningMessage(chartTitleElement, iconY: number, iconScaleTransform: any, iconWidth: number) {
@@ -1135,16 +1066,16 @@ namespace powerbi.extensibility.visual {
 
             let warningTitle = warning.title;
             warningTitle
-                .text(this.data.warningTooltipText);
+                .text(this.data.settings.dualKpiProperties.warningTooltipText);
 
             // move title over to account for icon
             chartTitleElement.attr("transform", "translate(" + (iconWidth + 6) + ",0)");
 
-            warning.group.on("touchstart", () => this.showMobileTooltip(this.data.warningTooltipText));
+            warning.group.on("touchstart", () => this.showMobileTooltip(this.data.settings.dualKpiProperties.warningTooltipText));
         }
 
         private createInfoMessage(iconY: number, iconScaleTransform: any, iconWidth: number, chartWidth: number, dataDaysOld: number) {
-            let infoMessage = "Data is " + dataDaysOld + " days old. " + this.data.staleDataTooltipText;
+            let infoMessage = "Data is " + dataDaysOld + " days old. " + this.data.settings.dualKpiProperties.staleDataTooltipText;
             let info = this.bottomContainer.info;
             info.group
                 .attr("transform", "translate(" + (chartWidth - iconWidth - 8) + "," + (iconY) + ")");
@@ -1177,10 +1108,13 @@ namespace powerbi.extensibility.visual {
         private drawChart(options: IDualKpiOptions) {
             let chartData: Array<IDualKpiDataPoint> = options.chartData;
             let axisConfig: IAxisConfig = options.axisConfig;
-            const latestValue: number = chartData[chartData.length - 1].value;
+            const latestValue: number = chartData[chartData.length - 1].value,
+                isTopChart: boolean = options.position === DualKpiChartPositionType.top,
+                dataColor: string = isTopChart ? this.data.settings.dualKpiColors.dataColor : this.data.settings.dualKpiColorsBottom.dataColor,
+                chartOpacity: number = isTopChart ? this.data.settings.dualKpiColors.opacity : this.data.settings.dualKpiColorsBottom.opacity;
 
             let target = this.target;
-            let targetPadding = parseInt($(target).css("padding-left")) || 0;
+            let targetPadding = parseInt($(target).css("padding-left"), 10) || 0;
 
             let margin = {
                 top: 7,
@@ -1198,8 +1132,8 @@ namespace powerbi.extensibility.visual {
                 minValue = d3.min(chartData, (d) => d.value) || 0,
                 maxValue = d3.max(chartData, (d) => d.value) || 0;
 
-            let axisMinValue = axisConfig.min !== null ? axisConfig.min : minValue;
-            let axisMaxValue = axisConfig.max !== null ? axisConfig.max : maxValue;
+            let axisMinValue = axisConfig.min !== null && axisConfig.min !== undefined ? axisConfig.min : minValue;
+            let axisMaxValue = axisConfig.max !== null && axisConfig.max !== undefined ? axisConfig.max : maxValue;
 
             let xScale = d3.time.scale()
                 .domain(d3.extent(chartData, (d) => d.date))
@@ -1230,7 +1164,7 @@ namespace powerbi.extensibility.visual {
                     .y0(calcHeight)
                     .y1((d: any) => yScale(d.value || 0));
 
-                fill = this.data.dataColor;
+                fill = dataColor;
                 stroke = "none";
                 strokeWidth = 0;
             } else {
@@ -1239,7 +1173,7 @@ namespace powerbi.extensibility.visual {
                     .y((d: any) => yScale(d.value || 0));
 
                 fill = "none";
-                stroke = this.data.dataColor;
+                stroke = dataColor;
                 strokeWidth = 2;
             }
 
@@ -1251,7 +1185,7 @@ namespace powerbi.extensibility.visual {
             chartArea
                 .datum(chartData)
                 .attr({
-                    "style": "opacity: " + (this.data.opacity / 100),
+                    "style": "opacity: " + (chartOpacity / 100),
                     "fill": fill,
                     "stroke": stroke,
                     "stroke-width": strokeWidth,
@@ -1289,7 +1223,7 @@ namespace powerbi.extensibility.visual {
             /* Add elements for hover behavior ******************************************************/
             let hoverLine: Selection = chartGroup.hoverLine;
             hoverLine
-                .classed("invisible", true)
+                .classed(DualKpi.INVISIBLE, true)
                 .attr({
                     "x1": 0,
                     "x2": 0,
@@ -1303,7 +1237,7 @@ namespace powerbi.extensibility.visual {
             let chartLeft = margin.left;
 
             let hoverDataContainer: IHoverDataContainer = options.element.hoverDataContainer;
-            this.updateHoverDataContainer(hoverDataContainer, chartBottom, chartLeft, calcWidth);
+            this.updateHoverDataContainer(hoverDataContainer, chartBottom, chartLeft, calcWidth, isTopChart);
 
             this.dispatch.on("onDualKpiMouseMove." + options.position, ([leftPosition, topPosition]: number[]) => {
                 let areaScale: ElementScale = DualKpi.getScale(target);
@@ -1322,9 +1256,13 @@ namespace powerbi.extensibility.visual {
                     dataPoint) {
 
                     hoverLine.attr("transform", "translate(" + leftPosition + ", 0)");
-                    hoverLine.classed("invisible", false);
+                    hoverLine.classed(DualKpi.INVISIBLE, false);
 
-                    this.showHoverData(hoverDataContainer, dataPoint, latestValue, options.valueAsPercent, options.abbreviateValue);
+                    let value: number = options.hoverDataPercentType === PercentType.lastDate ? chartData[chartData.length - 1].value
+                                            : options.hoverDataPercentType === PercentType.firstDate ? chartData[0].value
+                                            : chartData[i - 1] ? chartData[i - 1].value : 0;
+
+                    this.showHoverData(hoverDataContainer, dataPoint, value, options.hoverDataPercentType, options.valueAsPercent, options.abbreviateHoverValue);
                 } else {
                     this.hideHoverData(hoverDataContainer, hoverLine);
                 }
@@ -1334,7 +1272,13 @@ namespace powerbi.extensibility.visual {
                 this.hideHoverData(hoverDataContainer, hoverLine);
             });
 
-            this.addOverlayText(options, latestValue, calcHeight, calcWidth);
+            if (options.showTextOverlay) {
+                this.addOverlayText(options, latestValue, calcHeight, calcWidth, isTopChart);
+            } else {
+                options.element.chartOverlay.rect.classed(DualKpi.INVISIBLE, true);
+                options.element.chartOverlay.title.classed(DualKpi.INVISIBLE, true);
+                options.element.chartOverlay.text.classed(DualKpi.INVISIBLE, true);
+            }
         }
 
         private static getScale(element: HTMLElement): ElementScale {
@@ -1346,12 +1290,60 @@ namespace powerbi.extensibility.visual {
             };
         }
 
-        private addOverlayText(options: IDualKpiOptions, latestValue: number, calcHeight: number, calcWidth: number): void {
+        private applyFontSize(element: Selection, fontSizeAutoFormattingTitle: boolean, fontSize: number) {
+            if (!fontSizeAutoFormattingTitle) {
+                element.attr("font-size", fontSize);
+            } else {
+                element.classed(this.sizeCssClass, true);
+            }
+        }
+
+        private applyBold(element: Selection, isBold: boolean) {
+            if (isBold) {
+                element.attr("font-weight", "bold");
+            } else {
+                element.attr("font-weight", null);
+            }
+        }
+
+        private applyItalic(element: Selection, isItalic: boolean) {
+            if (isItalic) {
+                element.attr("font-style", "italic");
+            } else {
+                element.attr("font-style", null);
+            }
+        }
+
+        private applyFontFamily(element: Selection, fontFamily: string) {
+            element.attr("font-family", fontFamily);
+        }
+
+        private applyTextStyle(element: Selection, options: IDualKpiOptions, isTitle?: boolean) {
+            const fontSizeAutoFormatting: boolean = isTitle ? options.fontSizeAutoFormattingTitle : options.fontSizeAutoFormattingValue,
+                fontSize: number = isTitle ? options.titleFontSize : options.valueFontSize,
+                isBold: boolean = isTitle ? options.isBoldTitle : options.isBoldValue,
+                isItalic: boolean = isTitle ? options.isItalicTitle : options.isItalicValue,
+                fontFamily: string = isTitle ? options.fontFamilyTitle : options.fontFamilyValue;
+
+            this.applyFontSize(element, fontSizeAutoFormatting, fontSize);
+            this.applyBold(element, isBold);
+            this.applyItalic(element, isItalic);
+            this.applyFontFamily(element, fontFamily);
+        }
+
+        private addOverlayText(options: IDualKpiOptions, latestValue: number, calcHeight: number, calcWidth: number, isTopChart: boolean): void {
+            const textColor: string = isTopChart ? this.data.settings.dualKpiColors.textColor : this.data.settings.dualKpiColorsBottom.textColor;
             let chartData: Array<IDualKpiDataPoint> = options.chartData;
             let chartGroup: IChartGroup = options.element;
 
             let percentChange = DualKpi.getPercentChange(options.percentChangeStartPoint.value, chartData[chartData.length - 1].value);
-            let formattedValue = options.abbreviateValue ? this.valueFormatter(latestValue) : this.commaNumberFormatter(Math.round(latestValue));
+
+            let formattedValue: string;
+            if (options.showDefaultTextOverlay) {
+                formattedValue = options.defaultTextOverlay;
+            } else {
+                formattedValue = options.abbreviateValue ? this.valueFormatter(latestValue) : this.commaNumberFormatter(Math.round(latestValue));
+            }
 
             if (options.valueAsPercent) {
                 formattedValue = DualKpi.percentFormatter(latestValue);
@@ -1362,19 +1354,21 @@ namespace powerbi.extensibility.visual {
             let chartOverlay: IChartOverlay = chartGroup.chartOverlay;
             let dataTitle = chartOverlay.title;
             dataTitle
-                .classed("invisible", true)
+                .classed(DualKpi.INVISIBLE, true)
                 .attr("class", "data-title")
-                .classed(this.sizeCssClass, true)
-                .attr("fill", this.data.textColor)
-                .text(options.chartTitle + " (" + percentChange + ")");
+                .attr("fill", textColor)
+                .text(options.showDefaultTextOverlay ? "" : options.chartTitle + " (" + percentChange + ")");
+
+            this.applyTextStyle(dataTitle, options, true);
 
             let dataValue = chartOverlay.text;
             dataValue
-                .classed("invisible", true)
+                .classed(DualKpi.INVISIBLE, true)
                 .attr("class", "data-value")
-                .classed(this.sizeCssClass, true)
-                .attr("fill", this.data.textColor)
+                .attr("fill", textColor)
                 .text(formattedValue);
+
+            this.applyTextStyle(dataValue, options);
 
             let dataTitleHorzCentering = calcWidth / 2;
             let dataValueHorzCentering = calcWidth / 2;
@@ -1390,16 +1384,25 @@ namespace powerbi.extensibility.visual {
             chartOverlay.group
                 .attr("transform", `translate(${horizontalCentering}, ${verticalCentering})`);
 
-            dataTitle.classed("invisible", false);
-            dataValue.classed("invisible", false);
+            dataTitle.classed(DualKpi.INVISIBLE, false);
+            dataValue.classed(DualKpi.INVISIBLE, false);
 
             // set rect dimensions
             // add rect to overlay section so that tooltip shows up more easily
             let overlayRect: Selection = chartOverlay.rect;
 
             // add tooltip
-            let percentChangeDesc = percentChange + " change since " + this.timeFormatter(options.percentChangeStartPoint.date);
-            let overlayTooltipText = options.tooltipText + " " + percentChangeDesc;
+            let percentChangeDesc = percentChange;
+            if (!this.data.settings.dualKpiProperties.shortKpiTooltip) {
+                percentChangeDesc += " change since " + this.timeFormatter(options.percentChangeStartPoint.date);
+            }
+
+            let overlayTooltipText: string;
+            if (options.showDefaultTextOverlay) {
+                overlayTooltipText = formattedValue;
+            } else {
+                overlayTooltipText = options.tooltipText + " " + percentChangeDesc;
+            }
 
             let overlayTooltip: Selection = chartOverlay.rectTitle;
 

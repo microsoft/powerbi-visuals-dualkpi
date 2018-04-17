@@ -108,12 +108,14 @@
             "properties": {
                 "topChartShow": {
                     "displayName": "Show top chart",
+                    "displayNameKey": "Visual_ShowTopChart",
                     "type": {
                         "bool": true
                     }
                 },
                 "bottomChartShow": {
                     "displayName": "Show bottom chart",
+                    "displayNameKey": "Visual_ShowBottomChart",
                     "type": {
                         "bool": true
                     }
@@ -134,18 +136,21 @@
                 },
                 "abbreviateHoverValues": {
                     "displayName": "Abbreviate hover values only",
+                    "displayNameKey": "Visual_DualKpiProperties_AbbreviateHoverValues",
                     "type": {
                         "bool": true
                     }
                 },
                 "shortKpiTooltip": {
                     "displayName": "Short KPI tooltip",
+                    "displayNameKey": "Visual_DualKpiProperties_ShortKPITooltip",
                     "type": {
                         "bool": true
                     }
                 },
                 "hoverDataPercentType": {
                     "displayName": "Variance type",
+                    "displayNameKey": "Visual_VarianceType",
                     "type": { 
                         "enumeration": [{
                             "value": "lastDate",
@@ -222,6 +227,7 @@
         },
         "dualKpiValues": {
             "displayName": "Dual KPI Values",
+            "displayNameKey": "Visual_DualKPIValues",
             "properties": {
                 "show": {
                     "type": {
@@ -230,24 +236,28 @@
                 },
                 "showKpiValuesTop": {
                     "displayName": "Show top chart KPI values",
+                    "displayNameKey": "Visual_ShowTopChartKPIValues",
                     "type": {
                         "bool": true
                     }
                 },
                 "topChartDefaultKpiValue": {
                     "displayName": "Top chart default KPI text",
+                    "displayNameKey": "Visual_TopChartDefaultKPIText",
                     "type": {
                         "text": true
                     }
                 },
                 "showKpiValuesBottom": {
                     "displayName": "Show bottom chart KPI values",
+                    "displayNameKey": "Visual_ShowBottomChartKPIValues",
                     "type": {
                         "bool": true
                     }
                 },
                 "bottomChartDefaultKpiValue": {
                     "displayName": "Bottom chart default KPI text",
+                    "displayNameKey": "Visual_BottomChartDefaultKPIText",
                     "type": {
                         "text": true
                     }
@@ -256,15 +266,18 @@
         },
         "dualKpiTitleFormatting": {
             "displayName": "Dual KPI Title formatting",
+            "displayNameKey": "Visual_TitleFormatting",
             "properties": {
                 "fontSizeAutoFormatting": {
                     "displayName": "Auto text size",
+                    "displayNameKey": "Visual_TextAutoSize",
                     "type": {
                         "bool": true
                     }
                 },
                 "fontSize": {
                     "displayName": "Value text size",
+                    "displayNameKey": "Visual_TextSizeValue",
                     "type": {
                         "formatting": {
                             "fontSize": true
@@ -273,22 +286,26 @@
                 },
                 "isBold": {
                     "displayName": "Bold",
+                    "displayNameKey": "Visual_TextIsBold",
                     "type": {
                         "bool": true
                     }
                 },
                 "isItalic": {
                     "displayName": "Italic",
+                    "displayNameKey": "Visual_TextIsItalic",
                     "type": {
                         "bool": true
                     }
                 },
                 "fontFamily": {
                     "displayName": "Font family",
+                    "displayNameKey": "Visual_TextFontFamily",
                     "type": {
                         "enumeration": [
                             {
                                 "displayName": "Default",
+                                "displayNameKey": "Visual_TextDefault",
                                 "description": "helvetica, arial, sans-serif",
                                 "value": "helvetica, arial, sans-serif"
                             },
@@ -391,15 +408,18 @@
         },
         "dualKpiValueFormatting": {
             "displayName": "Dual KPI Value formatting",
+            "displayNameKey": "Visual_ValueFormatting",
             "properties": {
                 "fontSizeAutoFormatting": {
                     "displayName": "Auto text size",
+                    "displayNameKey": "Visual_TextAutoSize",
                     "type": {
                         "bool": true
                     }
                 },
                 "fontSize": {
                     "displayName": "Value text size",
+                    "displayNameKey": "Visual_TextSizeValue",
                     "type": {
                         "formatting": {
                             "fontSize": true
@@ -408,22 +428,26 @@
                 },
                 "isBold": {
                     "displayName": "Bold",
+                    "displayNameKey": "Visual_TextIsBold",
                     "type": {
                         "bool": true
                     }
                 },
                 "isItalic": {
                     "displayName": "Italic",
+                    "displayNameKey": "Visual_TextIsItalic",
                     "type": {
                         "bool": true
                     }
                 },
                 "fontFamily": {
                     "displayName": "Font family",
+                    "displayNameKey": "Visual_TextFontFamily",
                     "type": {
                         "enumeration": [
                             {
                                 "displayName": "Default",
+                                "displayNameKey": "Visual_TextDefault",
                                 "description": "helvetica, arial, sans-serif",
                                 "value": "helvetica, arial, sans-serif"
                             },
@@ -541,7 +565,7 @@
                 },
                 "textColor": {
                     "displayName": "Text color",
-                    "displayNameKey": "Visual_DualKpiColors_TestColor",
+                    "displayNameKey": "Visual_DualKpiColors_TextColor",
                     "type": {
                         "fill": {
                             "solid": {
@@ -561,15 +585,18 @@
         },
         "dualKpiColorsBottom": {
             "displayName": "Dual KPI Bottom Chart Colors",
+            "displayNameKey": "Visual_DualKpiChart_BottomChartColors",
             "properties": {
                 "matchTopChartOptions": {
                     "displayName": "Match top chart settings",
+                    "displayNameKey": "Visual_DualKpiChart_BottomChartColors_MatchTopChartSettings",
                     "type": {
                         "bool": true
                     }
                 },                        
                 "dataColor": {
                     "displayName": "Data color",
+                    "displayNameKey": "Visual_DualKpiColors_DataColor",
                     "type": {
                         "fill": {
                             "solid": {
@@ -580,6 +607,7 @@
                 },
                 "textColor": {
                     "displayName": "Text color",
+                    "displayNameKey": "Visual_DualKpiColors_TextColor",
                     "type": {
                         "fill": {
                             "solid": {
@@ -590,6 +618,7 @@
                 },
                 "opacity": {
                     "displayName": "Chart opacity",
+                    "displayNameKey": "Visual_DualKpiColors_Opacity",
                     "type": {
                         "numeric": true
                     }

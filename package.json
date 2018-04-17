@@ -16,21 +16,24 @@
     "dual-kpi"
   ],
   "scripts": {
-    "postinstall": "typings install && pbiviz update 1.10.0",
-    "typings": "typings",
+    "postinstall": "pbiviz update 1.11.0",
     "pbiviz": "pbiviz",
     "start": "pbiviz start",
     "package": "pbiviz package",
     "lint": "node node_modules/tslint/bin/tslint \"+(src|test)/**/*.ts\"",
     "pretest": "pbiviz package --resources --no-minify --no-pbiviz",
-    "test": "karma start"
+    "test": "karma start",
+    "cert": "pbiviz --create-cert"
   },
   "license": "MIT",
   "devDependencies": {
     "d3": "3.5.5",
-    "powerbi-visuals-tools": "1.10.0",
-    "tslint": "3.15.1",
-    "typings": "2.0.0"
+    "@types/d3": "3.5.38",
+    "@types/jquery": "2.0.41",
+    "@types/lodash": "4.14.55",
+    "powerbi-models": "^1.0.2",
+    "powerbi-visuals-tools": "1.11.2",
+    "typescript": "2.1.4"
   },
   "dependencies": {
     "powerbi-visuals-utils-dataviewutils": "^1.4.1",

@@ -34,14 +34,14 @@ namespace powerbi.extensibility.visual {
     export class DualKpiPropertiesSettings {
         public topChartShow: boolean = true;
         public bottomChartShow: boolean = true;
-        public titleText: string = "Title";
+        public titleText: string = null;
         public abbreviateValues: boolean = false;
         public abbreviateHoverValues: boolean = false;
         public shortKpiTooltip: boolean = false;
         public hoverDataPercentType: PercentType = PercentType.lastDate;
         public topChartToolTipText: string = "";
         public bottomChartToolTipText: string = "";
-        public warningTooltipText: string = "Warning message";
+        public warningTooltipText: string = null;
         public showStaleDataWarning: boolean = true;
         public staleDataTooltipText: string = "";
         public staleDataThreshold: number = 2;

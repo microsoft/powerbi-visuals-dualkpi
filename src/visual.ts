@@ -145,34 +145,6 @@ module powerbi.extensibility.visual {
     }
 
     export class DualKpi implements IVisual {
-
-        private static defaultValues = {
-            titleText: "Title",
-            abbreviateValues: false,
-            topChartToolTipText: "",
-            bottomChartToolTipText: "",
-            warningTooltipText: "Warning message",
-            showStaleDataWarning: true,
-            staleDataTooltipText: "",
-            staleDataThreshold: 2,
-            topPercentCalcDate: null,
-            bottomPercentCalcDate: null,
-
-            dataColor: "#01b8aa",
-            textColor: "#212121",
-            opacity: 30,
-
-            topChartAxisMin: null,
-            topChartAxisMax: null,
-            bottomChartAxisMin: null,
-            bottomChartAxisMax: null,
-            topChartZeroLine: false,
-            bottomChartZeroLine: false,
-
-            topChartType: "area",
-            bottomChartType: "area"
-        };
-
         private dataView: DataView;
         private data: IDualKpiData;
         private target: HTMLElement;
@@ -195,6 +167,7 @@ module powerbi.extensibility.visual {
         private touchEventsEnabled: boolean = false;
         private viewport: IViewport;
         private eventListeners: Array<any> = [];
+        private localizationManager: ILocalizationManager;
 
         private axisNumberFormatter;
 
@@ -236,6 +209,7 @@ module powerbi.extensibility.visual {
             this.timeFormatter = d3.time.format("%m/%d/%y");
             this.dataBisector = d3.bisector((d: IDualKpiDataPoint) => { return d.date; }).left;
             this.dispatch = d3.dispatch("onDualKpiMouseMove", "onDualKpiMouseOut");
+            this.localizationManager = options.host.createLocalizationManager();
 
             this.initContainer();
             this.initMouseEvents();
@@ -442,7 +416,8 @@ module powerbi.extensibility.visual {
                 return;
             }
 
-            let data: IDualKpiData = this.data = DualKpi.converter(this.dataView);
+            let isFirstUpdate = !!this.data,
+                data: IDualKpiData = this.data = DualKpi.converter(this.dataView, isFirstUpdate, this.localizationManager);
 
             let availableHeight = options.viewport.height < 90 ? 90 : options.viewport.height,
                 availableWidth = options.viewport.width < 220 ? 220 : options.viewport.width,
@@ -752,20 +727,24 @@ module powerbi.extensibility.visual {
             }
         }
 
-        private static parseSettings(dataView: DataView): DualKpiSettings {
+        private static parseSettings(dataView: DataView, isFirstUpdate: boolean, localizationManager: ILocalizationManager): DualKpiSettings {
             let settings: DualKpiSettings = DualKpiSettings.parse<DualKpiSettings>(dataView);
 
+            if (isFirstUpdate) {
+                settings.dualKpiProperties.titleText = localizationManager.getDisplayName("Visual_Default_Title");
+                settings.dualKpiProperties.warningTooltipText = localizationManager.getDisplayName("Visual_Default_WarningTooltipText");
+            }
             settings.dualKpiColors.opacity = DualKpi.validateOpacity(settings.dualKpiColors.opacity);
             settings.dualKpiColorsBottom.opacity = DualKpi.validateOpacity(settings.dualKpiColorsBottom.opacity);
 
             return settings;
         }
 
-        private static converter(dataView: DataView): IDualKpiData {
+        private static converter(dataView: DataView, isFirstUpdate: boolean, localizationManager: ILocalizationManager): IDualKpiData {
             let data = {} as IDualKpiData;
             let topValueFormatSymbol = "";
             let bottomValueFormatSymbol = "";
-            data.settings = DualKpi.parseSettings(dataView);
+            data.settings = DualKpi.parseSettings(dataView, isFirstUpdate, localizationManager);
             data.topValues = [];
             data.bottomValues = [];
 
@@ -1034,7 +1013,7 @@ module powerbi.extensibility.visual {
                 dayRangeElement
                     .attr("class", "date-range-text")
                     .classed(this.sizeCssClass, true)
-                    .text("last " + dayRange + " days");
+                    .text(this.localizationManager.getDisplayName("Visual_BottomContainerText_Last") + dayRange + this.localizationManager.getDisplayName("Visual_BottomContainerText_Days"));
 
                 let dayRangeLeft = chartWidth - 8;
                 if (infoIconShowing) {
@@ -1075,7 +1054,8 @@ module powerbi.extensibility.visual {
         }
 
         private createInfoMessage(iconY: number, iconScaleTransform: any, iconWidth: number, chartWidth: number, dataDaysOld: number) {
-            let infoMessage = "Data is " + dataDaysOld + " days old. " + this.data.settings.dualKpiProperties.staleDataTooltipText;
+            let infoMessage = this.localizationManager.getDisplayName("Visual_InfoMessage_DataIs") + dataDaysOld 
+                + this.localizationManager.getDisplayName("Visual_InfoMessage_DaysOld") + this.data.settings.dualKpiProperties.staleDataTooltipText;
             let info = this.bottomContainer.info;
             info.group
                 .attr("transform", "translate(" + (chartWidth - iconWidth - 8) + "," + (iconY) + ")");
@@ -1394,7 +1374,8 @@ module powerbi.extensibility.visual {
             // add tooltip
             let percentChangeDesc = percentChange;
             if (!this.data.settings.dualKpiProperties.shortKpiTooltip) {
-                percentChangeDesc += " change since " + this.timeFormatter(options.percentChangeStartPoint.date);
+                percentChangeDesc += this.localizationManager.getDisplayName("Visual_TooltipForPercentageChangeTime")
+                    + this.timeFormatter(options.percentChangeStartPoint.date);
             }
 
             let overlayTooltipText: string;

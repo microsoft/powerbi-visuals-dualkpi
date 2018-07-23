@@ -40,21 +40,28 @@
 
     .axis{
         .tick {
-            line {
-                stroke: #dcdcdc;
-            }
-
             text {
                 font-family: @regularFontFamily;
                 font-size: 10px;
-                fill: #777;
-
             }
         }
         path {
             stroke-width: 1;
-            stroke: #aaa;
             fill: none;
+        }
+    }
+    
+    .axis-colored {
+        .tick{
+            line {
+                stroke: #dcdcdc;
+            }
+            text {
+                fill: #777;
+            }
+        } 
+        path {
+            stroke: #aaa;
         }
     }
 

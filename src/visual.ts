@@ -28,6 +28,7 @@ module powerbi.extensibility.visual {
 
     import textMeasurementService = powerbi.extensibility.utils.formatting.textMeasurementService;
     import IVisual = powerbi.extensibility.IVisual;
+    import ColorHelper = powerbi.extensibility.utils.color.ColorHelper;
 
     export interface Selection extends d3.Selection<SVGElement> {
     };
@@ -195,6 +196,9 @@ module powerbi.extensibility.visual {
         private titleSize: number = 0;
         private dispatch: any;
 
+        private colorPalette: IColorPalette;
+        private colorHelper: ColorHelper;
+
         constructor(options: VisualConstructorOptions) {
             this.init(options);
         }
@@ -210,6 +214,9 @@ module powerbi.extensibility.visual {
             this.dataBisector = d3.bisector((d: IDualKpiDataPoint) => { return d.date; }).left;
             this.dispatch = d3.dispatch("onDualKpiMouseMove", "onDualKpiMouseOut");
             this.localizationManager = options.host.createLocalizationManager();
+
+            this.colorPalette = options.host.colorPalette;
+            this.colorHelper = new ColorHelper(this.colorPalette);
 
             this.initContainer();
             this.initMouseEvents();
@@ -417,7 +424,7 @@ module powerbi.extensibility.visual {
             }
 
             let isFirstUpdate = !!this.data,
-                data: IDualKpiData = this.data = DualKpi.converter(this.dataView, isFirstUpdate, this.localizationManager);
+                data: IDualKpiData = this.data = DualKpi.converter(this.dataView, isFirstUpdate, this.localizationManager, this.colorHelper);
 
             let availableHeight = options.viewport.height < 90 ? 90 : options.viewport.height,
                 availableWidth = options.viewport.width < 220 ? 220 : options.viewport.width,
@@ -727,7 +734,7 @@ module powerbi.extensibility.visual {
             }
         }
 
-        private static parseSettings(dataView: DataView, isFirstUpdate: boolean, localizationManager: ILocalizationManager): DualKpiSettings {
+        private static parseSettings(dataView: DataView, isFirstUpdate: boolean, localizationManager: ILocalizationManager, colorHelper: ColorHelper): DualKpiSettings {
             let settings: DualKpiSettings = DualKpiSettings.parse<DualKpiSettings>(dataView);
 
             if (isFirstUpdate) {
@@ -737,14 +744,19 @@ module powerbi.extensibility.visual {
             settings.dualKpiColors.opacity = DualKpi.validateOpacity(settings.dualKpiColors.opacity);
             settings.dualKpiColorsBottom.opacity = DualKpi.validateOpacity(settings.dualKpiColorsBottom.opacity);
 
+            settings.dualKpiColors.dataColor = colorHelper.getHighContrastColor("foreground", settings.dualKpiColors.dataColor);
+            settings.dualKpiColors.textColor = colorHelper.getHighContrastColor("foreground", settings.dualKpiColors.textColor);
+            settings.dualKpiColorsBottom.dataColor = colorHelper.getHighContrastColor("foreground", settings.dualKpiColorsBottom.dataColor);
+            settings.dualKpiColorsBottom.textColor = colorHelper.getHighContrastColor("foreground", settings.dualKpiColorsBottom.textColor);
+
             return settings;
         }
 
-        private static converter(dataView: DataView, isFirstUpdate: boolean, localizationManager: ILocalizationManager): IDualKpiData {
+        private static converter(dataView: DataView, isFirstUpdate: boolean, localizationManager: ILocalizationManager, colorHelper: ColorHelper): IDualKpiData {
             let data = {} as IDualKpiData;
             let topValueFormatSymbol = "";
             let bottomValueFormatSymbol = "";
-            data.settings = DualKpi.parseSettings(dataView, isFirstUpdate, localizationManager);
+            data.settings = DualKpi.parseSettings(dataView, isFirstUpdate, localizationManager, colorHelper);
             data.topValues = [];
             data.bottomValues = [];
 
@@ -1091,7 +1103,10 @@ module powerbi.extensibility.visual {
             const latestValue: number = chartData[chartData.length - 1].value,
                 isTopChart: boolean = options.position === DualKpiChartPositionType.top,
                 dataColor: string = isTopChart ? this.data.settings.dualKpiColors.dataColor : this.data.settings.dualKpiColorsBottom.dataColor,
-                chartOpacity: number = isTopChart ? this.data.settings.dualKpiColors.opacity : this.data.settings.dualKpiColorsBottom.opacity;
+                chartOpacity: number = isTopChart ? this.data.settings.dualKpiColors.opacity : this.data.settings.dualKpiColorsBottom.opacity,
+                axisStrokeHighContrastColor: string = this.colorHelper.getHighContrastColor("foreground", this.data.settings.dualKpiColors.textColor),
+                isHighContrastMode: boolean = this.colorHelper.isHighContrast,
+                hoverLineStrokeColor: string = "#777";
 
             let target = this.target;
             let targetPadding = parseInt($(target).css("padding-left"), 10) || 0;
@@ -1198,8 +1213,22 @@ module powerbi.extensibility.visual {
             axis
                 .attr("class", "axis")
                 .classed(this.sizeCssClass, true)
+                .classed("axis-colored", !isHighContrastMode)
                 .call(yAxis);
 
+            if (isHighContrastMode) {
+                let axisTicks: Selection = axis.selectAll("g.tick");
+                axisTicks.selectAll("text").attr({
+                    "fill": axisStrokeHighContrastColor
+                });
+                axisTicks.select("line").attr({
+                    "stroke": axisStrokeHighContrastColor
+                });
+                axis.select("path").attr({
+                    "stroke": axisStrokeHighContrastColor
+                });
+                zeroAxis.style({ "stroke": axisStrokeHighContrastColor });
+            }
             /* Add elements for hover behavior ******************************************************/
             let hoverLine: Selection = chartGroup.hoverLine;
             hoverLine
@@ -1210,7 +1239,7 @@ module powerbi.extensibility.visual {
                     "y1": 0,
                     "y2": calcHeight,
                     "stroke-width": 1,
-                    "stroke": "#777"
+                    "stroke": this.colorHelper.isHighContrast ? axisStrokeHighContrastColor : hoverLineStrokeColor
                 });
 
             let chartBottom = margin.top + calcHeight;

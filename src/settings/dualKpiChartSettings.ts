@@ -24,9 +24,7 @@
  *  THE SOFTWARE.
  */
 
-namespace powerbi.extensibility.visual {
-    export class DualKpiChartSettings {
-        public topChartType: string = "area";
-        public bottomChartType: string = "area";
-    }
+export class DualKpiChartSettings {
+    public topChartType: string = "area";
+    public bottomChartType: string = "area";
 }

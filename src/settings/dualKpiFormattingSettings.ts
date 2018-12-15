@@ -24,12 +24,10 @@
  *  THE SOFTWARE.
  */
 
-namespace powerbi.extensibility.visual {
-    export class DualKpiFormattingSettings {
-        public fontSizeAutoFormatting: boolean = true;
-        public fontSize: number = 12;
-        public isBold: boolean = false;
-        public isItalic: boolean = false;
-        public fontFamily: string = "helvetica, arial, sans-serif";
-    }
+export class DualKpiFormattingSettings {
+    public fontSizeAutoFormatting: boolean = true;
+    public fontSize: number = 12;
+    public isBold: boolean = false;
+    public isItalic: boolean = false;
+    public fontFamily: string = "helvetica, arial, sans-serif";
 }

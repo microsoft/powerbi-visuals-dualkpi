@@ -1,106 +1,142 @@
 {
-    "dataRoles": [{
-        "displayName": "Axis",
-        "displayNameKey": "Visual_Axis",
-        "name": "axis",
-        "kind": "Grouping"
-    }, {
-        "displayName": "Top values",
-        "displayNameKey": "Visual_TopValues",
-        "name": "topvalues",
-        "kind": "Measure",
-        "requiredTypes": [{
-            "numeric": true
-        }, {
-            "integer": true
-        }]
-    }, {
-        "displayName": "Bottom values",
-        "displayNameKey": "Visual_BottomValues",
-        "name": "bottomvalues",
-        "kind": "Measure",
-        "requiredTypes": [{
-            "numeric": true
-        }, {
-            "integer": true
-        }]
-    }, {
-        "displayName": "Warning state",
-        "displayNameKey": "Visual_WarningState",
-        "name": "warningstate",
-        "kind": "Measure"
-    }, {
-        "displayName": "Top - % change start date",
-        "displayNameKey": "Visual_TopPercentDate",
-        "name": "toppercentdate",
-        "kind": "Grouping"
-    }, {
-        "displayName": "Bottom - % change start date",
-        "displayNameKey": "Visual_BottomPercentDate",
-        "name": "bottompercentdate",
-        "kind": "Grouping"
-    }],
-    "dataViewMappings": [{
-        "conditions": [{
-            "axis": {
-                "max": 1
-            },
-            "topvalues": {
-                "max": 1
-            },
-            "bottomvalues": {
-                "max": 1
-            },
-            "warningstate": {
-                "max": 1
-            },
-            "toppercentdate": {
-                "max": 1
-            },
-            "bottompercentdate": {
-                "max": 1
-            }
-        }],
-        "categorical": {
-            "categories": {
-                "for": {
-                    "in": "axis"
+    "dataRoles": [
+        {
+            "displayName": "Axis",
+            "displayNameKey": "Visual_Axis",
+            "name": "axis",
+            "kind": "Grouping"
+        },
+        {
+            "displayName": "Top values",
+            "displayNameKey": "Visual_TopValues",
+            "name": "topvalues",
+            "kind": "Measure",
+            "requiredTypes": [
+                {
+                    "numeric": true
                 },
-                "dataReductionAlgorithm": {
-                    "top": {
-                        "count": 1000
+                {
+                    "integer": true
+                }
+            ]
+        },
+        {
+            "displayName": "Bottom values",
+            "displayNameKey": "Visual_BottomValues",
+            "name": "bottomvalues",
+            "kind": "Measure",
+            "requiredTypes": [
+                {
+                    "numeric": true
+                },
+                {
+                    "integer": true
+                }
+            ]
+        },
+        {
+            "displayName": "Warning state",
+            "displayNameKey": "Visual_WarningState",
+            "name": "warningstate",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "Top - % change start date",
+            "displayNameKey": "Visual_TopPercentDate",
+            "name": "toppercentdate",
+            "kind": "Grouping"
+        },
+        {
+            "displayName": "Bottom - % change start date",
+            "displayNameKey": "Visual_BottomPercentDate",
+            "name": "bottompercentdate",
+            "kind": "Grouping"
+        }
+    ],
+    "dataViewMappings": [
+        {
+            "conditions": [
+                {
+                    "axis": {
+                        "max": 1
+                    },
+                    "topvalues": {
+                        "max": 1
+                    },
+                    "bottomvalues": {
+                        "max": 1
+                    },
+                    "warningstate": {
+                        "max": 1
+                    },
+                    "toppercentdate": {
+                        "max": 1
+                    },
+                    "bottompercentdate": {
+                        "max": 1
                     }
                 }
+            ],
+            "categorical": {
+                "categories": {
+                    "for": {
+                        "in": "axis"
+                    },
+                    "dataReductionAlgorithm": {
+                        "top": {
+                            "count": 1000
+                        }
+                    }
+                },
+                "values": {
+                    "select": [
+                        {
+                            "bind": {
+                                "to": "axis"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "topvalues"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "bottomvalues"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "warningstate"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "toppercentdate"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "bottompercentdate"
+                            }
+                        }
+                    ]
+                }
             },
-            "values": {
-                "select": [{
-                    "bind": {
-                        "to": "axis"
+            "table": {
+                "rows": {
+                    "for": {
+                        "in": "axis"
+                    },
+                    "dataReductionAlgorithm": {
+                        "top": {
+                            "count": 1000
+                        }
                     }
-                }, {
-                    "bind": {
-                        "to": "topvalues"
-                    }
-                }, {
-                    "bind": {
-                        "to": "bottomvalues"
-                    }
-                }, {
-                    "bind": {
-                        "to": "warningstate"
-                    }
-                }, {
-                    "bind": {
-                        "to": "toppercentdate"
-                    }
-                }, {
-                    "bind": {
-                        "to": "bottompercentdate"
-                    }
-                }]
+                }
             }
         }
-    }],
+    ],
     "objects": {
         "dualKpiProperties": {
             "displayName": "Dual KPI Properties",
@@ -151,22 +187,26 @@
                 "hoverDataPercentType": {
                     "displayName": "Variance type",
                     "displayNameKey": "Visual_VarianceType",
-                    "type": { 
-                        "enumeration": [{
-                            "value": "lastDate",
-                            "displayName": "Last date",
-                            "displayNameKey": "Visual_DualKpiProperties_HoverDataPercentType_LastDate"
-                        }, {
-                            "value": "firstDate",
-                            "displayName": "First date",
-                            "displayNameKey": "Visual_DualKpiProperties_HoverDataPercentType_FirstDate"
-                        }, {
-                            "value": "previousDate",
-                            "displayName": "Previous date",
-                            "displayNameKey": "Visual_DualKpiProperties_HoverDataPercentType_PreviousDate"
-                        }]
+                    "type": {
+                        "enumeration": [
+                            {
+                                "value": "lastDate",
+                                "displayName": "Last date",
+                                "displayNameKey": "Visual_DualKpiProperties_HoverDataPercentType_LastDate"
+                            },
+                            {
+                                "value": "firstDate",
+                                "displayName": "First date",
+                                "displayNameKey": "Visual_DualKpiProperties_HoverDataPercentType_FirstDate"
+                            },
+                            {
+                                "value": "previousDate",
+                                "displayName": "Previous date",
+                                "displayNameKey": "Visual_DualKpiProperties_HoverDataPercentType_PreviousDate"
+                            }
+                        ]
                     }
-                },  
+                },
                 "topChartToolTipText": {
                     "displayName": "Top chart tooltip text",
                     "displayNameKey": "Visual_DualKpiProperties_TopChartToolTipText",
@@ -311,94 +351,117 @@
                             },
                             {
                                 "displayName": "Arial",
+                                "displayNameKey": "Visual_Font_Arial",
                                 "value": "Arial"
                             },
                             {
                                 "displayName": "Arial Black",
+                                "displayNameKey": "Visual_Font_ArialBlack",
                                 "value": "\"Arial Black\""
                             },
                             {
                                 "displayName": "Arial Unicode MS",
+                                "displayNameKey": "Visual_Font_ArialUnicodeMS",
                                 "value": "\"Arial Unicode MS\""
                             },
                             {
                                 "displayName": "Calibri",
+                                "displayNameKey": "Visual_Font_Calibri",
                                 "value": "Calibri"
                             },
                             {
                                 "displayName": "Cambria",
+                                "displayNameKey": "Visual_Font_Cambria",
                                 "value": "Cambria"
                             },
                             {
                                 "displayName": "Cambria Math",
+                                "displayNameKey": "Visual_Font_CambriaMath",
                                 "value": "\"Cambria Math\""
                             },
                             {
                                 "displayName": "Candara",
+                                "displayNameKey": "Visual_Font_Candara",
                                 "value": "Candara"
                             },
                             {
                                 "displayName": "Comic Sans MS",
+                                "displayNameKey": "Visual_Font_ComicSansMS",
                                 "value": "\"Comic Sans MS\""
                             },
                             {
                                 "displayName": "Consolas",
+                                "displayNameKey": "Visual_Font_Consolas",
                                 "value": "Consolas"
                             },
                             {
                                 "displayName": "Constantia",
+                                "displayNameKey": "Visual_Font_Constantia",
                                 "value": "Constantia"
                             },
                             {
                                 "displayName": "Corbel",
+                                "displayNameKey": "Visual_Font_Corbel",
                                 "value": "Corbel"
                             },
                             {
                                 "displayName": "Courier New",
+                                "displayNameKey": "Visual_Font_CourierNew",
                                 "value": "\"Courier New\""
                             },
                             {
                                 "displayName": "Georgia",
+                                "displayNameKey": "Visual_Font_Georgia",
                                 "value": "Georgia"
                             },
                             {
                                 "displayName": "Lucida Sans Unicode",
+                                "displayNameKey": "Visual_Font_LucidaSansUnicode",
                                 "value": "\"Lucida Sans Unicode\""
                             },
                             {
                                 "displayName": "Segoe (Bold)",
+                                "displayNameKey": "Visual_Font_SegoeBold",
                                 "value": "\"Segoe UI Bold\", wf_segoe-ui_bold, helvetica, arial, sans-serif"
                             },
                             {
                                 "displayName": "Segoe UI",
+                                "displayNameKey": "Visual_Font_SegoeUI",
                                 "value": "\"Segoe UI\", wf_segoe-ui_normal, helvetica, arial, sans-serif"
                             },
                             {
                                 "displayName": "Segoe UI Light",
+                                "displayNameKey": "Visual_Font_SegoeUILight",
                                 "value": "\"Segoe UI Light\", wf_segoe-ui_bold, helvetica, arial, sans-serif"
                             },
                             {
                                 "displayName": "Symbol",
+                                "displayNameKey": "Visual_Font_Symbol",
                                 "value": "Symbol"
                             },
                             {
                                 "displayName": "Tahoma",
+                                "displayNameKey": "Visual_Font_Tahoma",
                                 "value": "Tahoma"
                             },
                             {
                                 "displayName": "Times New Roman",
+                                "displayNameKey": "Visual_Font_TimesNewRoman",
                                 "value": "\"Times New Roman\""
                             },
                             {
                                 "displayName": "Trebuchet MS",
+                                "displayNameKey": "Visual_Font_TrebuchetMS",
                                 "value": "\"Trebuchet MS\""
                             },
                             {
                                 "displayName": "Verdana",
+                                "displayNameKey": "Visual_Font_Verdana",
                                 "value": "Verdana"
                             },
                             {
                                 "displayName": "Wingdings",
+                                "displayNameKey": "Visual_Font_Wingdings",
                                 "value": "Wingdings"
                             }
                         ]
@@ -453,98 +516,139 @@
                             },
                             {
                                 "displayName": "Arial",
+                                "displayNameKey": "Visual_Font_Arial",
                                 "value": "Arial"
                             },
                             {
                                 "displayName": "Arial Black",
+                                "displayNameKey": "Visual_Font_ArialBlack",
                                 "value": "\"Arial Black\""
                             },
                             {
                                 "displayName": "Arial Unicode MS",
+                                "displayNameKey": "Visual_Font_ArialUnicodeMS",
                                 "value": "\"Arial Unicode MS\""
                             },
                             {
                                 "displayName": "Calibri",
+                                "displayNameKey": "Visual_Font_Calibri",
                                 "value": "Calibri"
                             },
                             {
                                 "displayName": "Cambria",
+                                "displayNameKey": "Visual_Font_Cambria",
                                 "value": "Cambria"
                             },
                             {
                                 "displayName": "Cambria Math",
+                                "displayNameKey": "Visual_Font_CambriaMath",
                                 "value": "\"Cambria Math\""
                             },
                             {
                                 "displayName": "Candara",
+                                "displayNameKey": "Visual_Font_Candara",
                                 "value": "Candara"
                             },
                             {
                                 "displayName": "Comic Sans MS",
+                                "displayNameKey": "Visual_Font_ComicSansMS",
                                 "value": "\"Comic Sans MS\""
                             },
                             {
                                 "displayName": "Consolas",
+                                "displayNameKey": "Visual_Font_Consolas",
                                 "value": "Consolas"
                             },
                             {
                                 "displayName": "Constantia",
+                                "displayNameKey": "Visual_Font_Constantia",
                                 "value": "Constantia"
                             },
                             {
                                 "displayName": "Corbel",
+                                "displayNameKey": "Visual_Font_Corbel",
                                 "value": "Corbel"
                             },
                             {
                                 "displayName": "Courier New",
+                                "displayNameKey": "Visual_Font_CourierNew",
                                 "value": "\"Courier New\""
                             },
                             {
                                 "displayName": "Georgia",
+                                "displayNameKey": "Visual_Font_Georgia",
                                 "value": "Georgia"
                             },
                             {
                                 "displayName": "Lucida Sans Unicode",
+                                "displayNameKey": "Visual_Font_LucidaSansUnicode",
                                 "value": "\"Lucida Sans Unicode\""
                             },
                             {
                                 "displayName": "Segoe (Bold)",
+                                "displayNameKey": "Visual_Font_SegoeBold",
                                 "value": "\"Segoe UI Bold\", wf_segoe-ui_bold, helvetica, arial, sans-serif"
                             },
                             {
                                 "displayName": "Segoe UI",
+                                "displayNameKey": "Visual_Font_SegoeUI",
                                 "value": "\"Segoe UI\", wf_segoe-ui_normal, helvetica, arial, sans-serif"
                             },
                             {
                                 "displayName": "Segoe UI Light",
+                                "displayNameKey": "Visual_Font_SegoeUILight",
                                 "value": "\"Segoe UI Light\", wf_segoe-ui_bold, helvetica, arial, sans-serif"
                             },
                             {
                                 "displayName": "Symbol",
+                                "displayNameKey": "Visual_Font_Symbol",
                                 "value": "Symbol"
                             },
                             {
                                 "displayName": "Tahoma",
+                                "displayNameKey": "Visual_Font_Tahoma",
                                 "value": "Tahoma"
                             },
                             {
                                 "displayName": "Times New Roman",
+                                "displayNameKey": "Visual_Font_TimesNewRoman",
                                 "value": "\"Times New Roman\""
                             },
                             {
                                 "displayName": "Trebuchet MS",
+                                "displayNameKey": "Visual_Font_TrebuchetMS",
                                 "value": "\"Trebuchet MS\""
                             },
                             {
                                 "displayName": "Verdana",
+                                "displayNameKey": "Visual_Font_Verdana",
                                 "value": "Verdana"
                             },
                             {
                                 "displayName": "Wingdings",
+                                "displayNameKey": "Visual_Font_Wingdings",
                                 "value": "Wingdings"
                             }
                         ]
                     }
+                },
+                "displayUnits": {
+                    "displayName": "Display units",
+                    "displayNameKey": "Visual_DisplayUnits",
+                    "type": {
+                        "formatting": {
+                             "labelDisplayUnits": true
+                         }
+                    }
+                },
+                "precision": {
+                    "displayName": "Decimal Places",
+                    "displayNameKey": "Visual_DecimalPlaces",
+                    "description": "Select the number of decimal places to display",
+                    "type": {
+                        "numeric": true
+                    },
+                    "placeHolderText": "Auto"
                 }
             }
         },
@@ -593,7 +697,7 @@
                     "type": {
                         "bool": true
                     }
-                },                        
+                },
                 "dataColor": {
                     "displayName": "Data color",
                     "displayNameKey": "Visual_DualKpiColors_DataColor",
@@ -681,30 +785,36 @@
                     "displayName": "Top chart type",
                     "displayNameKey": "Visual_DualKpiChart_TopChartType",
                     "type": {
-                        "enumeration": [{
-                            "value": "area",
-                            "displayName": "Area",
-                            "displayNameKey": "Visual_DualKpiChart_Area"
-                        }, {
-                            "value": "line",
-                            "displayName": "Line",
-                            "displayNameKey": "Visual_DualKpiChart_Line"
-                        }]
+                        "enumeration": [
+                            {
+                                "value": "area",
+                                "displayName": "Area",
+                                "displayNameKey": "Visual_DualKpiChart_Area"
+                            },
+                            {
+                                "value": "line",
+                                "displayName": "Line",
+                                "displayNameKey": "Visual_DualKpiChart_Line"
+                            }
+                        ]
                     }
                 },
                 "bottomChartType": {
                     "displayName": "Bottom chart type",
                     "displayNameKey": "Visual_DualKpiChart_BottomChartType",
                     "type": {
-                        "enumeration": [{
-                            "value": "area",
-                            "displayName": "Area",
-                            "displayNameKey": "Visual_DualKpiChart_Area"
-                        }, {
-                            "value": "line",
-                            "displayName": "Line",
-                            "displayNameKey": "Visual_DualKpiChart_Line"
-                        }]
+                        "enumeration": [
+                            {
+                                "value": "area",
+                                "displayName": "Area",
+                                "displayNameKey": "Visual_DualKpiChart_Area"
+                            },
+                            {
+                                "value": "line",
+                                "displayName": "Line",
+                                "displayNameKey": "Visual_DualKpiChart_Line"
+                            }
+                        ]
                     }
                 }
             }

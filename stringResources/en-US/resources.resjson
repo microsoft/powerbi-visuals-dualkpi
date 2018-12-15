@@ -61,6 +61,7 @@
     "Visual_BottomContainerText_Last": "Last ",
     "Visual_BottomContainerText_Days": " days",
     "Visual_Default_Title": "Title",
-    "Visual_Default_WarningTooltipText": "Warning message" 
-
+    "Visual_Default_WarningTooltipText": "Warning message" ,
+    "Visual_DisplayUnits": "Display units",
+    "Visual_DecimalPlaces": "Decimal Places"
 }

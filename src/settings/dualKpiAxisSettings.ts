@@ -24,13 +24,11 @@
  *  THE SOFTWARE.
  */
 
-namespace powerbi.extensibility.visual {
-    export class DualKpiAxisSettings {
-        public topChartAxisMin: number = null;
-        public topChartAxisMax: number = null;
-        public bottomChartAxisMin: number = null;
-        public bottomChartAxisMax: number = null;
-        public topChartZeroLine: boolean = false;
-        public bottomChartZeroLine: boolean = false;
-    }
+export class DualKpiAxisSettings {
+    public topChartAxisMin: number = null;
+    public topChartAxisMax: number = null;
+    public bottomChartAxisMin: number = null;
+    public bottomChartAxisMax: number = null;
+    public topChartZeroLine: boolean = false;
+    public bottomChartZeroLine: boolean = false;
 }

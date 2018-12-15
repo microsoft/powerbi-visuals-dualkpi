@@ -24,8 +24,10 @@
  *  THE SOFTWARE.
  */
 
-namespace powerbi.extensibility.visual {
-    export class DualKpiValueFormattingSettings extends DualKpiFormattingSettings {
-        public fontSize: number = 16;
-    }
+import { DualKpiFormattingSettings } from "./dualKpiFormattingSettings";
+
+export class DualKpiValueFormattingSettings extends DualKpiFormattingSettings {
+    public fontSize: number = 16;
+    public displayUnits: number = 1;
+    public precision: number = 0;
 }

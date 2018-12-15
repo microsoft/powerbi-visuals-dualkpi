@@ -24,11 +24,9 @@
  *  THE SOFTWARE.
  */
 
-namespace powerbi.extensibility.visual {
-    export class DualKpiColorsBottomSettings {
-        public matchTopChartOptions: boolean = true;
-        public dataColor: string = "#01b8aa";
-        public textColor: string = "#212121";
-        public opacity: number = 30;
-    }
+export class DualKpiColorsBottomSettings {
+    public matchTopChartOptions: boolean = true;
+    public dataColor: string = "#01b8aa";
+    public textColor: string = "#212121";
+    public opacity: number = 30;
 }

@@ -24,7 +24,9 @@
  *  THE SOFTWARE.
  */
 
+import { DualKpiChartType } from "../enums";
+
 export class DualKpiChartSettings {
-    public topChartType: string = "area";
-    public bottomChartType: string = "area";
+    public topChartType: string = DualKpiChartType.area;
+    public bottomChartType: string = DualKpiChartType.area;
 }

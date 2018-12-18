@@ -79,22 +79,32 @@
             ],
             "categorical": {
                 "categories": {
-                    "for": {
-                        "in": "axis"
-                    },
                     "dataReductionAlgorithm": {
                         "top": {
                             "count": 1000
                         }
-                    }
-                },
-                "values": {
+                    },
                     "select": [
                         {
                             "bind": {
                                 "to": "axis"
                             }
                         },
+                        {
+                            "bind": {
+                                "to": "toppercentdate"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "bottompercentdate"
+                            }
+                        }
+                    ]
+                },
+                "values": {
+                    "select": [
+                        
                         {
                             "bind": {
                                 "to": "topvalues"
@@ -109,30 +119,8 @@
                             "bind": {
                                 "to": "warningstate"
                             }
-                        },
-                        {
-                            "bind": {
-                                "to": "toppercentdate"
-                            }
-                        },
-                        {
-                            "bind": {
-                                "to": "bottompercentdate"
-                            }
                         }
                     ]
-                }
-            },
-            "table": {
-                "rows": {
-                    "for": {
-                        "in": "axis"
-                    },
-                    "dataReductionAlgorithm": {
-                        "top": {
-                            "count": 1000
-                        }
-                    }
                 }
             }
         }

@@ -25,17 +25,17 @@
  */
 
 export enum DualKpiChartPositionType {
-    top = <any>"top",
-    bottom = <any>"bottom"
+    top = "top",
+    bottom = "bottom"
 }
 
 export enum DualKpiChartType {
-    area = <any>"area",
-    line = <any>"line"
+    area = "area",
+    line = "line"
 }
 
 export enum DualKpiHoverDataPercentType {
-    lastDate = <any>"Last date",
-    firstDate = <any>"First date",
-    previousDate = <any>"Previous date"
+    lastDate = "Last date",
+    firstDate = "First date",
+    previousDate = "Previous date"
 }

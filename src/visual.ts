@@ -38,7 +38,8 @@ import IViewport = powerbi.IViewport;
 import VisualObjectInstance = powerbi.VisualObjectInstance;
 import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
 import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
-import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
+import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
+import DataViewValueColumn = powerbi.DataViewValueColumn;
 
 // powerbi.extensibility
 import IVisual = powerbi.extensibility.IVisual;
@@ -795,54 +796,58 @@ export class DualKpi implements IVisual {
         data.bottomValues = [];
 
         let axisCol = -1, topValuesCol = -1, bottomValuesCol = -1, warningStateCol = -1,
-            topPercentDateCol = -1, bottomPercentDateCol = -1,
-            rows = [];
+            topPercentDateCol = -1, bottomPercentDateCol = -1;
 
-        let metadataColumns = dataView.metadata.columns;
-        for (let i: number = 0; i < metadataColumns.length; i++) {
-            let col: DataViewMetadataColumn = metadataColumns[i];
-            if (col.roles) {
-                // not else ifs because in a column can have multiple roles
-                if (col.roles["axis"])
+        const categories = dataView.categorical.categories;
+        for (let i: number = 0; i < categories.length; i++) {
+            let col: DataViewCategoryColumn = categories[i];
+            if (col.source && col.source.roles) {
+                if (col.source.roles["axis"]) {
                     axisCol = i;
-                if (col.roles["topvalues"]) {
-                    topValuesCol = i;
-                    data.topChartName = col.displayName;
-                    topValueFormatSymbol = this.getFormatSymbol(col.format);
                 }
-                if (col.roles["bottomvalues"]) {
-                    bottomValuesCol = i;
-                    data.bottomChartName = col.displayName;
-                    bottomValueFormatSymbol = this.getFormatSymbol(col.format);
-                }
-                if (col.roles["warningstate"]) {
-                    warningStateCol = i;
-                }
-                if (col.roles["toppercentdate"]) {
+                if (col.source.roles["toppercentdate"]) {
                     topPercentDateCol = i;
                 }
-                if (col.roles["bottompercentdate"]) {
+                if (col.source.roles["bottompercentdate"]) {
                     bottomPercentDateCol = i;
                 }
             }
         }
 
-        if (dataView && dataView.table) {
-            rows = dataView.table.rows;
+        const values = dataView.categorical.values;
+        for (let i: number = 0; i < values.length; i++) {
+            let col: DataViewValueColumn = values[i];
+            if (col.source && col.source.roles) {
+                if (col.source.roles["topvalues"]) {
+                    topValuesCol = i;
+                    data.topChartName = col.source.displayName;
+                    topValueFormatSymbol = this.getFormatSymbol(col.source.format);
+                }
+                if (col.source.roles["bottomvalues"]) {
+                    bottomValuesCol = i;
+                    data.bottomChartName = col.source.displayName;
+                    bottomValueFormatSymbol = this.getFormatSymbol(col.source.format);
+                }
+                if (col.source.roles["warningstate"]) {
+                    warningStateCol = i;
+                }
+            }
         }
+
+        const rowsLength = categories.length > 0 ? categories[0].values.length : (values.length > 0 ? values[0].values.length : 0);
 
         data.topValueAsPercent = topValueFormatSymbol === "%" ? true : false;
         data.bottomValueAsPercent = bottomValueFormatSymbol === "%" ? true : false;
 
         // if percent dates are in data use that, otherwise get from formatting pane/default values
-        data.topPercentCalcDate = topPercentDateCol > -1 && rows[0] ? new Date(rows[0][topPercentDateCol]) : new Date(data.settings.dualKpiProperties.topPercentCalcDate);
-        data.bottomPercentCalcDate = bottomPercentDateCol > -1 && rows[0] ? new Date(rows[0][bottomPercentDateCol]) : new Date(data.settings.dualKpiProperties.bottomPercentCalcDate);
+        data.topPercentCalcDate = topPercentDateCol > -1 && categories[topPercentDateCol].values[0] ? new Date(<any>categories[topPercentDateCol].values[0]) : new Date(data.settings.dualKpiProperties.topPercentCalcDate);
+        data.bottomPercentCalcDate = bottomPercentDateCol > -1 && categories[bottomPercentDateCol].values[0] ? new Date(<any>categories[bottomPercentDateCol].values[0]) : new Date(data.settings.dualKpiProperties.bottomPercentCalcDate);
 
-        for (let i: number = 0; i < rows.length; i++) {
+        for (let i: number = 0; i < rowsLength; i++) {
             let date = null;
 
             if (axisCol > -1) {
-                let timestamp: number = Date.parse(rows[i][axisCol]);
+                let timestamp: number = Date.parse(<any>categories[axisCol].values[i]);
 
                 if (!isNaN(timestamp)) {
                     date = new Date(timestamp);
@@ -853,8 +858,8 @@ export class DualKpi implements IVisual {
                 date = new Date();
             }
 
-            let topValue = topValuesCol > -1 ? rows[i][topValuesCol] : 0;
-            let bottomValue = bottomValuesCol > -1 ? rows[i][bottomValuesCol] : 0;
+            let topValue = topValuesCol > -1 ? <any>values[topValuesCol].values[i] : 0;
+            let bottomValue = bottomValuesCol > -1 ? <any>values[bottomValuesCol].values[i] : 0;
 
             if (data.topValueAsPercent) {
                 topValue *= 100;
@@ -875,8 +880,8 @@ export class DualKpi implements IVisual {
             });
         }
 
-        if ((warningStateCol > -1) && (rows.length > 0)) {
-            data.warningState = rows[rows.length - 1][warningStateCol];
+        if ((warningStateCol > -1) && (rowsLength > 0)) {
+            data.warningState = <any>values[warningStateCol].values[rowsLength - 1];
         }
 
         const sortBy = (key) => {
@@ -1370,8 +1375,8 @@ export class DualKpi implements IVisual {
         let percentChange = DualKpi.getPercentChange(options.percentChangeStartPoint.value, chartData[chartData.length - 1].value);
 
         let format: string;
-        for (let col = 0; col < this.dataView.table.columns.length; col++) {
-            let column = this.dataView.table.columns[col];
+        for (let col = 0; col < this.dataView.metadata.columns.length; col++) {
+            let column = this.dataView.metadata.columns[col];
             if (column.roles["topvalues"] && isTopChart) {
                 format = column.format;
                 break;

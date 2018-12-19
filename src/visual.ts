@@ -25,6 +25,7 @@
  */
 
 import "./../style/visual.less";
+import "@babel/polyfill";
 
 // d3
 import * as d3 from "d3";

@@ -25,9 +25,10 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@babel/polyfill": "^7.0.0",
     "d3": "^5.7.0",
     "powerbi-models": "^1.0.13",
-    "powerbi-visuals-api": "^2.2.2",
+    "powerbi-visuals-api": "^2.3.1",
     "powerbi-visuals-utils-colorutils": "^2.1.0",
     "powerbi-visuals-utils-dataviewutils": "^2.0.1",
     "powerbi-visuals-utils-formattingutils": "^4.0.2"
@@ -38,6 +39,7 @@
     "@types/jasmine-jquery": "^1.5.33",
     "@types/jquery": "2.0.46",
     "@types/webpack": "4.4.4",
+    "ajv": "^6.6.2",
     "coveralls": "2.11.15",
     "css-loader": "1.0.0",
     "istanbul-instrumenter-loader": "^3.0.1",
@@ -51,7 +53,7 @@
     "karma-jasmine": "1.1.2",
     "karma-junit-reporter": "^1.2.0",
     "karma-sourcemap-loader": "0.3.7",
-    "karma-typescript": "^3.0.12",
+    "karma-typescript": "^3.0.13",
     "karma-typescript-preprocessor": "0.3.1",
     "karma-webpack": "3.0.0",
     "less": "^2.3.1",
@@ -64,7 +66,7 @@
     "ts-loader": "4.4.2",
     "ts-node": "7.0.0",
     "tslint": "4.0.2",
-    "typescript": "3.0.1",
+    "typescript": "^2.9.2",
     "webpack": "4.14.0"
   }
 }

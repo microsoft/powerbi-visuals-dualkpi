@@ -24,21 +24,18 @@
  *  THE SOFTWARE.
  */
 
-namespace powerbi.extensibility.visual {
+export enum DualKpiChartPositionType {
+    top = "top",
+    bottom = "bottom"
+}
 
-    export enum DualKpiChartPositionType {
-        top = <any>"top",
-        bottom = <any>"bottom"
-    }
+export enum DualKpiChartType {
+    area = "area",
+    line = "line"
+}
 
-    export enum DualKpiChartType {
-        area = <any>"area",
-        line = <any>"line"
-    }
-
-    export enum DualKpiHoverDataPercentType {
-        lastDate = <any>"Last date",
-        firstDate = <any>"First date",
-        previousDate = <any>"Previous date"
-    }
+export enum DualKpiHoverDataPercentType {
+    lastDate = "Last date",
+    firstDate = "First date",
+    previousDate = "Previous date"
 }

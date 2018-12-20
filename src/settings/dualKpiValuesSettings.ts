@@ -24,12 +24,10 @@
  *  THE SOFTWARE.
  */
 
-namespace powerbi.extensibility.visual {
-    export class DualKpiValuesSettings {
-        public show: boolean = true;
-        public showKpiValuesTop: boolean = true;
-        public topChartDefaultKpiValue: string = "N/A";
-        public showKpiValuesBottom: boolean = true;
-        public bottomChartDefaultKpiValue: string = "N/A";
-    }
+export class DualKpiValuesSettings {
+    public show: boolean = true;
+    public showKpiValuesTop: boolean = true;
+    public topChartDefaultKpiValue: string = "N/A";
+    public showKpiValuesBottom: boolean = true;
+    public bottomChartDefaultKpiValue: string = "N/A";
 }

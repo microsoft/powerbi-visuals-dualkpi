@@ -24,18 +24,25 @@
  *  THE SOFTWARE.
  */
 
-namespace powerbi.extensibility.visual {
-    // powerbi.extensibility.utils.dataview
-    import DataViewObjectsParser = powerbi.extensibility.utils.dataview.DataViewObjectsParser;
+import { dataViewObjectsParser } from "powerbi-visuals-utils-dataviewutils";
+import DataViewObjectsParser = dataViewObjectsParser.DataViewObjectsParser;
 
-    export class DualKpiSettings extends DataViewObjectsParser {
-        public dualKpiProperties: DualKpiPropertiesSettings = new DualKpiPropertiesSettings();
-        public dualKpiValues: DualKpiValuesSettings = new DualKpiValuesSettings();
-        public dualKpiTitleFormatting: DualKpiTitleFormattingSettings = new DualKpiTitleFormattingSettings();
-        public dualKpiValueFormatting: DualKpiValueFormattingSettings = new DualKpiValueFormattingSettings();
-        public dualKpiColors: DualKpiColorsSettings = new DualKpiColorsSettings();
-        public dualKpiColorsBottom: DualKpiColorsBottomSettings = new DualKpiColorsBottomSettings();
-        public dualKpiAxis: DualKpiAxisSettings = new DualKpiAxisSettings();
-        public dualKpiChart: DualKpiChartSettings = new DualKpiChartSettings();
-    }
+import { DualKpiPropertiesSettings } from "./dualKpiPropertiesSettings";
+import { DualKpiValuesSettings } from "./dualKpiValuesSettings";
+import { DualKpiTitleFormattingSettings } from "./dualKpiTitleFormattingSettings";
+import { DualKpiValueFormattingSettings } from "./dualKpiValueFormattingSettings";
+import { DualKpiColorsSettings } from "./dualKpiColorsSettings";
+import { DualKpiColorsBottomSettings } from "./dualKpiColorsBottomSettings";
+import { DualKpiAxisSettings } from "./dualKpiAxisSettings";
+import { DualKpiChartSettings } from "./dualKpiChartSettings";
+
+export class DualKpiSettings extends DataViewObjectsParser {
+    public dualKpiProperties: DualKpiPropertiesSettings = new DualKpiPropertiesSettings();
+    public dualKpiValues: DualKpiValuesSettings = new DualKpiValuesSettings();
+    public dualKpiTitleFormatting: DualKpiTitleFormattingSettings = new DualKpiTitleFormattingSettings();
+    public dualKpiValueFormatting: DualKpiValueFormattingSettings = new DualKpiValueFormattingSettings();
+    public dualKpiColors: DualKpiColorsSettings = new DualKpiColorsSettings();
+    public dualKpiColorsBottom: DualKpiColorsBottomSettings = new DualKpiColorsBottomSettings();
+    public dualKpiAxis: DualKpiAxisSettings = new DualKpiAxisSettings();
+    public dualKpiChart: DualKpiChartSettings = new DualKpiChartSettings();
 }

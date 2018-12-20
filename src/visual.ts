@@ -95,7 +95,7 @@ export interface IDualKpiData {
 export interface IAxisConfig {
     min: number;
     max: number;
-};
+}
 
 export enum DualKpiSize {
     supersmall,
@@ -103,7 +103,7 @@ export enum DualKpiSize {
     small,
     medium,
     large
-};
+}
 
 export type DualKpiSizeClass = "super-small" | "extra-small" | "small" | "medium" | "large";
 

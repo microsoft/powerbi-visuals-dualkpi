@@ -104,7 +104,6 @@
                 },
                 "values": {
                     "select": [
-                        
                         {
                             "bind": {
                                 "to": "topvalues"
@@ -330,129 +329,9 @@
                     "displayName": "Font family",
                     "displayNameKey": "Visual_TextFontFamily",
                     "type": {
-                        "enumeration": [
-                            {
-                                "displayName": "Default",
-                                "displayNameKey": "Visual_TextDefault",
-                                "description": "helvetica, arial, sans-serif",
-                                "value": "helvetica, arial, sans-serif"
-                            },
-                            {
-                                "displayName": "Arial",
-                                "displayNameKey": "Visual_Font_Arial",
-                                "value": "Arial"
-                            },
-                            {
-                                "displayName": "Arial Black",
-                                "displayNameKey": "Visual_Font_ArialBlack",
-                                "value": "\"Arial Black\""
-                            },
-                            {
-                                "displayName": "Arial Unicode MS",
-                                "displayNameKey": "Visual_Font_ArialUnicodeMS",
-                                "value": "\"Arial Unicode MS\""
-                            },
-                            {
-                                "displayName": "Calibri",
-                                "displayNameKey": "Visual_Font_Calibri",
-                                "value": "Calibri"
-                            },
-                            {
-                                "displayName": "Cambria",
-                                "displayNameKey": "Visual_Font_Cambria",
-                                "value": "Cambria"
-                            },
-                            {
-                                "displayName": "Cambria Math",
-                                "displayNameKey": "Visual_Font_CambriaMath",
-                                "value": "\"Cambria Math\""
-                            },
-                            {
-                                "displayName": "Candara",
-                                "displayNameKey": "Visual_Font_Candara",
-                                "value": "Candara"
-                            },
-                            {
-                                "displayName": "Comic Sans MS",
-                                "displayNameKey": "Visual_Font_ComicSansMS",
-                                "value": "\"Comic Sans MS\""
-                            },
-                            {
-                                "displayName": "Consolas",
-                                "displayNameKey": "Visual_Font_Consolas",
-                                "value": "Consolas"
-                            },
-                            {
-                                "displayName": "Constantia",
-                                "displayNameKey": "Visual_Font_Constantia",
-                                "value": "Constantia"
-                            },
-                            {
-                                "displayName": "Corbel",
-                                "displayNameKey": "Visual_Font_Corbel",
-                                "value": "Corbel"
-                            },
-                            {
-                                "displayName": "Courier New",
-                                "displayNameKey": "Visual_Font_CourierNew",
-                                "value": "\"Courier New\""
-                            },
-                            {
-                                "displayName": "Georgia",
-                                "displayNameKey": "Visual_Font_Georgia",
-                                "value": "Georgia"
-                            },
-                            {
-                                "displayName": "Lucida Sans Unicode",
-                                "displayNameKey": "Visual_Font_LucidaSansUnicode",
-                                "value": "\"Lucida Sans Unicode\""
-                            },
-                            {
-                                "displayName": "Segoe (Bold)",
-                                "displayNameKey": "Visual_Font_SegoeBold",
-                                "value": "\"Segoe UI Bold\", wf_segoe-ui_bold, helvetica, arial, sans-serif"
-                            },
-                            {
-                                "displayName": "Segoe UI",
-                                "displayNameKey": "Visual_Font_SegoeUI",
-                                "value": "\"Segoe UI\", wf_segoe-ui_normal, helvetica, arial, sans-serif"
-                            },
-                            {
-                                "displayName": "Segoe UI Light",
-                                "displayNameKey": "Visual_Font_SegoeUILight",
-                                "value": "\"Segoe UI Light\", wf_segoe-ui_bold, helvetica, arial, sans-serif"
-                            },
-                            {
-                                "displayName": "Symbol",
-                                "displayNameKey": "Visual_Font_Symbol",
-                                "value": "Symbol"
-                            },
-                            {
-                                "displayName": "Tahoma",
-                                "displayNameKey": "Visual_Font_Tahoma",
-                                "value": "Tahoma"
-                            },
-                            {
-                                "displayName": "Times New Roman",
-                                "displayNameKey": "Visual_Font_TimesNewRoman",
-                                "value": "\"Times New Roman\""
-                            },
-                            {
-                                "displayName": "Trebuchet MS",
-                                "displayNameKey": "Visual_Font_TrebuchetMS",
-                                "value": "\"Trebuchet MS\""
-                            },
-                            {
-                                "displayName": "Verdana",
-                                "displayNameKey": "Visual_Font_Verdana",
-                                "value": "Verdana"
-                            },
-                            {
-                                "displayName": "Wingdings",
-                                "displayNameKey": "Visual_Font_Wingdings",
-                                "value": "Wingdings"
-                            }
-                        ]
+                        "formatting": {
+                            "fontFamily": true
+                        }
                     }
                 }
             }
@@ -495,129 +374,9 @@
                     "displayName": "Font family",
                     "displayNameKey": "Visual_TextFontFamily",
                     "type": {
-                        "enumeration": [
-                            {
-                                "displayName": "Default",
-                                "displayNameKey": "Visual_TextDefault",
-                                "description": "helvetica, arial, sans-serif",
-                                "value": "helvetica, arial, sans-serif"
-                            },
-                            {
-                                "displayName": "Arial",
-                                "displayNameKey": "Visual_Font_Arial",
-                                "value": "Arial"
-                            },
-                            {
-                                "displayName": "Arial Black",
-                                "displayNameKey": "Visual_Font_ArialBlack",
-                                "value": "\"Arial Black\""
-                            },
-                            {
-                                "displayName": "Arial Unicode MS",
-                                "displayNameKey": "Visual_Font_ArialUnicodeMS",
-                                "value": "\"Arial Unicode MS\""
-                            },
-                            {
-                                "displayName": "Calibri",
-                                "displayNameKey": "Visual_Font_Calibri",
-                                "value": "Calibri"
-                            },
-                            {
-                                "displayName": "Cambria",
-                                "displayNameKey": "Visual_Font_Cambria",
-                                "value": "Cambria"
-                            },
-                            {
-                                "displayName": "Cambria Math",
-                                "displayNameKey": "Visual_Font_CambriaMath",
-                                "value": "\"Cambria Math\""
-                            },
-                            {
-                                "displayName": "Candara",
-                                "displayNameKey": "Visual_Font_Candara",
-                                "value": "Candara"
-                            },
-                            {
-                                "displayName": "Comic Sans MS",
-                                "displayNameKey": "Visual_Font_ComicSansMS",
-                                "value": "\"Comic Sans MS\""
-                            },
-                            {
-                                "displayName": "Consolas",
-                                "displayNameKey": "Visual_Font_Consolas",
-                                "value": "Consolas"
-                            },
-                            {
-                                "displayName": "Constantia",
-                                "displayNameKey": "Visual_Font_Constantia",
-                                "value": "Constantia"
-                            },
-                            {
-                                "displayName": "Corbel",
-                                "displayNameKey": "Visual_Font_Corbel",
-                                "value": "Corbel"
-                            },
-                            {
-                                "displayName": "Courier New",
-                                "displayNameKey": "Visual_Font_CourierNew",
-                                "value": "\"Courier New\""
-                            },
-                            {
-                                "displayName": "Georgia",
-                                "displayNameKey": "Visual_Font_Georgia",
-                                "value": "Georgia"
-                            },
-                            {
-                                "displayName": "Lucida Sans Unicode",
-                                "displayNameKey": "Visual_Font_LucidaSansUnicode",
-                                "value": "\"Lucida Sans Unicode\""
-                            },
-                            {
-                                "displayName": "Segoe (Bold)",
-                                "displayNameKey": "Visual_Font_SegoeBold",
-                                "value": "\"Segoe UI Bold\", wf_segoe-ui_bold, helvetica, arial, sans-serif"
-                            },
-                            {
-                                "displayName": "Segoe UI",
-                                "displayNameKey": "Visual_Font_SegoeUI",
-                                "value": "\"Segoe UI\", wf_segoe-ui_normal, helvetica, arial, sans-serif"
-                            },
-                            {
-                                "displayName": "Segoe UI Light",
-                                "displayNameKey": "Visual_Font_SegoeUILight",
-                                "value": "\"Segoe UI Light\", wf_segoe-ui_bold, helvetica, arial, sans-serif"
-                            },
-                            {
-                                "displayName": "Symbol",
-                                "displayNameKey": "Visual_Font_Symbol",
-                                "value": "Symbol"
-                            },
-                            {
-                                "displayName": "Tahoma",
-                                "displayNameKey": "Visual_Font_Tahoma",
-                                "value": "Tahoma"
-                            },
-                            {
-                                "displayName": "Times New Roman",
-                                "displayNameKey": "Visual_Font_TimesNewRoman",
-                                "value": "\"Times New Roman\""
-                            },
-                            {
-                                "displayName": "Trebuchet MS",
-                                "displayNameKey": "Visual_Font_TrebuchetMS",
-                                "value": "\"Trebuchet MS\""
-                            },
-                            {
-                                "displayName": "Verdana",
-                                "displayNameKey": "Visual_Font_Verdana",
-                                "value": "Verdana"
-                            },
-                            {
-                                "displayName": "Wingdings",
-                                "displayNameKey": "Visual_Font_Wingdings",
-                                "value": "Wingdings"
-                            }
-                        ]
+                        "formatting": {
+                            "fontFamily": true
+                        }
                     }
                 },
                 "displayUnits": {
@@ -625,8 +384,8 @@
                     "displayNameKey": "Visual_DisplayUnits",
                     "type": {
                         "formatting": {
-                             "labelDisplayUnits": true
-                         }
+                            "labelDisplayUnits": true
+                        }
                     }
                 },
                 "precision": {
@@ -641,7 +400,7 @@
             }
         },
         "dualKpiColors": {
-            "displayName": "Dual KPI Colors",
+            "displayName": "Dual KPI Top Chart Colors",
             "displayNameKey": "Visual_DualKpiColors",
             "properties": {
                 "dataColor": {

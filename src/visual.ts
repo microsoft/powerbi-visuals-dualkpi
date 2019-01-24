@@ -63,6 +63,7 @@ import { ColorHelper } from "powerbi-visuals-utils-colorutils";
 import { DualKpiSettings } from "./settings/settings";
 import { PercentType } from "./settings/dualKpiPropertiesSettings";
 import { DualKpiChartPositionType } from "./enums";
+import { minMax } from "./helper";
 
 type Selection = d3.Selection<any, any, any, any>;
 
@@ -1390,17 +1391,8 @@ export class DualKpi implements IVisual {
             }
         }
 
-        let decimalPlaces: number = 0;
-        if (this.data.settings.dualKpiValueFormatting.precision) {
-            if (this.data.settings.dualKpiValueFormatting.precision > 17) {
-                this.data.settings.dualKpiValueFormatting.precision = 17;
-                decimalPlaces = this.data.settings.dualKpiValueFormatting.precision;
-            } else if (this.data.settings.dualKpiValueFormatting.precision < 0) {
-                this.data.settings.dualKpiValueFormatting.precision = null;
-            } else {
-                decimalPlaces = this.data.settings.dualKpiValueFormatting.precision;
-            }
-        }
+        this.data.settings.dualKpiValueFormatting.precision = minMax(this.data.settings.dualKpiValueFormatting.precision, 0, 17);
+        let decimalPlaces: number = this.data.settings.dualKpiValueFormatting.precision;
 
         const formatter: IValueFormatter = valueFormatter.create({
             format: format,

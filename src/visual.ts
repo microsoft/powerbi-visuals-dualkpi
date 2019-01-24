@@ -63,6 +63,7 @@ import { ColorHelper } from "powerbi-visuals-utils-colorutils";
 import { DualKpiSettings } from "./settings/settings";
 import { PercentType } from "./settings/dualKpiPropertiesSettings";
 import { DualKpiChartPositionType } from "./enums";
+import { minMax } from "./helper";
 
 type Selection = d3.Selection<any, any, any, any>;
 
@@ -452,8 +453,7 @@ export class DualKpi implements IVisual {
             return;
         }
 
-        let isFirstUpdate = !!this.data,
-            data: IDualKpiData = this.data = DualKpi.converter(this.dataView, isFirstUpdate, this.localizationManager, this.colorHelper);
+        let data: IDualKpiData = this.data = DualKpi.converter(this.dataView, this.localizationManager, this.colorHelper);
 
         let availableHeight = options.viewport.height < 90 ? 90 : options.viewport.height,
             availableWidth = options.viewport.width < 220 ? 220 : options.viewport.width,
@@ -762,11 +762,14 @@ export class DualKpi implements IVisual {
         }
     }
 
-    private static parseSettings(dataView: DataView, isFirstUpdate: boolean, localizationManager: ILocalizationManager, colorHelper: ColorHelper): DualKpiSettings {
+    private static parseSettings(dataView: DataView, localizationManager: ILocalizationManager, colorHelper: ColorHelper): DualKpiSettings {
         let settings: DualKpiSettings = DualKpiSettings.parse<DualKpiSettings>(dataView);
 
-        if (isFirstUpdate) {
+        if (settings.dualKpiProperties.titleText === null) {
             settings.dualKpiProperties.titleText = localizationManager.getDisplayName("Visual_Default_Title");
+        }
+
+        if (settings.dualKpiProperties.warningTooltipText === null) {
             settings.dualKpiProperties.warningTooltipText = localizationManager.getDisplayName("Visual_Default_WarningTooltipText");
         }
 
@@ -781,11 +784,11 @@ export class DualKpi implements IVisual {
         return settings;
     }
 
-    private static converter(dataView: DataView, isFirstUpdate: boolean, localizationManager: ILocalizationManager, colorHelper: ColorHelper): IDualKpiData {
+    private static converter(dataView: DataView, localizationManager: ILocalizationManager, colorHelper: ColorHelper): IDualKpiData {
         let data = {} as IDualKpiData;
         let topValueFormatSymbol = "";
         let bottomValueFormatSymbol = "";
-        data.settings = DualKpi.parseSettings(dataView, isFirstUpdate, localizationManager, colorHelper);
+        data.settings = DualKpi.parseSettings(dataView, localizationManager, colorHelper);
 
         if (data.settings.dualKpiColorsBottom.matchTopChartOptions) {
             data.settings.dualKpiColorsBottom.dataColor = data.settings.dualKpiColors.dataColor;
@@ -1388,9 +1391,12 @@ export class DualKpi implements IVisual {
             }
         }
 
+        this.data.settings.dualKpiValueFormatting.precision = minMax(this.data.settings.dualKpiValueFormatting.precision, 0, 17);
+        let decimalPlaces: number = this.data.settings.dualKpiValueFormatting.precision;
+
         const formatter: IValueFormatter = valueFormatter.create({
             format: format,
-            precision: this.data.settings.dualKpiValueFormatting.precision,
+            precision: decimalPlaces,
             value: this.data.settings.dualKpiValueFormatting.displayUnits || latestValue,
             displayUnitSystemType: DisplayUnitSystemType.WholeUnits,
         });

@@ -1,3 +1,10 @@
+## 2.0.1
+* "Title" and "Warning Tooltip Text" options setting up was repaired
+* Duplicated items in chart types dropboxes were fixed
+* "Dual KPI Colors" settings group was renamed to "Dual KPI Top Chart Colors"
+* "Decimal Places" option is now restricted from 0 to 17
+* "Font Family" option now has standard definition in capabilities so, it contains predefined in core items
+
 ## 2.0.0
 * Webpack migration
 * API 2.2.2

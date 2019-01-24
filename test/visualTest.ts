@@ -32,6 +32,7 @@ import { assertColorsMatch, getSolidColorStructuralObject, d3MouseMove } from "p
 
 import { VisualData, getRandomHexColor } from "./visualData";
 import { VisualBuilder } from "./visualBuilder";
+import { minMax } from "../src/helper";
 
 describe("DualKpi", () => {
     let visualBuilder: VisualBuilder;
@@ -43,6 +44,45 @@ describe("DualKpi", () => {
         visualBuilder = new VisualBuilder(1000, 500);
         defaultDataViewBuilder = new VisualData();
         dataView = defaultDataViewBuilder.getDataView();
+    });
+
+    describe("Unit tests", () => {
+        it("minMax function target is greater than bounds", () => {
+            const res = minMax(5, -4, 4);
+            expect(res).toBe(4);
+        });
+
+        it("minMax function target inside bounds", () => {
+            const res = minMax(3, 0, 14);
+            expect(res).toBe(3);
+        });
+
+        it("minMax function target is lesser that bounds", () => {
+            const res = minMax(-3, 0, 14);
+            expect(res).toBeNull();
+        });
+
+        it("minMax function max is undefined", () => {
+            let res = minMax(5, -4, null);
+            expect(res).toBe(5);
+
+            res = minMax(5, -4, undefined);
+            expect(res).toBe(5);
+
+            res = minMax(-5, -4, null);
+            expect(res).toBeNull();
+        });
+
+        it("minMax function min is undefined", () => {
+            let res = minMax(5, null, 15);
+            expect(res).toBe(5);
+
+            res = minMax(5, undefined, 15);
+            expect(res).toBe(5);
+
+            res = minMax(-2, null, -3);
+            expect(res).toBe(-3);
+        });
     });
 
     describe("Capabilities tests", () => {

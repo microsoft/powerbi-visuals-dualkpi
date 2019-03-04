@@ -1,4 +1,8 @@
-## 2.0.1
+## 2.0.2
+* "Decimal Places" option initial value and reverted value bug fixed
+* "Abbreviate Value" and "Decimal Places" options' interaction bug fixed
+
+# 2.0.1
 * "Title" and "Warning Tooltip Text" options setting up was repaired
 * Duplicated items in chart types dropboxes were fixed
 * "Dual KPI Colors" settings group was renamed to "Dual KPI Top Chart Colors"

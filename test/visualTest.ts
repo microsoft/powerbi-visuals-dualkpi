@@ -83,6 +83,29 @@ describe("DualKpi", () => {
             res = minMax(-2, null, -3);
             expect(res).toBe(-3);
         });
+
+        it("minMax function target in nullable", () => {
+            let res = minMax(null, 0, 15);
+            expect(res).toBe(0);
+
+            res = minMax(null, -2, -1);
+            expect(res).toBe(-2);
+
+            res = minMax(undefined, 3, 5);
+            expect(res).toBe(3);
+
+            res = minMax(undefined, -53, -5);
+            expect(res).toBe(-53);
+
+            res = minMax(null, null, -3);
+            expect(res).toBe(null);
+
+            res = minMax(undefined, null, -3);
+            expect(res).toBe(null);
+
+            res = minMax(undefined, undefined, -3);
+            expect(res).toBe(null);
+        });
     });
 
     describe("Capabilities tests", () => {

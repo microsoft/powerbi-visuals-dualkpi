@@ -25,11 +25,19 @@
  */
 
 export function minMax(targetNum: number, min: number, max: number) {
-    if (max !== undefined && max !== null) {
-        targetNum = targetNum <= max ? targetNum : max;
-    }
-    if (min !== undefined && min !== null) {
-        targetNum = targetNum > min ? targetNum : null;
+    const isNullableTargetNum: boolean = targetNum === undefined || targetNum === null;
+    const isNullableMin: boolean = min === undefined || min === null;
+    const isNullableMax: boolean = max === undefined || max === null;
+
+    if (isNullableTargetNum) {
+        targetNum = (!isNullableMin) ? min : null;
+    } else {
+        if (!isNullableMax) {
+            targetNum = targetNum <= max ? targetNum : max;
+        }
+        if (!isNullableMin) {
+            targetNum = targetNum > min ? targetNum : null;
+        }
     }
 
     return targetNum;

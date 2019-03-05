@@ -73,6 +73,21 @@ describe("DualKpi", () => {
             expect(res).toBeNull();
         });
 
+        it("minMax function target == min == max", () => {
+            let res = minMax(-1, -1, -1);
+            expect(res).toBe(-1);
+        });
+
+        it("minMax function target == min", () => {
+            let res = minMax(-1, -1, 4);
+            expect(res).toBe(-1);
+        });
+
+        it("minMax function target == max", () => {
+            let res = minMax(5, -4, 5);
+            expect(res).toBe(5);
+        });
+
         it("minMax function min is undefined", () => {
             let res = minMax(5, null, 15);
             expect(res).toBe(5);

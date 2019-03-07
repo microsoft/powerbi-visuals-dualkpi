@@ -36,7 +36,7 @@ export function minMax(targetNum: number, min: number, max: number) {
             targetNum = targetNum <= max ? targetNum : max;
         }
         if (!isNullableMin) {
-            targetNum = targetNum > min ? targetNum : null;
+            targetNum = targetNum >= min ? targetNum : null;
         }
     }
 

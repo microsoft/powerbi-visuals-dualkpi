@@ -207,7 +207,7 @@ export class DualKpi implements IVisual {
 
     private static DefaultTitleSizes = {
         "super-small": 10,
-        "extra-small": 10,
+        "extra-small": 11,
         "small": 12,
         "medium": 14,
         "large": 16
@@ -215,7 +215,7 @@ export class DualKpi implements IVisual {
 
     private static DefaultValueSizes = {
         "super-small": 14,
-        "extra-small": 14,
+        "extra-small": 18,
         "small": 26,
         "medium": 32,
         "large": 40

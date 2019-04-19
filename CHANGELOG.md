@@ -1,3 +1,6 @@
+## 2.0.4
+* Increased space between "extra-small" title and bold value.
+
 ## 2.0.2
 * "Decimal Places" option initial value and reverted value bug fixed
 * "Abbreviate Value" and "Decimal Places" options' interaction bug fixed

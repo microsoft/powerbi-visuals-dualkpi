@@ -295,6 +295,13 @@
             "displayName": "Dual KPI Title formatting",
             "displayNameKey": "Visual_TitleFormatting",
             "properties": {
+                "upperCase": {
+                    "displayName": "Uppercase",
+                    "displayNameKey": "Visual_Uppercase",
+                    "type": {
+                        "bool": true
+                    }
+                },
                 "fontSizeAutoFormatting": {
                     "displayName": "Auto text size",
                     "displayNameKey": "Visual_TextAutoSize",

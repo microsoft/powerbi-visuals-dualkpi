@@ -24,16 +24,30 @@
  *  THE SOFTWARE.
  */
 
-import "./../style/visual.less";
-import "@babel/polyfill";
+import "../style/visual.less";
 
 // d3
 import * as d3 from "d3";
-
 import * as jQuery from "jquery";
-
 // powerbi
 import powerbi from "powerbi-visuals-api";
+import { ColorHelper } from "powerbi-visuals-utils-colorutils";
+// powerbi.extensibility.utils.formatting
+import {
+    textMeasurementService, valueFormatter as ValueFormatter
+} from "powerbi-visuals-utils-formattingutils";
+import {
+    DisplayUnitSystemType
+} from "powerbi-visuals-utils-formattingutils/lib/src/displayUnitSystem/displayUnitSystemType";
+// powerbi.extensibility.utils.tooltip
+import { ITooltipServiceWrapper } from "powerbi-visuals-utils-tooltiputils";
+
+import { DualKpiChartPositionType } from "./enums";
+import { minMax } from "./helper";
+import { PercentType } from "./settings/dualKpiPropertiesSettings";
+import { DualKpiSettings } from "./settings/settings";
+import { CustomTooltipSeviceWrapper } from "./tooltipServiceWrapper";
+
 import DataView = powerbi.DataView;
 import IViewport = powerbi.IViewport;
 import VisualObjectInstance = powerbi.VisualObjectInstance;
@@ -44,26 +58,16 @@ import DataViewValueColumn = powerbi.DataViewValueColumn;
 
 // powerbi.extensibility
 import IVisual = powerbi.extensibility.IVisual;
+import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IColorPalette = powerbi.extensibility.IColorPalette;
 
-// powerbi.extensibility.utils.formatting
-import { valueFormatter as ValueFormatter } from "powerbi-visuals-utils-formattingutils";
 import IValueFormatter = ValueFormatter.IValueFormatter;
-import valueFormatter = ValueFormatter.valueFormatter;
+import valueFormatter = ValueFormatter;
 
-import { textMeasurementService } from "powerbi-visuals-utils-formattingutils";
 import TextMeasurementService = textMeasurementService.textMeasurementService;
-import { DisplayUnitSystemType } from "powerbi-visuals-utils-formattingutils/lib/displayUnitSystem/displayUnitSystemType";
-
-import { ColorHelper } from "powerbi-visuals-utils-colorutils";
-
-import { DualKpiSettings } from "./settings/settings";
-import { PercentType } from "./settings/dualKpiPropertiesSettings";
-import { DualKpiChartPositionType } from "./enums";
-import { minMax } from "./helper";
 
 type Selection = d3.Selection<any, any, any, any>;
 
@@ -136,6 +140,7 @@ export interface IDualKpiOptions {
     isBoldValue: boolean;
     isItalicTitle: boolean;
     isItalicValue: boolean;
+    isUpperCasedTitle: boolean;
     fontFamilyTitle: string;
     fontFamilyValue: string;
 }
@@ -232,7 +237,14 @@ export class DualKpi implements IVisual {
     private colorPalette: IColorPalette;
     private colorHelper: ColorHelper;
 
+    private tooltipServiceWrapper: ITooltipServiceWrapper;
+    private host: IVisualHost;
+
     constructor(options: VisualConstructorOptions) {
+        if (window.location !== window.parent.location) {
+            require("core-js/stable");
+        }
+
         this.init(options);
     }
 
@@ -251,8 +263,17 @@ export class DualKpi implements IVisual {
         this.colorPalette = options.host.colorPalette;
         this.colorHelper = new ColorHelper(this.colorPalette);
 
+        this.host = options.host;
+
         this.initContainer();
         this.initMouseEvents();
+
+        this.tooltipServiceWrapper = new CustomTooltipSeviceWrapper(
+            {
+                tooltipService: this.host.tooltipService,
+                rootElement: options.element,
+                handleTouchDelay: 0
+            });
     }
 
     private initMouseEvents(): void {
@@ -312,10 +333,6 @@ export class DualKpi implements IVisual {
             .append("path")
             .classed("warning-icon", true);
 
-        let warningTitle = warningGroup
-            .append("title")
-            .classed("warning-title", true);
-
         let infoGroup = bottomContainer
             .append("g")
             .classed("info-group", true);
@@ -323,10 +340,6 @@ export class DualKpi implements IVisual {
         let infoIcon = infoGroup
             .append("path")
             .classed("info-icon", true);
-
-        let infoTitle = infoIcon
-            .append("title")
-            .classed("info-title", true);
 
         let dateRangeText = bottomContainer
             .append("text")
@@ -339,12 +352,12 @@ export class DualKpi implements IVisual {
             warning: {
                 group: warningGroup,
                 icon: warningIcon,
-                title: warningTitle
+                title: warningIcon
             },
             info: {
                 group: infoGroup,
                 icon: infoIcon,
-                title: infoTitle
+                title: infoIcon
             },
             dateRangeText: dateRangeText
         };
@@ -406,15 +419,12 @@ export class DualKpi implements IVisual {
             .append("rect")
             .attr("style", "stroke: none; fill: #000;opacity:0;");
 
-        let rectTitle = chartOverlayTextGroup
-            .append("title");
-
         return {
             group: chartOverlayTextGroup,
             title: title,
             text: text,
             rect: chartOverlayRect,
-            rectTitle: rectTitle
+            rectTitle: chartOverlayTextGroup
         };
     }
 
@@ -553,6 +563,7 @@ export class DualKpi implements IVisual {
                     isBoldValue: data.settings.dualKpiValueFormatting.isBold,
                     isItalicTitle: data.settings.dualKpiTitleFormatting.isItalic,
                     isItalicValue: data.settings.dualKpiValueFormatting.isItalic,
+                    isUpperCasedTitle: data.settings.dualKpiTitleFormatting.upperCase,
                     fontFamilyTitle: data.settings.dualKpiTitleFormatting.fontFamily,
                     fontFamilyValue: data.settings.dualKpiValueFormatting.fontFamily
                 });
@@ -596,6 +607,7 @@ export class DualKpi implements IVisual {
                     isBoldValue: data.settings.dualKpiValueFormatting.isBold,
                     isItalicTitle: data.settings.dualKpiTitleFormatting.isItalic,
                     isItalicValue: data.settings.dualKpiValueFormatting.isItalic,
+                    isUpperCasedTitle: data.settings.dualKpiTitleFormatting.upperCase,
                     fontFamilyTitle: data.settings.dualKpiTitleFormatting.fontFamily,
                     fontFamilyValue: data.settings.dualKpiValueFormatting.fontFamily
                 });
@@ -1023,6 +1035,7 @@ export class DualKpi implements IVisual {
 
             this.touchEventsEnabled = true;
         }
+
         // prevent hide from being called, and prevent hover interaction from occuring on same event
         (d3.event as TouchEvent).stopPropagation();
 
@@ -1101,9 +1114,14 @@ export class DualKpi implements IVisual {
             .attr("transform", iconScaleTransform)
             .classed(this.sizeCssClass, true);
 
-        let warningTitle = warning.title;
-        warningTitle
-            .text(this.data.settings.dualKpiProperties.warningTooltipText);
+        this.tooltipServiceWrapper.addTooltip(
+            warning.title,
+            () => {
+                return [{
+                    displayName: null,
+                    value: this.data.settings.dualKpiProperties.warningTooltipText
+                }];
+            });
 
         // move title over to account for icon
         chartTitleElement.attr("transform", "translate(" + (iconWidth + 6) + ",0)");
@@ -1129,9 +1147,14 @@ export class DualKpi implements IVisual {
             .classed(this.sizeCssClass, true)
             .classed("hidden", false);
 
-        let infoTitle = info.title;
-        infoTitle
-            .text(infoMessage);
+        this.tooltipServiceWrapper.addTooltip(
+            info.title,
+            () => {
+                return [{
+                    displayName: null,
+                    value: infoMessage
+                }];
+            });
 
         info.group.on("touchstart", () => this.showMobileTooltip(infoMessage));
     }
@@ -1420,6 +1443,7 @@ export class DualKpi implements IVisual {
             .classed(DualKpi.INVISIBLE, true)
             .attr("class", "data-title")
             .attr("fill", textColor)
+            .classed("uppercased", options.isUpperCasedTitle)
             .text(options.showDefaultTextOverlay ? "" : options.chartTitle + " (" + percentChange + ")");
 
         this.applyTextStyle(dataTitle, options, true);
@@ -1468,10 +1492,14 @@ export class DualKpi implements IVisual {
             overlayTooltipText = options.tooltipText + " " + percentChangeDesc;
         }
 
-        let overlayTooltip: Selection = chartOverlay.rectTitle;
-
-        overlayTooltip
-            .text(overlayTooltipText);
+        this.tooltipServiceWrapper.addTooltip(
+            chartOverlay.rectTitle,
+            () => {
+                return [{
+                    displayName: null,
+                    value: overlayTooltipText
+                }];
+            });
 
         let dataTitleProps = TextMeasurementService.getSvgMeasurementProperties(dataTitle.node() as SVGTextElement);
         let dataValueProps = TextMeasurementService.getSvgMeasurementProperties(dataValue.node() as SVGTextElement);

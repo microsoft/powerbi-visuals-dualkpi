@@ -1,3 +1,8 @@
+## 2.0.5
+* Conditional polyfills for IE11
+* New option to enable/disable uppercase for value labels
+* Replacement of d3 titles by standard tooltips (except touch events)
+
 ## 2.0.4
 * Increased space between "extra-small" title and bold value.
 

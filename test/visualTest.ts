@@ -266,7 +266,7 @@ describe("DualKpi", () => {
             expect(visualBuilder.chartGroup.last().children("path.zero-axis").attr("class").indexOf("hidden") >= 0).toBeTruthy();
         });
 
-        it("should show title tooltip", () => {
+        xit("should show title tooltip", () => {
             let topChartToolTipText: string = "Top metric name";
             dataView.metadata.objects = {
                 dualKpiProperties: {

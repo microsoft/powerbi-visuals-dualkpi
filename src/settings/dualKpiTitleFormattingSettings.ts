@@ -27,5 +27,6 @@
 import { DualKpiFormattingSettings } from "./dualKpiFormattingSettings";
 
 export class DualKpiTitleFormattingSettings extends DualKpiFormattingSettings {
+    public upperCase: boolean = false;
     public fontSize: number = 10;
 }

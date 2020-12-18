@@ -41,7 +41,7 @@ export class VisualBuilder extends VisualBuilderBase<DualKpi> {
     }
 
     public get mainElement() {
-        return this.element.children("svg.dualKpi");
+        return $(this.element).children("svg.dualKpi");
     }
 
     public get chartGroup() {

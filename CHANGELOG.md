@@ -1,3 +1,7 @@
+## 2.0.6
+* API 3.4
+* Packages update
+
 ## 2.0.5
 * Conditional polyfills for IE11
 * New option to enable/disable uppercase for value labels

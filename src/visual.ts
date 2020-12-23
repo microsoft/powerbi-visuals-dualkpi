@@ -62,6 +62,7 @@ import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IColorPalette = powerbi.extensibility.IColorPalette;
+import ISelectionManager = powerbi.extensibility.ISelectionManager;
 
 import IValueFormatter = ValueFormatter.IValueFormatter;
 import valueFormatter = ValueFormatter;
@@ -235,6 +236,8 @@ export class DualKpi implements IVisual {
     private tooltipServiceWrapper: ITooltipServiceWrapper;
     private host: IVisualHost;
 
+    private selectionManager: ISelectionManager;
+
     constructor(options: VisualConstructorOptions) {
         if (window.location !== window.parent.location) {
             require("core-js/stable");
@@ -269,6 +272,21 @@ export class DualKpi implements IVisual {
                 rootElement: options.element,
                 handleTouchDelay: 0
             });
+
+
+        this.selectionManager = this.host.createSelectionManager();
+
+        const visualSelection = d3.select(this.target);
+        visualSelection.on("contextmenu", () => {
+            const mouseEvent: MouseEvent = d3.event as MouseEvent;
+            const eventTarget: EventTarget = mouseEvent.target;
+            let dataPoint: any = d3.select(<any>eventTarget).datum();
+            this.selectionManager.showContextMenu(dataPoint ? dataPoint.selectionId : {}, {
+                x: mouseEvent.clientX,
+                y: mouseEvent.clientY
+            });
+            mouseEvent.preventDefault();
+        });
     }
 
     private initMouseEvents(): void {

@@ -1,3 +1,6 @@
+## 2.0.7
+* Context menu support
+
 ## 2.0.6
 * API 3.4
 * Packages update

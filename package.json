@@ -25,7 +25,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "d3": "^5.7.0",
+    "d3": "^7.0.0",
     "powerbi-models": "^1.7.0",
     "powerbi-visuals-api": "^3.4.0",
     "powerbi-visuals-utils-colorutils": "^2.3.0",

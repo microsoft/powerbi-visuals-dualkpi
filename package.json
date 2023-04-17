@@ -58,7 +58,7 @@
     "karma-webpack": "^4.0.2",
     "less": "^3.13.0",
     "less-loader": "^5.0.0",
-    "powerbi-visuals-tools": "^3.1.15",
+    "powerbi-visuals-tools": "^3.4.3",
     "powerbi-visuals-utils-testutils": "2.1.4",
     "puppeteer": "^5.5.0",
     "style-loader": "2.0.0",

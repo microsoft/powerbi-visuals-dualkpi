@@ -28,9 +28,9 @@
     "d3": "^5.7.0",
     "powerbi-models": "^1.7.0",
     "powerbi-visuals-api": "^3.4.0",
-    "powerbi-visuals-utils-colorutils": "^2.3.0",
+    "powerbi-visuals-utils-colorutils": "^6.0.0",
     "powerbi-visuals-utils-dataviewutils": "^2.4.0",
-    "powerbi-visuals-utils-formattingutils": "^4.7.0",
+    "powerbi-visuals-utils-formattingutils": "^6.0.0",
     "powerbi-visuals-utils-tooltiputils": "^2.3.0"
   },
   "devDependencies": {

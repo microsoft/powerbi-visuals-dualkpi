@@ -27,7 +27,16 @@
 import "../style/visual.less";
 
 // d3
-import * as d3 from "d3";
+// import * as d3 from "d3";
+import { Selection as d3Selection, select as d3Select, pointer as d3Pointer } from "d3-selection";
+import { format as d3Format } from "d3-format";
+import { timeFormat as d3TimeFormat } from "d3-time-format";
+import { bisector as d3Bisector, min as d3Min, max as d3Max, extent as d3Extent } from "d3-array";
+import { dispatch as d3Dispatch, Dispatch } from "d3-dispatch";
+import { scaleTime as d3ScaleTime, scaleLinear as d3ScaleLinear } from "d3-scale";
+import { axisLeft as d3AxisLeft } from "d3-axis";
+import { area as d3Area, line as d3Line } from "d3-shape"
+
 import * as jQuery from "jquery";
 // powerbi
 import powerbi from "powerbi-visuals-api";
@@ -68,7 +77,7 @@ import IValueFormatter = ValueFormatter.IValueFormatter;
 import valueFormatter = ValueFormatter;
 
 type FormatterFunction = (n: number | { valueOf(): number }) => string;
-type Selection = d3.Selection<any, any, any, any>;
+type Selection = d3Selection<any, any, any, any>;
 
 export interface IDualKpiDataPoint {
     date: Date;
@@ -229,7 +238,7 @@ export class DualKpi implements IVisual {
     private static OPACITY_MAX: number = 100;
 
     private titleSize: number = 0;
-    private dispatch: any;
+    private dispatch: Dispatch<object>;
 
     private colorPalette: IColorPalette;
     private colorHelper: ColorHelper;
@@ -247,22 +256,20 @@ export class DualKpi implements IVisual {
         this.target = options.element;
         this.size = DualKpiSize.small;
         this.sizeCssClass = "small";
-        this.valueFormatter = d3.format(".3s");
-        this.axisNumberFormatter = d3.format(".2s");
-        this.commaNumberFormatter = d3.format(",");
-        this.timeFormatter = d3.timeFormat("%m/%d/%y");
-        this.dataBisector = d3.bisector((d: IDualKpiDataPoint) => { return d.date; }).left;
-        this.dispatch = d3.dispatch("onDualKpiMouseMove", "onDualKpiMouseOut");
-        this.localizationManager = options.host.createLocalizationManager();
-
-        this.colorPalette = options.host.colorPalette;
-        this.colorHelper = new ColorHelper(this.colorPalette);
+        this.valueFormatter = d3Format(".3s");
+        this.axisNumberFormatter = d3Format(".2s");
+        this.commaNumberFormatter = d3Format(",");
+        this.timeFormatter = d3TimeFormat("%m/%d/%y");
+        this.dataBisector = d3Bisector((d: IDualKpiDataPoint) => { return d.date; }).left;
+        this.dispatch = d3Dispatch("onDualKpiMouseMove", "onDualKpiMouseOut");
 
         this.host = options.host;
+        this.localizationManager = this.host.createLocalizationManager();
+        this.selectionManager = this.host.createSelectionManager();
 
-        this.initContainer();
-        this.initMouseEvents();
-
+        this.colorPalette = this.host.colorPalette;
+        this.colorHelper = new ColorHelper(this.colorPalette);
+        
         this.tooltipServiceWrapper = new TooltipServiceWrapper(
             {
                 tooltipService: this.host.tooltipService,
@@ -270,29 +277,30 @@ export class DualKpi implements IVisual {
                 handleTouchDelay: 0
             });
 
+        this.initContainer();
+        this.initMouseEvents();
+        this.handleContextMenu(this.target);
+    }
 
-        this.selectionManager = this.host.createSelectionManager();
+    private handleContextMenu(target: HTMLElement): void {
+        const visualSelection = d3Select(target);
+        visualSelection.on("contextmenu", (event: MouseEvent) => {
+            event.preventDefault();
 
-        const visualSelection = d3.select(this.target);
-        visualSelection.on("contextmenu", () => {
-            const mouseEvent: MouseEvent = d3.event as MouseEvent;
-            const eventTarget: EventTarget = mouseEvent.target;
-            const dataPoint: any = d3.select(<any>eventTarget).datum();
-            this.selectionManager.showContextMenu(dataPoint ? dataPoint.selectionId : {}, {
-                x: mouseEvent.clientX,
-                y: mouseEvent.clientY
+            this.selectionManager.showContextMenu({}, {
+                x: event.clientX,
+                y: event.clientY
             });
-            mouseEvent.preventDefault();
         });
     }
 
     private initMouseEvents(): void {
         const dispatch = this.dispatch;
         const target = this.target;
-        const targetElement = d3.select(target);
+        const targetElement = d3Select(target);
 
-        const onMouseMove = function () {
-            dispatch.call("onDualKpiMouseMove", this, d3.mouse(target));
+        const onMouseMove = function (event: MouseEvent) {
+            dispatch.call("onDualKpiMouseMove", this, d3Pointer(event, target));
         };
 
         targetElement.on("mousemove", onMouseMove);
@@ -313,7 +321,7 @@ export class DualKpi implements IVisual {
         const xmlns = "http://www.w3.org/2000/svg";
         const svgElem = document.createElementNS(xmlns, "svg");
 
-        const svgRoot = this.svgRoot = d3.select(svgElem);
+        const svgRoot = this.svgRoot = d3Select(svgElem);
 
         svgRoot
             .attr("class", "dualKpi");
@@ -1169,22 +1177,22 @@ export class DualKpi implements IVisual {
 
         const calcWidth = options.width - margin.right - margin.left,
             calcHeight = options.height - margin.top - margin.bottom,
-            minValue = d3.min(chartData, (d) => d.value) || 0,
-            maxValue = d3.max(chartData, (d) => d.value) || 0;
+            minValue = d3Min(chartData, (d) => d.value) || 0,
+            maxValue = d3Max(chartData, (d) => d.value) || 0;
 
         const axisMinValue = axisConfig.min !== null && axisConfig.min !== undefined ? axisConfig.min : minValue;
         const axisMaxValue = axisConfig.max !== null && axisConfig.max !== undefined ? axisConfig.max : maxValue;
 
-        const xScale = d3.scaleTime()
-            .domain(d3.extent(chartData, (d) => d.date))
+        const xScale = d3ScaleTime()
+            .domain(d3Extent(chartData, (d) => d.date))
             .range([0, calcWidth]);
 
-        const yScale = d3.scaleLinear()
+        const yScale = d3ScaleLinear()
             .domain([axisMinValue, axisMaxValue])
             .clamp(true)
             .range([calcHeight, 0]);
 
-        const yAxis = d3.axisLeft(yScale)
+        const yAxis = d3AxisLeft(yScale)
             .tickValues([axisMinValue, axisMaxValue])
             .tickFormat((d) => {
                 let axisTickLabel: string = String(this.axisNumberFormatter(d));
@@ -1197,7 +1205,7 @@ export class DualKpi implements IVisual {
         let seriesRenderer, fill, stroke, strokeWidth;
 
         if (options.chartType === "area") {
-            seriesRenderer = d3.area()
+            seriesRenderer = d3Area()
                 .x((d: any) => xScale(d.date || new Date()))
                 .y0(calcHeight)
                 .y1((d: any) => yScale(d.value || 0));
@@ -1206,7 +1214,7 @@ export class DualKpi implements IVisual {
             stroke = "none";
             strokeWidth = 0;
         } else {
-            seriesRenderer = d3.line()
+            seriesRenderer = d3Line()
                 .x((d: any) => xScale(d.date || new Date()))
                 .y((d: any) => yScale(d.value || 0));
 
@@ -1235,7 +1243,7 @@ export class DualKpi implements IVisual {
         // if formatting option for zero line set to true
         // and if a value of zero is on the y-axis
         if (options.showZeroLine && zeroPointOnAxis) {
-            const axisLine = d3.line()
+            const axisLine = d3Line()
                 .x((d: any) => xScale(d.date))
                 .y(() => yScale(0));
 

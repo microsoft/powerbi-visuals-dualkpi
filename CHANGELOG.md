@@ -4,6 +4,7 @@
 ### Code improvements
 * Migrate from tslint to eslint, fix eslint errors
 * Update API to 5.11.0, tools to 5.5.1 and other packages
+* Split d3 into submodules
 
 ### Other
 

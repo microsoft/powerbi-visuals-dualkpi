@@ -1,3 +1,11 @@
+## 2.1.0
+### Visual changes
+
+### Code improvements
+* Migrate from tslint to eslint, fix eslint errors
+
+### Other
+
 ## 2.0.7
 * Context menu support
 

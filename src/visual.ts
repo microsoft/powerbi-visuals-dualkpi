@@ -67,6 +67,7 @@ import ISelectionManager = powerbi.extensibility.ISelectionManager;
 import IValueFormatter = ValueFormatter.IValueFormatter;
 import valueFormatter = ValueFormatter;
 
+type FormatterFunction = (n: number | { valueOf(): number }) => string;
 type Selection = d3.Selection<any, any, any, any>;
 
 export interface IDualKpiDataPoint {
@@ -195,10 +196,10 @@ export class DualKpi implements IVisual {
     private chartGroupBottom: IChartGroup;
 
     private bottomContainer: IBottomContainer;
-    private valueFormatter: Function;
-    private commaNumberFormatter: Function;
-    private timeFormatter: Function;
-    private dataBisector: Function;
+    private valueFormatter: FormatterFunction;
+    private commaNumberFormatter: FormatterFunction;
+    private timeFormatter: (date: Date) => string;
+    private dataBisector: (array: ArrayLike<IDualKpiDataPoint>, x: Date, lo?: number, hi?: number) => number;
 
     private chartLeftMargin = 35;
     private viewport: IViewport;
@@ -239,10 +240,6 @@ export class DualKpi implements IVisual {
     private selectionManager: ISelectionManager;
 
     constructor(options: VisualConstructorOptions) {
-        if (window.location !== window.parent.location) {
-            require("core-js/stable");
-        }
-
         this.init(options);
     }
 
@@ -280,7 +277,7 @@ export class DualKpi implements IVisual {
         visualSelection.on("contextmenu", () => {
             const mouseEvent: MouseEvent = d3.event as MouseEvent;
             const eventTarget: EventTarget = mouseEvent.target;
-            let dataPoint: any = d3.select(<any>eventTarget).datum();
+            const dataPoint: any = d3.select(<any>eventTarget).datum();
             this.selectionManager.showContextMenu(dataPoint ? dataPoint.selectionId : {}, {
                 x: mouseEvent.clientX,
                 y: mouseEvent.clientY
@@ -290,11 +287,11 @@ export class DualKpi implements IVisual {
     }
 
     private initMouseEvents(): void {
-        let dispatch = this.dispatch;
-        let target = this.target;
-        let targetElement = d3.select(target);
+        const dispatch = this.dispatch;
+        const target = this.target;
+        const targetElement = d3.select(target);
 
-        let onMouseMove = function (e: any) {
+        const onMouseMove = function () {
             dispatch.call("onDualKpiMouseMove", this, d3.mouse(target));
         };
 
@@ -303,7 +300,7 @@ export class DualKpi implements IVisual {
         targetElement.on("touchmove", onMouseMove);
         targetElement.on("touchstart", onMouseMove);
 
-        let onMouseOut = function (e: any) {
+        const onMouseOut = function () {
             dispatch.call("onDualKpiMouseOut", this);
         };
 
@@ -312,10 +309,11 @@ export class DualKpi implements IVisual {
     }
 
     private initContainer(): void {
+        // eslint-disable-next-line powerbi-visuals/no-http-string
         const xmlns = "http://www.w3.org/2000/svg";
-        let svgElem = document.createElementNS(xmlns, "svg");
+        const svgElem = document.createElementNS(xmlns, "svg");
 
-        let svgRoot = this.svgRoot = d3.select(svgElem);
+        const svgRoot = this.svgRoot = d3.select(svgElem);
 
         svgRoot
             .attr("class", "dualKpi");
@@ -329,32 +327,32 @@ export class DualKpi implements IVisual {
     }
 
     private createBottomContainer(svgRoot: Selection): IBottomContainer {
-        let bottomContainer = svgRoot
+        const bottomContainer = svgRoot
             .append("g")
             .attr("class", "bottom-title-container")
             .classed("invisible", true);
 
-        let chartTitleElement = bottomContainer
+        const chartTitleElement = bottomContainer
             .append("text")
             .classed("title", true);
 
-        let warningGroup = bottomContainer
+        const warningGroup = bottomContainer
             .append("g")
             .classed("warning-group", true);
 
-        let warningIcon = warningGroup
+        const warningIcon = warningGroup
             .append("path")
             .classed("warning-icon", true);
 
-        let infoGroup = bottomContainer
+        const infoGroup = bottomContainer
             .append("g")
             .classed("info-group", true);
 
-        let infoIcon = infoGroup
+        const infoIcon = infoGroup
             .append("path")
             .classed("info-icon", true);
 
-        let dateRangeText = bottomContainer
+        const dateRangeText = bottomContainer
             .append("text")
             .classed("date-range-text", true)
             .attr("text-anchor", "end");
@@ -377,27 +375,27 @@ export class DualKpi implements IVisual {
     }
 
     private createChartGroup(svgRoot: Selection, type: DualKpiChartPositionType): IChartGroup {
-        let chartGroup: Selection = svgRoot
+        const chartGroup: Selection = svgRoot
             .append("g")
             .attr("class", "chartGroup")
             .classed(type === DualKpiChartPositionType.top ? "chartGroupTop" : "chartGroupBottom", true);
 
-        let chartArea = chartGroup
+        const chartArea = chartGroup
             .append("path")
             .attr("class", "area");
 
-        let yAxis = chartGroup
+        const yAxis = chartGroup
             .append("g")
             .attr("class", "axis");
 
-        let hoverLine = chartGroup
+        const hoverLine = chartGroup
             .append("line")
             .attr("class", "hoverLine");
 
-        let hoverDataContainer: IHoverDataContainer = this.createHoverDataContainer(chartGroup);
-        let chartOverlay: IChartOverlay = this.createChartOverlay(chartGroup);
+        const hoverDataContainer: IHoverDataContainer = this.createHoverDataContainer(chartGroup);
+        const chartOverlay: IChartOverlay = this.createChartOverlay(chartGroup);
 
-        let zeroAxis = chartGroup
+        const zeroAxis = chartGroup
             .append("path")
             .attr("class", "zero-axis");
 
@@ -413,22 +411,22 @@ export class DualKpi implements IVisual {
     }
 
     private createChartOverlay(chartGroup: Selection): IChartOverlay {
-        let chartOverlayTextGroup = chartGroup
+        const chartOverlayTextGroup = chartGroup
             .append("g")
             .classed("group", true);
 
-        let title = chartOverlayTextGroup
+        const title = chartOverlayTextGroup
             .append("text")
             .classed("data-title", true)
             .attr("text-anchor", "middle");
 
-        let text = chartOverlayTextGroup
+        const text = chartOverlayTextGroup
             .append("text")
             .classed("data-value", true)
             .attr("text-anchor", "middle");
 
         // this rect is always invisible, used for capture mouse and touch events
-        let chartOverlayRect = chartOverlayTextGroup
+        const chartOverlayRect = chartOverlayTextGroup
             .append("rect")
             .attr("style", "stroke: none; fill: #000;opacity:0;");
 
@@ -464,8 +462,9 @@ export class DualKpi implements IVisual {
         return DualKpiSize.large;
     }
 
+    // eslint-disable-next-line max-lines-per-function
     public update(options: VisualUpdateOptions) {
-        let dataView: DataView = this.dataView = options.dataViews && options.dataViews[0];
+        const dataView: DataView = this.dataView = options.dataViews && options.dataViews[0];
 
         if (!dataView ||
             !dataView.metadata ||
@@ -476,14 +475,14 @@ export class DualKpi implements IVisual {
             return;
         }
 
-        let data: IDualKpiData = this.data = DualKpi.converter(this.dataView, this.localizationManager, this.colorHelper);
+        const data: IDualKpiData = this.data = DualKpi.converter(this.dataView, this.localizationManager, this.colorHelper);
 
-        let availableHeight = options.viewport.height < 90 ? 90 : options.viewport.height,
-            availableWidth = options.viewport.width < 220 ? 220 : options.viewport.width,
-            chartWidth = availableWidth,
-            chartSpaceBetween, chartTitleSpace, iconOffset;
+        const availableHeight = options.viewport.height < 90 ? 90 : options.viewport.height;
+        const availableWidth = options.viewport.width < 220 ? 220 : options.viewport.width;
+        const chartWidth = availableWidth;
+        let chartSpaceBetween: number, chartTitleSpace: number, iconOffset: number;
 
-        let size: DualKpiSize = DualKpi.getChartSize({ height: availableHeight, width: availableWidth });
+        const size: DualKpiSize = DualKpi.getChartSize({ height: availableHeight, width: availableWidth });
 
         switch (size) {
             case DualKpiSize.large:
@@ -532,12 +531,12 @@ export class DualKpi implements IVisual {
             height: availableHeight
         });
 
-        let chartHeight = (availableHeight - (chartSpaceBetween + chartTitleSpace)) / 2;
-        let topChartAxisConfig = { min: data.settings.dualKpiAxis.topChartAxisMin, max: data.settings.dualKpiAxis.topChartAxisMax };
-        let bottomChartAxisConfig = { min: data.settings.dualKpiAxis.bottomChartAxisMin, max: data.settings.dualKpiAxis.bottomChartAxisMax };
+        const chartHeight = (availableHeight - (chartSpaceBetween + chartTitleSpace)) / 2;
+        const topChartAxisConfig = { min: data.settings.dualKpiAxis.topChartAxisMin, max: data.settings.dualKpiAxis.topChartAxisMax };
+        const bottomChartAxisConfig = { min: data.settings.dualKpiAxis.bottomChartAxisMin, max: data.settings.dualKpiAxis.bottomChartAxisMax };
 
-        let topChartPercentChangeStartPoint = DualKpi.getPercentChangeStartPoint(data.topValues, data.topPercentCalcDate);
-        let bottomChartPercentChangeStartPoint = DualKpi.getPercentChangeStartPoint(data.bottomValues, data.bottomPercentCalcDate);
+        const topChartPercentChangeStartPoint = DualKpi.getPercentChangeStartPoint(data.topValues, data.topPercentCalcDate);
+        const bottomChartPercentChangeStartPoint = DualKpi.getPercentChangeStartPoint(data.bottomValues, data.bottomPercentCalcDate);
 
         const wasDataSetRendered: boolean = data.topValues.length > 0 || data.bottomValues.length > 0;
 
@@ -704,14 +703,14 @@ export class DualKpi implements IVisual {
     }
 
     private static getDaysBetween(date1: Date, date2: Date): number {
-        let oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-        let dayRange = Math.round(Math.abs(date1.getTime() - date2.getTime()) / oneDay);
+        const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+        const dayRange = Math.round(Math.abs(date1.getTime() - date2.getTime()) / oneDay);
         return dayRange;
     }
 
     private static percentFormatter(value: number, showPlusMinus?: boolean): string {
-        let prefix = value >= 0 ? "+" : "",
-            valueString = (Math.floor(value * 10) / 10) + "%";
+        const prefix = value >= 0 ? "+" : "";
+        let valueString = (Math.floor(value * 10) / 10) + "%";
 
         if (showPlusMinus) {
             valueString = prefix + valueString;
@@ -725,7 +724,7 @@ export class DualKpi implements IVisual {
             return "n/a";
         }
 
-        let diff = endValue - startValue;
+        const diff = endValue - startValue;
         let percentChange = Math.abs(diff / startValue);
 
         if (endValue < startValue) {
@@ -737,16 +736,15 @@ export class DualKpi implements IVisual {
 
     private static getPercentChangeStartPoint(chartData: Array<IDualKpiDataPoint>, percentCalcDate: Date): IDualKpiDataPoint {
         if (percentCalcDate !== null) {
-            let closestIndex = 0,
-                percentCalcDateTime = percentCalcDate.getTime(),
-                i, currTime;
+            let closestIndex = 0;
+            const percentCalcDateTime = percentCalcDate.getTime();
 
             // keep track of closest date to configured date
             // as soon as we find a date that is more recent than configured date
             // break and use the last date that was older than configured date.
             // always break if we find a date that is exactly equal
-            for (i = 0; i < chartData.length; i++) {
-                currTime = chartData[i].date.getTime();
+            for (let i = 0; i < chartData.length; i++) {
+                const currTime = chartData[i].date.getTime();
 
                 if (currTime === percentCalcDateTime) {
                     closestIndex = i;
@@ -759,6 +757,7 @@ export class DualKpi implements IVisual {
                     break;
                 }
             }
+
             return chartData[closestIndex];
         }
 
@@ -766,7 +765,7 @@ export class DualKpi implements IVisual {
     }
 
     private static getFormatSymbol(format: string): string {
-        let symbolPatterns: string[] = [
+        const symbolPatterns: string[] = [
             "[$]",      // dollar sign
             "[€]",      // euro sign
             "[£]",      // british pound sign
@@ -775,9 +774,9 @@ export class DualKpi implements IVisual {
             "[%]",      // percent sign
         ];
 
-        let symbolMatcher: RegExp = new RegExp(symbolPatterns.join("|"), "g");
+        const symbolMatcher: RegExp = new RegExp(symbolPatterns.join("|"), "g");
 
-        let match = symbolMatcher.exec(format);
+        const match = symbolMatcher.exec(format);
 
         if (!match) {
             return undefined;
@@ -788,7 +787,7 @@ export class DualKpi implements IVisual {
     }
 
     private static parseSettings(dataView: DataView, localizationManager: ILocalizationManager, colorHelper: ColorHelper): DualKpiSettings {
-        let settings: DualKpiSettings = DualKpiSettings.parse<DualKpiSettings>(dataView);
+        const settings: DualKpiSettings = DualKpiSettings.parse<DualKpiSettings>(dataView);
 
         if (settings.dualKpiProperties.titleText === null) {
             settings.dualKpiProperties.titleText = localizationManager.getDisplayName("Visual_Default_Title");
@@ -810,7 +809,7 @@ export class DualKpi implements IVisual {
     }
 
     private static converter(dataView: DataView, localizationManager: ILocalizationManager, colorHelper: ColorHelper): IDualKpiData {
-        let data = {} as IDualKpiData;
+        const data = {} as IDualKpiData;
         let topValueFormatSymbol = "";
         let bottomValueFormatSymbol = "";
         data.settings = DualKpi.parseSettings(dataView, localizationManager, colorHelper);
@@ -829,7 +828,7 @@ export class DualKpi implements IVisual {
 
         const categories = dataView.categorical.categories;
         for (let i: number = 0; i < categories.length; i++) {
-            let col: DataViewCategoryColumn = categories[i];
+            const col: DataViewCategoryColumn = categories[i];
             if (col.source && col.source.roles) {
                 if (col.source.roles["axis"]) {
                     axisCol = i;
@@ -845,7 +844,7 @@ export class DualKpi implements IVisual {
 
         const values = dataView.categorical.values;
         for (let i: number = 0; i < values.length; i++) {
-            let col: DataViewValueColumn = values[i];
+            const col: DataViewValueColumn = values[i];
             if (col.source && col.source.roles) {
                 if (col.source.roles["topvalues"]) {
                     topValuesCol = i;
@@ -876,7 +875,7 @@ export class DualKpi implements IVisual {
             let date = null;
 
             if (axisCol > -1) {
-                let timestamp: number = Date.parse(<any>categories[axisCol].values[i]);
+                const timestamp: number = Date.parse(<any>categories[axisCol].values[i]);
 
                 if (!isNaN(timestamp)) {
                     date = new Date(timestamp);
@@ -923,20 +922,20 @@ export class DualKpi implements IVisual {
     }
 
     private createHoverDataContainer(chartGroup: Selection): IHoverDataContainer {
-        let hoverDataContainer = chartGroup.append("g")
+        const hoverDataContainer = chartGroup.append("g")
             .attr("class", "hover-data-container")
             .classed(DualKpi.INVISIBLE, true);
 
-        let date = hoverDataContainer.append("text")
+        const date = hoverDataContainer.append("text")
             .attr("class", "hover-text date")
             .text("0");
 
-        let text = hoverDataContainer.append("text")
+        const text = hoverDataContainer.append("text")
             .attr("class", "hover-text value")
             .attr("text-anchor", "middle")
             .text("0");
 
-        let percent = hoverDataContainer.append("text")
+        const percent = hoverDataContainer.append("text")
             .attr("class", "hover-text percent")
             .attr("text-anchor", "end")
             .text("0");
@@ -951,7 +950,7 @@ export class DualKpi implements IVisual {
 
     private updateHoverDataContainer(hoverDataContainer: IHoverDataContainer, chartBottom: number, chartLeft: number, chartWidth: number, isTopChart: boolean): void {
         const textColor: string = isTopChart ? this.data.settings.dualKpiColors.textColor : this.data.settings.dualKpiColorsBottom.textColor;
-        let hoverDate: Selection = hoverDataContainer.date;
+        const hoverDate: Selection = hoverDataContainer.date;
         let centerX = chartWidth / 2;
 
         if (chartWidth < 300) {
@@ -964,7 +963,7 @@ export class DualKpi implements IVisual {
             .attr("fill", textColor)
             .text("0");
 
-        let hoverValue: Selection = hoverDataContainer.text;
+        const hoverValue: Selection = hoverDataContainer.text;
         hoverValue
             .attr("class", "hover-text value")
             .classed(this.sizeCssClass, true)
@@ -972,7 +971,7 @@ export class DualKpi implements IVisual {
             .attr("fill", textColor)
             .text("0");
 
-        let hoverPercent: Selection = hoverDataContainer.percent;
+        const hoverPercent: Selection = hoverDataContainer.percent;
         hoverPercent
             .attr("class", "hover-text percent")
             .classed(this.sizeCssClass, true)
@@ -985,33 +984,33 @@ export class DualKpi implements IVisual {
     }
 
     private showHoverData(hoverDataContainer: IHoverDataContainer, dataPoint: IDualKpiDataPoint, latestValue: number, hoverDataPercentType: PercentType, valueAsPercent: boolean, abbreviateValue: boolean) {
-        let hoverDate: Selection = hoverDataContainer.date;
+        const hoverDate: Selection = hoverDataContainer.date;
         hoverDate
             .datum(dataPoint)
             .text((d: IDualKpiDataPoint) => this.timeFormatter(d.date));
 
-        let hoverValue: Selection = hoverDataContainer.text;
+        const hoverValue: Selection = hoverDataContainer.text;
         hoverValue
             .datum(dataPoint)
             .text((d: IDualKpiDataPoint) => {
-                let value = abbreviateValue ? this.valueFormatter(d.value) : this.commaNumberFormatter(Math.round(d.value));
+                const value = abbreviateValue ? this.valueFormatter(d.value) : this.commaNumberFormatter(Math.round(d.value));
                 if (valueAsPercent) {
                     return DualKpi.percentFormatter(d.value);
                 }
                 return value;
             });
 
-        let hoverPercent: Selection = hoverDataContainer.percent;
+        const hoverPercent: Selection = hoverDataContainer.percent;
         hoverPercent
             .datum(dataPoint)
             .text((d: IDualKpiDataPoint) => {
                 if (valueAsPercent) {
-                    let value: number = hoverDataPercentType === PercentType.lastDate ? latestValue - d.value
+                    const value: number = hoverDataPercentType === PercentType.lastDate ? latestValue - d.value
                         : d.value - latestValue;
 
                     return DualKpi.percentFormatter(value);
                 }
-                let leftValue: number = hoverDataPercentType === PercentType.lastDate ? d.value : latestValue,
+                const leftValue: number = hoverDataPercentType === PercentType.lastDate ? d.value : latestValue,
                     rightValue: number = hoverDataPercentType === PercentType.lastDate ? latestValue : d.value;
 
                 return DualKpi.getPercentChange(leftValue, rightValue);
@@ -1032,14 +1031,14 @@ export class DualKpi implements IVisual {
     private drawBottomContainer(chartWidth: number, chartHeight: number, chartTitleSpace: number, chartSpaceBetween: number, iconOffset: number): void {
         let infoIconShowing = false;
 
-        let chartTitleElement = this.bottomContainer.chartTitleElement
+        const chartTitleElement = this.bottomContainer.chartTitleElement
             .attr("class", "title")
             .classed(this.sizeCssClass, true)
             .text(this.data.settings.dualKpiProperties.titleText);
 
         let iconWidth = 22;
         let iconScaleTransform = "";
-        let iconY = (-chartTitleSpace + (chartTitleSpace / 2) + iconOffset);
+        const iconY = (-chartTitleSpace + (chartTitleSpace / 2) + iconOffset);
 
         if (this.size === DualKpiSize.small || this.size === DualKpiSize.extrasmall || this.size === DualKpiSize.supersmall) {
             iconScaleTransform = "scale(0.75)";
@@ -1053,8 +1052,8 @@ export class DualKpi implements IVisual {
 
         // add info icon
         if (this.data.topValues.length > 0) {
-            let today = new Date();
-            let dataDaysOld = DualKpi.getDaysBetween(this.data.topValues[this.data.topValues.length - 1].date, today);
+            const today = new Date();
+            const dataDaysOld = DualKpi.getDaysBetween(this.data.topValues[this.data.topValues.length - 1].date, today);
             if (dataDaysOld >= this.data.settings.dualKpiProperties.staleDataThreshold && this.data.settings.dualKpiProperties.showStaleDataWarning) {
                 infoIconShowing = true;
                 this.createInfoMessage(iconY, iconScaleTransform, iconWidth, chartWidth, dataDaysOld);
@@ -1063,8 +1062,8 @@ export class DualKpi implements IVisual {
             }
 
             // add day range text
-            let dayRange = DualKpi.getDaysBetween(this.data.topValues[0].date, this.data.topValues[this.data.topValues.length - 1].date);
-            let dayRangeElement = this.bottomContainer.dateRangeText;
+            const dayRange = DualKpi.getDaysBetween(this.data.topValues[0].date, this.data.topValues[this.data.topValues.length - 1].date);
+            const dayRangeElement = this.bottomContainer.dateRangeText;
             dayRangeElement
                 .attr("class", "date-range-text")
                 .classed(this.sizeCssClass, true)
@@ -1082,11 +1081,11 @@ export class DualKpi implements IVisual {
     }
 
     private createWarningMessage(chartTitleElement, iconY: number, iconScaleTransform: any, iconWidth: number) {
-        let warning = this.bottomContainer.warning;
+        const warning = this.bottomContainer.warning;
         warning.group
             .attr("transform", "translate(0," + (iconY) + ")");
 
-        let warningIcon = warning.icon;
+        const warningIcon = warning.icon;
         warningIcon
             .attr("d", "M24,24H8l8-16L24,24z M9.7,23h12.6L16,10.4L9.7,23z M16.5,19.8h-1v-5.4h1V19.8z M16.5,20.8v1.1h-1v-1.1H16.5z")
             .attr("fill", "#E81123")
@@ -1110,13 +1109,13 @@ export class DualKpi implements IVisual {
     }
 
     private createInfoMessage(iconY: number, iconScaleTransform: any, iconWidth: number, chartWidth: number, dataDaysOld: number) {
-        let infoMessage = this.localizationManager.getDisplayName("Visual_InfoMessage_DataIs") + dataDaysOld
+        const infoMessage = this.localizationManager.getDisplayName("Visual_InfoMessage_DataIs") + dataDaysOld
             + this.localizationManager.getDisplayName("Visual_InfoMessage_DaysOld") + this.data.settings.dualKpiProperties.staleDataTooltipText;
-        let info = this.bottomContainer.info;
+        const info = this.bottomContainer.info;
         info.group
             .attr("transform", "translate(" + (chartWidth - iconWidth - 8) + "," + (iconY) + ")");
 
-        let infoIcon = info.icon;
+        const infoIcon = info.icon;
         infoIcon
             .attr("d", "M24,16c0,1.4-0.4,2.8-1,4c-0.7,1.2-1.7,2.2-2.9,2.9c-1.2,0.7-2.5,1-4,1s-2.8-0.4-4-1c-1.2-0.7-2.2-1.7-2.9-2.9 C8.4,18.8,8,17.4,8,16c0-1.5,0.4-2.8,1.1-4c0.8-1.2,1.7-2.2,2.9-2.9S14.6,8,16,8s2.8,0.3,4,1.1c1.2,0.7,2.2,1.7,2.9,2.9 C23.6,13.2,24,14.5,24,16z M12.6,22c1.1,0.6,2.2 0.9,3.4,0.9s2.4-0.3,3.5-0.9c1-0.6,1.9-1.5,2.5-2.6c0.6-1,1-2.2,1-3.4 s-0.3-2.4-1-3.5s-1.5-1.9-2.5-2.5c-1.1-0.6-2.2-1-3.5-1s-2.4,0.4-3.4,1c-1.1,0.6-1.9,1.4-2.6,2.5c-0.6,1.1-0.9,2.2-0.9,3.5 c0,1.2,0.3,2.4,0.9,3.4C10.6,20.5,11.4,21.4,12.6,22z M16.5,17.6h-1v-5.4h1V17.6z M16.5 19.7h-1v-1.1h1V19.7z")
             .attr("fill", "#3599B8")
@@ -1138,13 +1137,14 @@ export class DualKpi implements IVisual {
     }
 
     private hideInfoMessage() {
-        let info = this.bottomContainer.info;
+        const info = this.bottomContainer.info;
         info.icon.classed("hidden", true);
     }
 
+    // eslint-disable-next-line max-lines-per-function
     private drawChart(options: IDualKpiOptions) {
-        let chartData: Array<IDualKpiDataPoint> = options.chartData;
-        let axisConfig: IAxisConfig = options.axisConfig;
+        const chartData: Array<IDualKpiDataPoint> = options.chartData;
+        const axisConfig: IAxisConfig = options.axisConfig;
         const latestValue: number = chartData[chartData.length - 1].value,
             isTopChart: boolean = options.position === DualKpiChartPositionType.top,
             dataColor: string = isTopChart ? this.data.settings.dualKpiColors.dataColor : this.data.settings.dualKpiColorsBottom.dataColor,
@@ -1153,10 +1153,10 @@ export class DualKpi implements IVisual {
             isHighContrastMode: boolean = this.colorHelper.isHighContrast,
             hoverLineStrokeColor: string = "#777";
 
-        let target = this.target;
-        let targetPadding = parseInt(jQuery(target).css("padding-left"), 10) || 0;
+        const target = this.target;
+        const targetPadding = parseInt(jQuery(target).css("padding-left"), 10) || 0;
 
-        let margin = {
+        const margin = {
             top: 7,
             right: 0,
             bottom: 0,
@@ -1167,24 +1167,24 @@ export class DualKpi implements IVisual {
             margin.left = 40;
         }
 
-        let calcWidth = options.width - margin.right - margin.left,
+        const calcWidth = options.width - margin.right - margin.left,
             calcHeight = options.height - margin.top - margin.bottom,
             minValue = d3.min(chartData, (d) => d.value) || 0,
             maxValue = d3.max(chartData, (d) => d.value) || 0;
 
-        let axisMinValue = axisConfig.min !== null && axisConfig.min !== undefined ? axisConfig.min : minValue;
-        let axisMaxValue = axisConfig.max !== null && axisConfig.max !== undefined ? axisConfig.max : maxValue;
+        const axisMinValue = axisConfig.min !== null && axisConfig.min !== undefined ? axisConfig.min : minValue;
+        const axisMaxValue = axisConfig.max !== null && axisConfig.max !== undefined ? axisConfig.max : maxValue;
 
-        let xScale = d3.scaleTime()
+        const xScale = d3.scaleTime()
             .domain(d3.extent(chartData, (d) => d.date))
             .range([0, calcWidth]);
 
-        let yScale = d3.scaleLinear()
+        const yScale = d3.scaleLinear()
             .domain([axisMinValue, axisMaxValue])
             .clamp(true)
             .range([calcHeight, 0]);
 
-        let yAxis = d3.axisLeft(yScale)
+        const yAxis = d3.axisLeft(yScale)
             .tickValues([axisMinValue, axisMaxValue])
             .tickFormat((d) => {
                 let axisTickLabel: string = String(this.axisNumberFormatter(d));
@@ -1215,11 +1215,11 @@ export class DualKpi implements IVisual {
             strokeWidth = 2;
         }
 
-        let chartGroup: IChartGroup = options.element;
+        const chartGroup: IChartGroup = options.element;
         chartGroup.group
             .attr("transform", "translate(" + margin.left + "," + (options.top + margin.top) + ")");
 
-        let chartArea: Selection = chartGroup.area;
+        const chartArea: Selection = chartGroup.area;
         chartArea
             .datum(chartData)
             .attr("style", "opacity: " + (chartOpacity / 100))
@@ -1228,16 +1228,16 @@ export class DualKpi implements IVisual {
             .attr("stroke-width", strokeWidth)
             .attr("d", seriesRenderer as any);
 
-        let zeroAxis: Selection = chartGroup.zeroAxis;
-        let zeroPointOnAxis = axisMinValue <= 0 && axisMaxValue >= 0 ? true : false;
+        const zeroAxis: Selection = chartGroup.zeroAxis;
+        const zeroPointOnAxis = axisMinValue <= 0 && axisMaxValue >= 0 ? true : false;
 
         // DRAW line for x axis at zero position
         // if formatting option for zero line set to true
         // and if a value of zero is on the y-axis
         if (options.showZeroLine && zeroPointOnAxis) {
-            let axisLine = d3.line()
+            const axisLine = d3.line()
                 .x((d: any) => xScale(d.date))
-                .y((d: any) => yScale(0));
+                .y(() => yScale(0));
 
             zeroAxis
                 .datum(chartData)
@@ -1248,7 +1248,7 @@ export class DualKpi implements IVisual {
                 .classed("hidden", true);
         }
 
-        let axis: Selection = chartGroup.yAxis;
+        const axis: Selection = chartGroup.yAxis;
         axis
             .attr("class", "axis")
             .classed(this.sizeCssClass, true)
@@ -1256,7 +1256,7 @@ export class DualKpi implements IVisual {
             .call(yAxis);
 
         if (isHighContrastMode) {
-            let axisTicks: Selection = axis.selectAll("g.tick");
+            const axisTicks: Selection = axis.selectAll("g.tick");
             axisTicks.selectAll("text").attr("fill", axisStrokeHighContrastColor);
             axisTicks.select("line").attr("stroke", axisStrokeHighContrastColor);
             axis.select("path").attr("stroke", axisStrokeHighContrastColor);
@@ -1264,7 +1264,7 @@ export class DualKpi implements IVisual {
         }
 
         /* Add elements for hover behavior ******************************************************/
-        let hoverLine: Selection = chartGroup.hoverLine;
+        const hoverLine: Selection = chartGroup.hoverLine;
         hoverLine
             .classed(DualKpi.INVISIBLE, true)
             .attr("x1", 0)
@@ -1274,21 +1274,21 @@ export class DualKpi implements IVisual {
             .attr("stroke-width", 1)
             .attr("stroke", this.colorHelper.isHighContrast ? axisStrokeHighContrastColor : hoverLineStrokeColor);
 
-        let chartBottom = margin.top + calcHeight;
-        let chartLeft = margin.left;
+        const chartBottom = margin.top + calcHeight;
+        const chartLeft = margin.left;
 
-        let hoverDataContainer: IHoverDataContainer = options.element.hoverDataContainer;
+        const hoverDataContainer: IHoverDataContainer = options.element.hoverDataContainer;
         this.updateHoverDataContainer(hoverDataContainer, chartBottom, chartLeft, calcWidth, isTopChart);
 
         this.dispatch.on("onDualKpiMouseMove." + options.position, ([leftPosition, topPosition]: number[]) => {
-            let areaScale: ElementScale = DualKpi.getScale(target);
-            let maxWidth: number = options.width - margin.left;
+            const areaScale: ElementScale = DualKpi.getScale(target);
+            const maxWidth: number = options.width - margin.left;
 
             leftPosition = leftPosition / areaScale.x - margin.left - targetPadding;
 
-            let x = xScale.invert(leftPosition);
-            let i = this.dataBisector(chartData, x, 1);
-            let dataPoint = chartData[i];
+            const x = xScale.invert(leftPosition);
+            const i = this.dataBisector(chartData, x, 1);
+            const dataPoint = chartData[i];
 
             if ((leftPosition > 0) &&
                 (topPosition > 0) &&
@@ -1299,7 +1299,7 @@ export class DualKpi implements IVisual {
                 hoverLine.attr("transform", "translate(" + leftPosition + ", 0)");
                 hoverLine.classed(DualKpi.INVISIBLE, false);
 
-                let value: number = options.hoverDataPercentType === PercentType.lastDate ? chartData[chartData.length - 1].value
+                const value: number = options.hoverDataPercentType === PercentType.lastDate ? chartData[chartData.length - 1].value
                     : options.hoverDataPercentType === PercentType.firstDate ? chartData[0].value
                         : chartData[i - 1] ? chartData[i - 1].value : 0;
 
@@ -1374,14 +1374,14 @@ export class DualKpi implements IVisual {
 
     private addOverlayText(options: IDualKpiOptions, latestValue: number, calcHeight: number, calcWidth: number, isTopChart: boolean): void {
         const textColor: string = isTopChart ? this.data.settings.dualKpiColors.textColor : this.data.settings.dualKpiColorsBottom.textColor;
-        let chartData: Array<IDualKpiDataPoint> = options.chartData;
-        let chartGroup: IChartGroup = options.element;
+        const chartData: Array<IDualKpiDataPoint> = options.chartData;
+        const chartGroup: IChartGroup = options.element;
 
         let percentChange = DualKpi.getPercentChange(options.percentChangeStartPoint.value, chartData[chartData.length - 1].value);
 
         let format: string;
         for (let col = 0; col < this.dataView.metadata.columns.length; col++) {
-            let column = this.dataView.metadata.columns[col];
+            const column = this.dataView.metadata.columns[col];
             if (column.roles["topvalues"] && isTopChart) {
                 format = column.format;
                 break;
@@ -1393,7 +1393,7 @@ export class DualKpi implements IVisual {
         }
 
         this.data.settings.dualKpiValueFormatting.precision = minMax(this.data.settings.dualKpiValueFormatting.precision, 0, 17);
-        let decimalPlaces: number = this.data.settings.dualKpiValueFormatting.precision;
+        const decimalPlaces: number = this.data.settings.dualKpiValueFormatting.precision;
 
         const formatter: IValueFormatter = valueFormatter.create({
             format: format,
@@ -1415,8 +1415,8 @@ export class DualKpi implements IVisual {
             percentChange = DualKpi.percentFormatter(chartData[chartData.length - 1].value - options.percentChangeStartPoint.value, true);
         }
 
-        let chartOverlay: IChartOverlay = chartGroup.chartOverlay;
-        let dataTitle = chartOverlay.title;
+        const chartOverlay: IChartOverlay = chartGroup.chartOverlay;
+        const dataTitle = chartOverlay.title;
         dataTitle
             .classed(DualKpi.INVISIBLE, true)
             .attr("class", "data-title")
@@ -1426,7 +1426,7 @@ export class DualKpi implements IVisual {
 
         this.applyTextStyle(dataTitle, options, true);
 
-        let dataValue = chartOverlay.text;
+        const dataValue = chartOverlay.text;
         dataValue
             .classed(DualKpi.INVISIBLE, true)
             .attr("class", "data-value")
@@ -1435,16 +1435,16 @@ export class DualKpi implements IVisual {
 
         this.applyTextStyle(dataValue, options);
 
-        let dataTitleHorzCentering = calcWidth / 2;
-        let dataValueHorzCentering = calcWidth / 2;
-        let verticalMargin = DualKpi.DefaultValueSizes[this.sizeCssClass];
+        const dataTitleHorzCentering = calcWidth / 2;
+        const dataValueHorzCentering = calcWidth / 2;
+        const verticalMargin = DualKpi.DefaultValueSizes[this.sizeCssClass];
 
         // apply centerings, then unhide text
         dataTitle.attr("transform", `translate(${dataTitleHorzCentering}, 0)`);
         dataValue.attr("transform", `translate(${dataValueHorzCentering}, ${verticalMargin})`);
 
-        let verticalCentering = (calcHeight / 2) - verticalMargin / 2; // bump slightly above perfectly vertically centered on chart
-        let horizontalCentering = 0;
+        const verticalCentering = (calcHeight / 2) - verticalMargin / 2; // bump slightly above perfectly vertically centered on chart
+        const horizontalCentering = 0;
 
         chartOverlay.group
             .attr("transform", `translate(${horizontalCentering}, ${verticalCentering})`);

@@ -74,7 +74,7 @@ export class VisualData extends TestDataViewBuilder {
                     },
                     values: this.valuesBottomValues
                 }
-            ], columnNames).build();
+            ], <string[]>columnNames).build();
     }
 }
 

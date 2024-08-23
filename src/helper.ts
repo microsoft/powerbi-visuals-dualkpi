@@ -24,10 +24,10 @@
  *  THE SOFTWARE.
  */
 
-export function minMax(targetNum: number, min: number, max: number) {
-    const isNullableTargetNum: boolean = targetNum === undefined || targetNum === null;
-    const isNullableMin: boolean = min === undefined || min === null;
-    const isNullableMax: boolean = max === undefined || max === null;
+export function minMax(targetNum?: number | null, min?: number | null, max?: number | null) {
+    const isNullableTargetNum: boolean = targetNum == null;
+    const isNullableMin: boolean = min == null;
+    const isNullableMax: boolean = max == null;
 
     if (isNullableTargetNum) {
         targetNum = (!isNullableMin) ? min : null;

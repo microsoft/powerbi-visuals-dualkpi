@@ -26,6 +26,7 @@
 
 import powerbi from "powerbi-visuals-api";
 import DataView = powerbi.DataView;
+import PrimitiveValue = powerbi.PrimitiveValue;
 
 // powerbi.extensibility.utils.test
 import { assertColorsMatch, getSolidColorStructuralObject, d3MouseMove } from "powerbi-visuals-utils-testutils";
@@ -161,8 +162,8 @@ describe("DualKpi", () => {
         });
 
         it("update with null values", (done) => {
-            dataView.categorical.categories[0].values[0] = null;
-            dataView.categorical.values[0].values[0] = null;
+            dataView.categorical!.categories![0].values[0] = null as unknown as PrimitiveValue;
+            dataView.categorical!.values![0].values[0] = null as unknown as PrimitiveValue;
 
             visualBuilder.updateRenderTimeout(dataView, () => {
                 expect(visualBuilder.chartGroup.children("path.area")).toBeInDOM();

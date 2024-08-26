@@ -34,6 +34,7 @@ import { assertColorsMatch, getSolidColorStructuralObject, d3MouseMove } from "p
 import { VisualData, getRandomHexColor } from "./visualData";
 import { VisualBuilder } from "./visualBuilder";
 import { minMax } from "../src/helper";
+import { ColorHelper } from "powerbi-visuals-utils-colorutils";
 
 describe("DualKpi", () => {
     let visualBuilder: VisualBuilder;
@@ -172,14 +173,14 @@ describe("DualKpi", () => {
         });
 
         it("changed data with high contrast on", () => {
-            let dataColorTop: string = getRandomHexColor(),
-                textColorTop: string = getRandomHexColor(),
+            let dataColorTop: string = "#01B8AA",
+                textColorTop: string = "#212121",
                 chartOpacityTop: number = 10;
 
             dataView.metadata.objects = {
                 dualKpiColors: {
-                    dataColor: getSolidColorStructuralObject(dataColorTop),
-                    textColor: getSolidColorStructuralObject(textColorTop),
+                    dataColor: dataColorTop,
+                    textColor: textColorTop,
                     opacity: chartOpacityTop
                 },
             };
@@ -187,6 +188,8 @@ describe("DualKpi", () => {
             visualBuilder.visualHost.colorPalette.isHighContrast = true;
 
             visualBuilder.updateFlushAllD3Transitions(dataView);
+            const colorHelper = new ColorHelper(visualBuilder.visualHost.colorPalette);
+            const foreground = colorHelper.getHighContrastColor("foreground");
 
             let topChartGroup: JQuery = visualBuilder.chartGroup.first(),
                 topGroup: JQuery = visualBuilder.group.first(),
@@ -194,8 +197,8 @@ describe("DualKpi", () => {
                 opacityTop: number = Math.round(parseFloat(opacityStringTop) * 10) / 10;
 
             expect(opacityTop).toBe(chartOpacityTop / 100);
-            assertColorsMatch($(topChartGroup).children("path.area").css("fill"), "#000000");
-            assertColorsMatch($(topGroup).children("text.data-title").css("fill"), "#000000");
+            assertColorsMatch($(topChartGroup).children("path.area").css("fill"), foreground);
+            assertColorsMatch($(topGroup).children("text.data-title").css("fill"), foreground);
         });
 
         it("data area and title should respect color formatting options", () => {
@@ -243,7 +246,10 @@ describe("DualKpi", () => {
 
         it("hovering data area should make hover mode elements visible", () => {
             visualBuilder.updateFlushAllD3Transitions(dataView);
-            d3MouseMove(visualBuilder.chartGroup.children("path.area"), 100, 100);
+            visualBuilder.chartGroup.children("path.area").each(function (index, element) {
+                const bBox = element.getBoundingClientRect();
+                d3MouseMove($(element), bBox.left + 100, bBox.top + 100);
+            });
 
             expect(visualBuilder.chartGroup.children("line").first().attr("class").indexOf("invisible") < 0).toBeTruthy();
             expect(visualBuilder.chartGroup.children("g.hover-data-container").first().attr("class").indexOf("invisible") < 0).toBeTruthy();
@@ -267,6 +273,7 @@ describe("DualKpi", () => {
             expect(visualBuilder.chartGroup.last().children("path.zero-axis").attr("class").indexOf("hidden") >= 0).toBeTruthy();
         });
 
+        // Tooltip is shown above the visual, so we can't access it
         xit("should show title tooltip", () => {
             let topChartToolTipText: string = "Top metric name";
             dataView.metadata.objects = {
@@ -276,7 +283,8 @@ describe("DualKpi", () => {
             };
 
             visualBuilder.updateFlushAllD3Transitions(dataView);
-            expect(visualBuilder.group.children("title").first().text().indexOf(topChartToolTipText) >= 0).toBeTruthy();
+            visualBuilder.group.first().get(0)?.dispatchEvent(new MouseEvent("mouseover", { clientX: 0, clientY: 0 }));
+            expect(visualBuilder.group.children("text").first().text().indexOf(topChartToolTipText) >= 0).toBeTruthy();
             expect(visualBuilder.group.children("text.data-value").first().text().indexOf("k") < 0).toBeTruthy();
 
             dataView.metadata.objects = {

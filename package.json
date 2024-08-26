@@ -57,7 +57,7 @@
     "@typescript-eslint/parser": "^8.2.0",
     "coveralls": "^3.1.1",
     "css-loader": "^7.1.2",
-    "eslint": "^9.9.0",
+    "eslint": "^8.57.0",
     "eslint-plugin-powerbi-visuals": "^0.8.1",
     "jasmine": "^5.2.0",
     "jasmine-jquery": "^2.1.1",

@@ -51,6 +51,7 @@ module.exports = (config) => {
         reporters: [
             "progress",
             "junit",
+            "coverage"
         ],
         junitReporter: {
             outputDir: path.join(__dirname, coverageFolder),

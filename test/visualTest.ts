@@ -173,14 +173,14 @@ describe("DualKpi", () => {
         });
 
         it("changed data with high contrast on", () => {
-            let dataColorTop: string = "#01B8AA",
+            const dataColorTop: string = "#01B8AA",
                 textColorTop: string = "#212121",
                 chartOpacityTop: number = 10;
 
             dataView.metadata.objects = {
                 dualKpiColors: {
-                    dataColor: dataColorTop,
-                    textColor: textColorTop,
+                    dataColor: getSolidColorStructuralObject(dataColorTop),
+                    textColor: getSolidColorStructuralObject(textColorTop),
                     opacity: chartOpacityTop
                 },
             };

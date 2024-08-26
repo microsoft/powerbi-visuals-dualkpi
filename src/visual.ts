@@ -55,10 +55,12 @@ import { DualKpiChartPositionType } from "./enums";
 import { minMax } from "./helper";
 import { PercentType } from "./settings/dualKpiPropertiesSettings";
 import { DualKpiSettings } from "./settings/settings";
+import { DualKpiSettingsModel } from './dualKpiSettingsModel';
 
 import DataView = powerbi.DataView;
 import IViewport = powerbi.IViewport;
 import VisualObjectInstance = powerbi.VisualObjectInstance;
+import FormattingModel = powerbi.visuals.FormattingModel;
 import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
 import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
 import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
@@ -75,6 +77,7 @@ import ISelectionManager = powerbi.extensibility.ISelectionManager;
 
 import IValueFormatter = ValueFormatter.IValueFormatter;
 import valueFormatter = ValueFormatter;
+import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
 
 type FormatterFunction = (n: number | { valueOf(): number }) => string;
 type Selection = d3Selection<any, any, any, any>;
@@ -90,8 +93,8 @@ export interface ElementScale {
 }
 
 export interface IDualKpiData {
-
     settings: DualKpiSettings;
+    formattingSettings: DualKpiSettingsModel;
     // data bound
     topChartName: string;
     bottomChartName: string;
@@ -212,7 +215,6 @@ export class DualKpi implements IVisual {
 
     private chartLeftMargin = 35;
     private viewport: IViewport;
-    private localizationManager: ILocalizationManager;
 
     private axisNumberFormatter;
 
@@ -246,7 +248,10 @@ export class DualKpi implements IVisual {
     private tooltipServiceWrapper: ITooltipServiceWrapper;
     private host: IVisualHost;
 
+    private localizationManager: ILocalizationManager;
     private selectionManager: ISelectionManager;
+    private formattingSettingsService: FormattingSettingsService;
+    private formattingSettings: DualKpiSettingsModel;
 
     constructor(options: VisualConstructorOptions) {
         this.init(options);
@@ -266,6 +271,7 @@ export class DualKpi implements IVisual {
         this.host = options.host;
         this.localizationManager = this.host.createLocalizationManager();
         this.selectionManager = this.host.createSelectionManager();
+        this.formattingSettingsService = new FormattingSettingsService(this.localizationManager);
 
         this.colorPalette = this.host.colorPalette;
         this.colorHelper = new ColorHelper(this.colorPalette);
@@ -483,6 +489,9 @@ export class DualKpi implements IVisual {
             return;
         }
 
+        this.formattingSettings = this.formattingSettingsService.populateFormattingSettingsModel(DualKpiSettingsModel, dataView);
+        this.formattingSettings.setLocalizedOptions(this.localizationManager);
+
         const data: IDualKpiData = this.data = DualKpi.converter(this.dataView, this.localizationManager, this.colorHelper);
 
         const availableHeight = options.viewport.height < 90 ? 90 : options.viewport.height;
@@ -662,6 +671,11 @@ export class DualKpi implements IVisual {
         }
 
         this.viewport = viewport;
+    }
+
+
+    public getFormattingModel(): FormattingModel {
+        return this.formattingSettingsService.buildFormattingModel(this.formattingSettings);
     }
 
     public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstance[] {

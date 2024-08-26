@@ -473,7 +473,6 @@ export class DualKpi implements IVisual {
         return DualKpiSize.large;
     }
 
-    // eslint-disable-next-line max-lines-per-function
     public update(options: VisualUpdateOptions) {
         try {
             const dataView: DataView = this.dataView = options.dataViews && options.dataViews[0];
@@ -497,49 +496,8 @@ export class DualKpi implements IVisual {
             const availableHeight = options.viewport.height < 90 ? 90 : options.viewport.height;
             const availableWidth = options.viewport.width < 220 ? 220 : options.viewport.width;
             const chartWidth = availableWidth;
-            let chartSpaceBetween: number, chartTitleSpace: number, iconOffset: number;
 
-            const size: DualKpiSize = DualKpi.getChartSize({ height: availableHeight, width: availableWidth });
-
-            switch (size) {
-                case DualKpiSize.large:
-                    this.size = DualKpiSize.large;
-                    this.sizeCssClass = "large";
-                    iconOffset = -1;
-                    chartSpaceBetween = 25;
-                    chartTitleSpace = 46;
-                    break;
-                case DualKpiSize.medium:
-                    this.size = DualKpiSize.medium;
-                    this.sizeCssClass = "medium";
-                    iconOffset = -8;
-                    chartSpaceBetween = 20;
-                    chartTitleSpace = 30;
-                    break;
-                case DualKpiSize.small:
-                    this.size = DualKpiSize.small;
-                    this.sizeCssClass = "small";
-                    iconOffset = -6;
-                    chartSpaceBetween = 15;
-                    chartTitleSpace = 22;
-                    break;
-                case DualKpiSize.extrasmall:
-                    this.size = DualKpiSize.extrasmall;
-                    this.sizeCssClass = "extra-small";
-                    iconOffset = -8;
-                    chartSpaceBetween = 12;
-                    chartTitleSpace = 20;
-                    break;
-                case DualKpiSize.supersmall:
-                    this.size = DualKpiSize.supersmall;
-                    this.sizeCssClass = "super-small";
-                    iconOffset = -8;
-                    chartSpaceBetween = 10;
-                    chartTitleSpace = 18;
-                    break;
-                default:
-                    break;
-            }
+            const { chartSpaceBetween, chartTitleSpace, iconOffset }: { chartSpaceBetween: number; chartTitleSpace: number; iconOffset: number; } = this.setChartLayout(availableHeight, availableWidth);
 
             this.titleSize = DualKpi.DefaultTitleSizes[this.sizeCssClass];
 
@@ -549,113 +507,185 @@ export class DualKpi implements IVisual {
             });
 
             const chartHeight = (availableHeight - (chartSpaceBetween + chartTitleSpace)) / 2;
-            const topChartAxisConfig = { min: data.settings.dualKpiAxis.topChartAxisMin.value, max: data.settings.dualKpiAxis.topChartAxisMax.value };
-            const bottomChartAxisConfig = { min: data.settings.dualKpiAxis.bottomChartAxisMin.value, max: data.settings.dualKpiAxis.bottomChartAxisMax.value };
-
-            const topChartPercentChangeStartPoint = DualKpi.getPercentChangeStartPoint(data.topValues, data.topPercentCalcDate);
-            const bottomChartPercentChangeStartPoint = DualKpi.getPercentChangeStartPoint(data.bottomValues, data.bottomPercentCalcDate);
-
             const wasDataSetRendered: boolean = data.topValues.length > 0 || data.bottomValues.length > 0;
 
             this.displayRootElement(wasDataSetRendered);
-
-            if (data.settings.dualKpiProperties.topChartShow.value) {
-                this.chartGroupTop.group.classed(DualKpi.INVISIBLE, false);
-                this.chartGroupTop.hoverDataContainer.container.classed(DualKpi.INVISIBLE, true);
-
-                if (data.topValues.length > 0) {
-                    this.drawChart({
-                        element: this.chartGroupTop,
-                        abbreviateValue: data.settings.dualKpiProperties.abbreviateValues.value,
-                        abbreviateHoverValue: data.settings.dualKpiProperties.abbreviateHoverValues.value,
-                        hoverDataPercentType: <PercentType>data.settings.dualKpiProperties.hoverDataPercentType.value.value,
-                        axisConfig: topChartAxisConfig,
-                        chartData: data.topValues,
-                        chartTitle: data.topChartName,
-                        chartType: <DualKpiChartType>data.settings.dualKpiChart.topChartType.value.value,
-                        height: data.settings.dualKpiProperties.bottomChartShow.value && data.settings.dualKpiProperties.topChartShow.value ? chartHeight : chartHeight * 2 + chartSpaceBetween,
-                        percentChangeStartPoint: topChartPercentChangeStartPoint,
-                        showZeroLine: data.settings.dualKpiAxis.topChartZeroLine.value,
-                        tooltipText: data.settings.dualKpiProperties.topChartToolTipText.value,
-                        top: 0,
-                        valueAsPercent: data.topValueAsPercent,
-                        width: chartWidth,
-                        position: DualKpiChartPositionType["top"],
-                        showTextOverlay: data.settings.dualKpiValues.show.value,
-                        showDefaultTextOverlay: !data.settings.dualKpiValues.showKpiValuesTop.value,
-                        defaultTextOverlay: data.settings.dualKpiValues.topChartDefaultKpiValue.value,
-                        fontSizeAutoFormattingTitle: data.settings.dualKpiTitleFormatting.fontSizeAutoFormatting.value,
-                        fontSizeAutoFormattingValue: data.settings.dualKpiValueFormatting.fontSizeAutoFormatting.value,
-                        titleFontSize: data.settings.dualKpiTitleFormatting.font.fontSize.value,
-                        valueFontSize: data.settings.dualKpiValueFormatting.font.fontSize.value,
-                        isBoldTitle: data.settings.dualKpiTitleFormatting.font.bold.value,
-                        isBoldValue: data.settings.dualKpiValueFormatting.font.bold.value,
-                        isItalicTitle: data.settings.dualKpiTitleFormatting.font.italic.value,
-                        isItalicValue: data.settings.dualKpiValueFormatting.font.italic.value,
-                        isUnderlineTitle: data.settings.dualKpiTitleFormatting.font.underline.value,
-                        isUnderlineValue: data.settings.dualKpiValueFormatting.font.underline.value,
-                        isUpperCasedTitle: data.settings.dualKpiTitleFormatting.upperCase.value,
-                        fontFamilyTitle: data.settings.dualKpiTitleFormatting.font.fontFamily.value,
-                        fontFamilyValue: data.settings.dualKpiValueFormatting.font.fontFamily.value,
-                    });
-                }
-            } else {
-                this.chartGroupTop.group.classed(DualKpi.INVISIBLE, true);
-                this.chartGroupTop.hoverDataContainer.container.classed(DualKpi.INVISIBLE, true);
-            }
-
-            if (data.settings.dualKpiProperties.bottomChartShow.value) {
-                // draw bottom chart
-                this.chartGroupBottom.group.classed(DualKpi.INVISIBLE, false);
-                this.chartGroupBottom.hoverDataContainer.container.classed(DualKpi.INVISIBLE, true);
-
-                if (data.bottomValues.length > 0) {
-                    this.drawChart({
-                        element: this.chartGroupBottom,
-                        abbreviateValue: data.settings.dualKpiProperties.abbreviateValues.value,
-                        abbreviateHoverValue: data.settings.dualKpiProperties.abbreviateHoverValues.value,
-                        hoverDataPercentType: <PercentType>data.settings.dualKpiProperties.hoverDataPercentType.value.value,
-                        axisConfig: bottomChartAxisConfig,
-                        chartData: data.bottomValues,
-                        chartTitle: data.bottomChartName,
-                        chartType: <DualKpiChartType>data.settings.dualKpiChart.bottomChartType.value.value,
-                        height: data.settings.dualKpiProperties.bottomChartShow.value && data.settings.dualKpiProperties.topChartShow.value ? chartHeight : chartHeight * 2 + chartSpaceBetween,
-                        percentChangeStartPoint: bottomChartPercentChangeStartPoint,
-                        showZeroLine: data.settings.dualKpiAxis.bottomChartZeroLine.value,
-                        tooltipText: data.settings.dualKpiProperties.bottomChartToolTipText.value,
-                        top: data.settings.dualKpiProperties.bottomChartShow.value && data.settings.dualKpiProperties.topChartShow.value ? chartHeight + chartSpaceBetween : 0,
-                        valueAsPercent: data.bottomValueAsPercent,
-                        width: chartWidth,
-                        position: DualKpiChartPositionType["bottom"],
-                        showTextOverlay: data.settings.dualKpiValues.show.value,
-                        showDefaultTextOverlay: !data.settings.dualKpiValues.showKpiValuesBottom.value,
-                        defaultTextOverlay: data.settings.dualKpiValues.bottomChartDefaultKpiValue.value,
-                        fontSizeAutoFormattingTitle: data.settings.dualKpiTitleFormatting.fontSizeAutoFormatting.value,
-                        fontSizeAutoFormattingValue: data.settings.dualKpiValueFormatting.fontSizeAutoFormatting.value,
-                        titleFontSize: data.settings.dualKpiTitleFormatting.font.fontSize.value,
-                        valueFontSize: data.settings.dualKpiValueFormatting.font.fontSize.value,
-                        isBoldTitle: data.settings.dualKpiTitleFormatting.font.bold.value,
-                        isBoldValue: data.settings.dualKpiValueFormatting.font.bold.value,
-                        isItalicTitle: data.settings.dualKpiTitleFormatting.font.italic.value,
-                        isItalicValue: data.settings.dualKpiValueFormatting.font.italic.value,
-                        isUnderlineTitle: data.settings.dualKpiTitleFormatting.font.underline.value,
-                        isUnderlineValue: data.settings.dualKpiValueFormatting.font.underline.value,
-                        isUpperCasedTitle: data.settings.dualKpiTitleFormatting.upperCase.value,
-                        fontFamilyTitle: data.settings.dualKpiTitleFormatting.font.fontFamily.value,
-                        fontFamilyValue: data.settings.dualKpiValueFormatting.font.fontFamily.value,
-                    });
-                }
-            } else {
-                this.chartGroupBottom.group.classed(DualKpi.INVISIBLE, true);
-                this.chartGroupBottom.hoverDataContainer.container.classed(DualKpi.INVISIBLE, true);
-            }
+            this.drawTopChart({data, chartHeight, chartWidth, chartSpaceBetween});
+            this.dropBottomChart({data, chartHeight, chartWidth, chartSpaceBetween});
 
             if (wasDataSetRendered) {
                 this.drawBottomContainer(chartWidth, chartHeight, chartTitleSpace, chartSpaceBetween, iconOffset);
             }
         } catch (e) {
             console.error(e);
+        }
+    }
 
+    private setChartLayout(availableHeight: number, availableWidth: number) {
+        let chartSpaceBetween: number, chartTitleSpace: number, iconOffset: number;
+        const size: DualKpiSize = DualKpi.getChartSize({ height: availableHeight, width: availableWidth });
+
+        switch (size) {
+            case DualKpiSize.large:
+                this.size = DualKpiSize.large;
+                this.sizeCssClass = "large";
+                iconOffset = -1;
+                chartSpaceBetween = 25;
+                chartTitleSpace = 46;
+                break;
+            case DualKpiSize.medium:
+                this.size = DualKpiSize.medium;
+                this.sizeCssClass = "medium";
+                iconOffset = -8;
+                chartSpaceBetween = 20;
+                chartTitleSpace = 30;
+                break;
+            case DualKpiSize.small:
+                this.size = DualKpiSize.small;
+                this.sizeCssClass = "small";
+                iconOffset = -6;
+                chartSpaceBetween = 15;
+                chartTitleSpace = 22;
+                break;
+            case DualKpiSize.extrasmall:
+                this.size = DualKpiSize.extrasmall;
+                this.sizeCssClass = "extra-small";
+                iconOffset = -8;
+                chartSpaceBetween = 12;
+                chartTitleSpace = 20;
+                break;
+            case DualKpiSize.supersmall:
+                this.size = DualKpiSize.supersmall;
+                this.sizeCssClass = "super-small";
+                iconOffset = -8;
+                chartSpaceBetween = 10;
+                chartTitleSpace = 18;
+                break;
+            default:
+                break;
+        }
+
+        return { chartSpaceBetween, chartTitleSpace, iconOffset };
+    }
+
+    private dropBottomChart({
+        data,
+        chartHeight,
+        chartSpaceBetween,
+        chartWidth,
+    }: {
+        data: IDualKpiData
+        chartHeight: number;
+        chartSpaceBetween: number;
+        chartWidth: number;
+    }) {
+        if (data.settings.dualKpiProperties.bottomChartShow.value) {
+            const bottomChartAxisConfig = { min: data.settings.dualKpiAxis.bottomChartAxisMin.value, max: data.settings.dualKpiAxis.bottomChartAxisMax.value };
+            const bottomChartPercentChangeStartPoint = DualKpi.getPercentChangeStartPoint(data.bottomValues, data.bottomPercentCalcDate);
+
+            this.chartGroupBottom.group.classed(DualKpi.INVISIBLE, false);
+            this.chartGroupBottom.hoverDataContainer.container.classed(DualKpi.INVISIBLE, true);
+
+            if (data.bottomValues.length > 0) {
+                this.drawChart({
+                    element: this.chartGroupBottom,
+                    abbreviateValue: data.settings.dualKpiProperties.abbreviateValues.value,
+                    abbreviateHoverValue: data.settings.dualKpiProperties.abbreviateHoverValues.value,
+                    hoverDataPercentType: <PercentType>data.settings.dualKpiProperties.hoverDataPercentType.value.value,
+                    axisConfig: bottomChartAxisConfig,
+                    chartData: data.bottomValues,
+                    chartTitle: data.bottomChartName,
+                    chartType: <DualKpiChartType>data.settings.dualKpiChart.bottomChartType.value.value,
+                    height: data.settings.dualKpiProperties.bottomChartShow.value && data.settings.dualKpiProperties.topChartShow.value ? chartHeight : chartHeight * 2 + chartSpaceBetween,
+                    percentChangeStartPoint: bottomChartPercentChangeStartPoint,
+                    showZeroLine: data.settings.dualKpiAxis.bottomChartZeroLine.value,
+                    tooltipText: data.settings.dualKpiProperties.bottomChartToolTipText.value,
+                    top: data.settings.dualKpiProperties.bottomChartShow.value && data.settings.dualKpiProperties.topChartShow.value ? chartHeight + chartSpaceBetween : 0,
+                    valueAsPercent: data.bottomValueAsPercent,
+                    width: chartWidth,
+                    position: DualKpiChartPositionType["bottom"],
+                    showTextOverlay: data.settings.dualKpiValues.show.value,
+                    showDefaultTextOverlay: !data.settings.dualKpiValues.showKpiValuesBottom.value,
+                    defaultTextOverlay: data.settings.dualKpiValues.bottomChartDefaultKpiValue.value,
+                    fontSizeAutoFormattingTitle: data.settings.dualKpiTitleFormatting.fontSizeAutoFormatting.value,
+                    fontSizeAutoFormattingValue: data.settings.dualKpiValueFormatting.fontSizeAutoFormatting.value,
+                    titleFontSize: data.settings.dualKpiTitleFormatting.font.fontSize.value,
+                    valueFontSize: data.settings.dualKpiValueFormatting.font.fontSize.value,
+                    isBoldTitle: data.settings.dualKpiTitleFormatting.font.bold.value,
+                    isBoldValue: data.settings.dualKpiValueFormatting.font.bold.value,
+                    isItalicTitle: data.settings.dualKpiTitleFormatting.font.italic.value,
+                    isItalicValue: data.settings.dualKpiValueFormatting.font.italic.value,
+                    isUnderlineTitle: data.settings.dualKpiTitleFormatting.font.underline.value,
+                    isUnderlineValue: data.settings.dualKpiValueFormatting.font.underline.value,
+                    isUpperCasedTitle: data.settings.dualKpiTitleFormatting.upperCase.value,
+                    fontFamilyTitle: data.settings.dualKpiTitleFormatting.font.fontFamily.value,
+                    fontFamilyValue: data.settings.dualKpiValueFormatting.font.fontFamily.value,
+                });
+            }
+        } else {
+            this.chartGroupBottom.group.classed(DualKpi.INVISIBLE, true);
+            this.chartGroupBottom.hoverDataContainer.container.classed(DualKpi.INVISIBLE, true);
+        }
+    }
+
+    private drawTopChart({
+        data,
+        chartHeight,
+        chartWidth,
+        chartSpaceBetween,
+    }: {
+        data: IDualKpiData;
+        chartHeight: number;
+        chartWidth: number;
+        chartSpaceBetween: number;
+    }) {
+        if (data.settings.dualKpiProperties.topChartShow.value) {
+            const topChartAxisConfig = { min: data.settings.dualKpiAxis.topChartAxisMin.value, max: data.settings.dualKpiAxis.topChartAxisMax.value };
+            const topChartPercentChangeStartPoint = DualKpi.getPercentChangeStartPoint(data.topValues, data.topPercentCalcDate);
+ 
+
+            this.chartGroupTop.group.classed(DualKpi.INVISIBLE, false);
+            this.chartGroupTop.hoverDataContainer.container.classed(DualKpi.INVISIBLE, true);
+
+            if (data.topValues.length > 0) {
+                this.drawChart({
+                    element: this.chartGroupTop,
+                    abbreviateValue: data.settings.dualKpiProperties.abbreviateValues.value,
+                    abbreviateHoverValue: data.settings.dualKpiProperties.abbreviateHoverValues.value,
+                    hoverDataPercentType: <PercentType>data.settings.dualKpiProperties.hoverDataPercentType.value.value,
+                    axisConfig: topChartAxisConfig,
+                    chartData: data.topValues,
+                    chartTitle: data.topChartName,
+                    chartType: <DualKpiChartType>data.settings.dualKpiChart.topChartType.value.value,
+                    height: data.settings.dualKpiProperties.bottomChartShow.value && data.settings.dualKpiProperties.topChartShow.value ? chartHeight : chartHeight * 2 + chartSpaceBetween,
+                    percentChangeStartPoint: topChartPercentChangeStartPoint,
+                    showZeroLine: data.settings.dualKpiAxis.topChartZeroLine.value,
+                    tooltipText: data.settings.dualKpiProperties.topChartToolTipText.value,
+                    top: 0,
+                    valueAsPercent: data.topValueAsPercent,
+                    width: chartWidth,
+                    position: DualKpiChartPositionType["top"],
+                    showTextOverlay: data.settings.dualKpiValues.show.value,
+                    showDefaultTextOverlay: !data.settings.dualKpiValues.showKpiValuesTop.value,
+                    defaultTextOverlay: data.settings.dualKpiValues.topChartDefaultKpiValue.value,
+                    fontSizeAutoFormattingTitle: data.settings.dualKpiTitleFormatting.fontSizeAutoFormatting.value,
+                    fontSizeAutoFormattingValue: data.settings.dualKpiValueFormatting.fontSizeAutoFormatting.value,
+                    titleFontSize: data.settings.dualKpiTitleFormatting.font.fontSize.value,
+                    valueFontSize: data.settings.dualKpiValueFormatting.font.fontSize.value,
+                    isBoldTitle: data.settings.dualKpiTitleFormatting.font.bold.value,
+                    isBoldValue: data.settings.dualKpiValueFormatting.font.bold.value,
+                    isItalicTitle: data.settings.dualKpiTitleFormatting.font.italic.value,
+                    isItalicValue: data.settings.dualKpiValueFormatting.font.italic.value,
+                    isUnderlineTitle: data.settings.dualKpiTitleFormatting.font.underline.value,
+                    isUnderlineValue: data.settings.dualKpiValueFormatting.font.underline.value,
+                    isUpperCasedTitle: data.settings.dualKpiTitleFormatting.upperCase.value,
+                    fontFamilyTitle: data.settings.dualKpiTitleFormatting.font.fontFamily.value,
+                    fontFamilyValue: data.settings.dualKpiValueFormatting.font.fontFamily.value,
+                });
+            }
+        } else {
+            this.chartGroupTop.group.classed(DualKpi.INVISIBLE, true);
+            this.chartGroupTop.hoverDataContainer.container.classed(DualKpi.INVISIBLE, true);
         }
     }
 

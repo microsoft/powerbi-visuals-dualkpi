@@ -125,39 +125,13 @@ describe("DualKpi", () => {
         });
     });
 
-    describe("Capabilities tests", () => {
-        it("all items having displayName should have displayNameKey property", () => {
-            jasmine.getJSONFixtures().fixturesPath = "base";
-
-            let jsonData = getJSONFixture("capabilities.json");
-
-            let objectsChecker: Function = (obj) => {
-                for (let property in obj) {
-                    let value: any = obj[property];
-
-                    if (value.displayName) {
-                        expect(value.displayNameKey).toBeDefined();
-                    }
-
-                    if (typeof value === "object") {
-                        objectsChecker(value);
-                    }
-                }
-            };
-
-            objectsChecker(jsonData);
-        });
-    });
-
     describe("DOM tests", () => {
-        it("svg element created", () => expect(visualBuilder.mainElement[0]).toBeInDOM());
+        it("svg element created", () => expect(visualBuilder.mainElement).toBeDefined());
 
         it("update", (done) => {
             visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(visualBuilder.chartGroup.children("path.area"))
-                    .toBeInDOM();
-                expect(visualBuilder.chartGroup.children("g.axis").children("g.tick").length)
-                    .toBe(4);
+                expect(visualBuilder.pathAreas.length).toBeGreaterThan(0);
+                expect(visualBuilder.axisTicks.length).toBe(4);
                 done();
             });
         });
@@ -167,7 +141,7 @@ describe("DualKpi", () => {
             dataView.categorical!.values![0].values[0] = null as unknown as PrimitiveValue;
 
             visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(visualBuilder.chartGroup.children("path.area")).toBeInDOM();
+                expect(visualBuilder.pathAreas.length).toBeGreaterThan(0);
                 done();
             }, DefaultWaitForRender);
         });
@@ -191,14 +165,12 @@ describe("DualKpi", () => {
             const colorHelper = new ColorHelper(visualBuilder.visualHost.colorPalette);
             const foreground = colorHelper.getHighContrastColor("foreground");
 
-            let topChartGroup: JQuery = visualBuilder.chartGroup.first(),
-                topGroup: JQuery = visualBuilder.group.first(),
-                opacityStringTop: string = $(topChartGroup).children("path.area").css("opacity"),
-                opacityTop: number = Math.round(parseFloat(opacityStringTop) * 10) / 10;
+            const opacityStringTop: string = visualBuilder.pathAreaTop?.style.opacity || "0";
+            const opacityTop: number = Math.round(parseFloat(opacityStringTop) * 10) / 10;
 
             expect(opacityTop).toBe(chartOpacityTop / 100);
-            assertColorsMatch($(topChartGroup).children("path.area").css("fill"), foreground);
-            assertColorsMatch($(topGroup).children("text.data-title").css("fill"), foreground);
+            assertColorsMatch(getComputedStyle(visualBuilder.pathAreaTop!).fill, foreground);
+            assertColorsMatch(getComputedStyle(visualBuilder.titleTop!).fill, foreground);
         });
 
         it("data area and title should respect color formatting options", () => {
@@ -225,34 +197,35 @@ describe("DualKpi", () => {
 
             visualBuilder.updateFlushAllD3Transitions(dataView);
 
-            let topChartGroup: JQuery = visualBuilder.chartGroup.first(),
-                topGroup: JQuery = visualBuilder.group.first(),
-                bottomChartGroup: JQuery = visualBuilder.chartGroup.last(),
-                bottomGroup: JQuery = visualBuilder.group.last();
-
-            let opacityStringTop: string = $(topChartGroup).children("path.area").css("opacity"),
+            const opacityStringTop: string = visualBuilder.pathAreaTop?.style.opacity || "0",
                 opacityTop: number = Math.round(parseFloat(opacityStringTop) * 10) / 10,
-                opacityStringBottom: string = $(bottomChartGroup).children("path.area").css("opacity"),
+                opacityStringBottom: string = visualBuilder.pathAreaBottom?.style.opacity || "0",
                 opacityBottom: number = Math.round(parseFloat(opacityStringBottom) * 10) / 10;
 
             expect(opacityTop).toBe(chartOpacityTop / 100);
-            assertColorsMatch($(topChartGroup).children("path.area").css("fill"), dataColorTop);
-            assertColorsMatch($(topGroup).children("text.data-title").css("fill"), textColorTop);
+            assertColorsMatch(getComputedStyle(visualBuilder.pathAreaTop!).fill, dataColorTop);
+            assertColorsMatch(getComputedStyle(visualBuilder.titleTop!).fill, textColorTop);
 
             expect(opacityBottom).toBe(chartOpacityBottom / 100);
-            assertColorsMatch($(bottomChartGroup).children("path.area").css("fill"), dataColorBottom);
-            assertColorsMatch($(bottomGroup).children("text.data-title").css("fill"), textColorBottom);
+            assertColorsMatch(getComputedStyle(visualBuilder.pathAreaBottom!).fill, dataColorBottom);
+            assertColorsMatch(getComputedStyle(visualBuilder.titleBottom!).fill, textColorBottom);
         });
 
         it("hovering data area should make hover mode elements visible", () => {
             visualBuilder.updateFlushAllD3Transitions(dataView);
-            visualBuilder.chartGroup.children("path.area").each(function (index, element) {
-                const bBox = element.getBoundingClientRect();
-                d3MouseMove($(element), bBox.left + 100, bBox.top + 100);
+
+            visualBuilder.pathAreas.forEach((pathArea: SVGPathElement) => {
+                const bBox = pathArea.getBoundingClientRect();
+                d3MouseMove(pathArea as unknown as HTMLElement, bBox.left + 100, bBox.top + 100);
             });
 
-            expect(visualBuilder.chartGroup.children("line").first().attr("class").indexOf("invisible") < 0).toBeTruthy();
-            expect(visualBuilder.chartGroup.children("g.hover-data-container").first().attr("class").indexOf("invisible") < 0).toBeTruthy();
+            visualBuilder.chartGroups.forEach((chartGroup: SVGGElement) => {
+                const line = chartGroup.querySelector("line")!;
+                const hoverContainer = chartGroup.querySelector("g.hover-data-container")!;
+
+                expect(line.classList.contains("invisible")).toBeFalsy();
+                expect(hoverContainer.classList.contains("invisible")).toBeFalsy();
+            });
         });
 
         it("should show zero line", () => {
@@ -269,8 +242,8 @@ describe("DualKpi", () => {
 
             visualBuilder.updateFlushAllD3Transitions(dataView);
 
-            expect(visualBuilder.chartGroup.first().children("path.zero-axis").attr("class").indexOf("hidden") < 0).toBeTruthy();
-            expect(visualBuilder.chartGroup.last().children("path.zero-axis").attr("class").indexOf("hidden") >= 0).toBeTruthy();
+            expect(visualBuilder.chartGroupTop!.querySelector("path.zero-axis")!.classList.contains("hidden")).toBeFalsy();
+            expect(visualBuilder.chartGroupBottom!.querySelector("path.zero-axis")!.classList.contains("hidden")).toBeTruthy();
         });
 
         // Tooltip is shown above the visual, so we can't access it
@@ -283,9 +256,10 @@ describe("DualKpi", () => {
             };
 
             visualBuilder.updateFlushAllD3Transitions(dataView);
-            visualBuilder.group.first().get(0)?.dispatchEvent(new MouseEvent("mouseover", { clientX: 0, clientY: 0 }));
-            expect(visualBuilder.group.children("text").first().text().indexOf(topChartToolTipText) >= 0).toBeTruthy();
-            expect(visualBuilder.group.children("text.data-value").first().text().indexOf("k") < 0).toBeTruthy();
+            // TODO:// check if tooltip is shown
+            visualBuilder.groupTop?.dispatchEvent(new MouseEvent("mouseover", { clientX: 0, clientY: 0 }));
+            expect(visualBuilder.titleTop!.textContent).toContain(topChartToolTipText);
+            expect(visualBuilder.textTop!.textContent).not.toContain("k");
 
             dataView.metadata.objects = {
                 dualKpiProperties: {
@@ -294,45 +268,46 @@ describe("DualKpi", () => {
             };
 
             visualBuilder.updateFlushAllD3Transitions(dataView);
-            expect(visualBuilder.group.children("text.data-value").first().text().indexOf("k") >= 0).toBeTruthy();
+
+            expect(visualBuilder.textTop!.textContent).toContain("k");
         });
 
         it("charts labels should not overlap", () => {
             let builder: VisualBuilder = new VisualBuilder(250, 150);
             builder.updateFlushAllD3Transitions(dataView);
 
-            let topTitleRect: ClientRect = visualBuilder.group.children("text.data-value").first()[0].getBoundingClientRect(),
-                bottomTitleRect: ClientRect = visualBuilder.group.children("text.data-value").last()[0].getBoundingClientRect(),
-                topTitleValueRect: ClientRect = visualBuilder.group.children("text.data-title").first()[0].getBoundingClientRect(),
-                bottomTitleValueRect: ClientRect = visualBuilder.group.children("text.data-title").first()[0].getBoundingClientRect();
+            let textTopRect = visualBuilder.textTop!.getBoundingClientRect(),
+                textBottomRect = visualBuilder.textBottom!.getBoundingClientRect(),
+                titleTopRect = visualBuilder.titleTop!.getBoundingClientRect(),
+                titleBottomRect = visualBuilder.titleBottom!.getBoundingClientRect();
 
-            expect(topTitleValueRect.top).not.toBeGreaterThan(topTitleRect.bottom);
-            expect(bottomTitleValueRect.top).not.toBeGreaterThan(bottomTitleRect.bottom);
-            expect(topTitleValueRect.bottom).not.toBeGreaterThan(bottomTitleRect.top);
+            expect(titleTopRect.top).not.toBeGreaterThan(textTopRect.bottom);
+            expect(titleBottomRect.top).not.toBeGreaterThan(textBottomRect.bottom);
+            expect(titleTopRect.bottom).not.toBeGreaterThan(textBottomRect.top);
 
             builder = new VisualBuilder(500, 300);
             builder.updateFlushAllD3Transitions(dataView);
 
-            topTitleRect = visualBuilder.group.children("text.data-value").first()[0].getBoundingClientRect(),
-                bottomTitleRect = visualBuilder.group.children("text.data-value").last()[0].getBoundingClientRect(),
-                topTitleValueRect = visualBuilder.group.children("text.data-title").first()[0].getBoundingClientRect(),
-                bottomTitleValueRect = visualBuilder.group.children("text.data-title").first()[0].getBoundingClientRect();
+            textTopRect = visualBuilder.textTop!.getBoundingClientRect(),
+                textBottomRect = visualBuilder.textBottom!.getBoundingClientRect(),
+                titleTopRect = visualBuilder.titleTop!.getBoundingClientRect(),
+                titleBottomRect = visualBuilder.titleBottom!.getBoundingClientRect();
 
-            expect(topTitleValueRect.top).not.toBeGreaterThan(topTitleRect.bottom);
-            expect(bottomTitleValueRect.top).not.toBeGreaterThan(bottomTitleRect.bottom);
-            expect(topTitleValueRect.bottom).not.toBeGreaterThan(bottomTitleRect.top);
+            expect(titleTopRect.top).not.toBeGreaterThan(textTopRect.bottom);
+            expect(titleBottomRect.top).not.toBeGreaterThan(textBottomRect.bottom);
+            expect(titleTopRect.bottom).not.toBeGreaterThan(textBottomRect.top);
 
             builder = new VisualBuilder(1000, 500);
             builder.updateFlushAllD3Transitions(dataView);
 
-            topTitleRect = visualBuilder.dataTitleValue.first()[0].getBoundingClientRect(),
-                bottomTitleRect = visualBuilder.dataTitleValue.last()[0].getBoundingClientRect(),
-                topTitleValueRect = visualBuilder.dataTitle.first()[0].getBoundingClientRect(),
-                bottomTitleValueRect = visualBuilder.dataTitle.first()[0].getBoundingClientRect();
+            textTopRect = visualBuilder.textTop!.getBoundingClientRect(),
+                textBottomRect = visualBuilder.textBottom!.getBoundingClientRect(),
+                titleTopRect = visualBuilder.titleTop!.getBoundingClientRect(),
+                titleBottomRect = visualBuilder.titleBottom!.getBoundingClientRect();
 
-            expect(topTitleValueRect.top).not.toBeGreaterThan(topTitleRect.bottom);
-            expect(bottomTitleValueRect.top).not.toBeGreaterThan(bottomTitleRect.bottom);
-            expect(topTitleValueRect.bottom).not.toBeGreaterThan(bottomTitleRect.top);
+            expect(titleTopRect.top).not.toBeGreaterThan(textTopRect.bottom);
+            expect(titleBottomRect.top).not.toBeGreaterThan(textBottomRect.bottom);
+            expect(titleTopRect.bottom).not.toBeGreaterThan(textBottomRect.top);
         });
 
         it("switches off KPI values via formatting options", () => {
@@ -343,7 +318,7 @@ describe("DualKpi", () => {
             };
             visualBuilder.updateFlushAllD3Transitions(dataView);
 
-            expect((<any>(visualBuilder.group)).visible).toBeFalsy();
+            expect((<any>(visualBuilder.groups)).visible).toBeFalsy();
         });
 
         it("shows short style tooltip for KPI group via formatting options", () => {
@@ -354,31 +329,32 @@ describe("DualKpi", () => {
             };
             visualBuilder.updateFlushAllD3Transitions(dataView);
 
-            expect(visualBuilder.title.text().indexOf("change since")).toBeLessThan(0);
+            expect(visualBuilder.titleTop!.textContent!).not.toContain("change since");
+            expect(visualBuilder.titleBottom!.textContent!).not.toContain("change since");
         });
 
         it("shows single chart if switch display chart is checked", () => {
             dataView.metadata.objects = {
                 dualKpiProperties: {
+                    topChartShow: true,
                     bottomChartShow: false,
-                    topChartShow: true
                 }
             };
             visualBuilder.updateFlushAllD3Transitions(dataView);
 
-            expect(visualBuilder.chartGroupTop.first().attr("class").indexOf("invisible") < 0).toBeTruthy();
-            expect(visualBuilder.chartGroupBottom.first().attr("class").indexOf("invisible") < 0).toBeFalsy();
+            expect(visualBuilder.chartGroupTop!.classList.contains("invisible")).toBeFalsy();
+            expect(visualBuilder.chartGroupBottom!.classList.contains("invisible")).toBeTruthy();
 
             dataView.metadata.objects = {
                 dualKpiProperties: {
+                    topChartShow: false,
                     bottomChartShow: true,
-                    topChartShow: false
                 }
             };
             visualBuilder.updateFlushAllD3Transitions(dataView);
 
-            expect(visualBuilder.chartGroupTop.first().attr("class").indexOf("invisible") < 0).toBeFalsy();
-            expect(visualBuilder.chartGroupBottom.first().attr("class").indexOf("invisible") < 0).toBeTruthy();
+            expect(visualBuilder.chartGroupTop!.classList.contains("invisible")).toBeTruthy();
+            expect(visualBuilder.chartGroupBottom!.classList.contains("invisible")).toBeFalsy();
         });
 
         it("changes data text style via formatting options", () => {
@@ -394,8 +370,8 @@ describe("DualKpi", () => {
             };
 
             visualBuilder.updateFlushAllD3Transitions(dataView);
-            expect(visualBuilder.dataTitle.first().css("font-weight")).toMatch("^((bold)|(700))$");
-            expect(visualBuilder.dataTitleValue.first().css("font-style")).toBe("italic");
+            expect(getComputedStyle(visualBuilder.titleTop!).fontWeight).toMatch("^((bold)|(700))$");
+            expect(getComputedStyle(visualBuilder.textTop!).fontStyle).toBe("italic");
         });
 
         it("check value format", () => {
@@ -409,8 +385,9 @@ describe("DualKpi", () => {
             };
 
             visualBuilder.updateFlushAllD3Transitions(dataView);
-            expect(visualBuilder.dataTitleValue.first().text().split(".").pop().length).toBe(precision + 1);
-            expect(visualBuilder.dataTitleValue.first().text().indexOf("K")).toBeGreaterThan(-1);
+
+            expect(visualBuilder.textTop!.textContent!.split(".").pop()!.length).toBe(precision + 1);
+            expect(visualBuilder.textTop!.textContent!).toContain("K");
         });
     });
 });

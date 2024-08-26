@@ -27,7 +27,6 @@
 import "../style/visual.less";
 
 // d3
-// import * as d3 from "d3";
 import { Selection as d3Selection, select as d3Select, pointer as d3Pointer } from "d3-selection";
 import { format as d3Format } from "d3-format";
 import { timeFormat as d3TimeFormat } from "d3-time-format";
@@ -37,7 +36,6 @@ import { scaleTime as d3ScaleTime, scaleLinear as d3ScaleLinear } from "d3-scale
 import { axisLeft as d3AxisLeft } from "d3-axis";
 import { area as d3Area, line as d3Line } from "d3-shape"
 
-import * as jQuery from "jquery";
 // powerbi
 import powerbi from "powerbi-visuals-api";
 import { ColorHelper } from "powerbi-visuals-utils-colorutils";
@@ -1175,7 +1173,8 @@ export class DualKpi implements IVisual {
             hoverLineStrokeColor: string = "#777";
 
         const target = this.target;
-        const targetPadding = parseInt(jQuery(target).css("padding-left"), 10) || 0;
+        const targetStyle = getComputedStyle(target);
+        const targetPadding = targetStyle.paddingLeft ? parseInt(targetStyle.paddingLeft, 10) : 0;
 
         const margin = {
             top: 7,

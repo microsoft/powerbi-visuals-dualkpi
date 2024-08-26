@@ -8,8 +8,8 @@
 * Update API to 5.11.0, tools to 5.5.1 and other packages
 * Split d3 into submodules
 * Fix broken tests
+* Fix npm vulnerabilities
 
-### Other
 
 ## 2.0.7
 * Context menu support

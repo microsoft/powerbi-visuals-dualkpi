@@ -75,7 +75,7 @@
     "less-loader": "^12.2.0",
     "playwright-chromium": "^1.46.1",
     "powerbi-visuals-tools": "^5.5.1",
-    "powerbi-visuals-utils-formattingmodel": "^6.0.3",
+    "powerbi-visuals-utils-formattingmodel": "6.0.2",
     "powerbi-visuals-utils-testutils": "^6.1.1",
     "style-loader": "^4.0.0",
     "ts-loader": "^9.5.1",

@@ -384,6 +384,13 @@
                         "bool": true
                     }
                 },
+                "isUnderline": {
+                    "displayName": "Underline",
+                    "displayNameKey": "Visual_TextIsUnderline",
+                    "type": {
+                        "bool": true
+                    }
+                },
                 "fontFamily": {
                     "displayName": "Font family",
                     "displayNameKey": "Visual_TextFontFamily",

@@ -5,8 +5,7 @@ import ValidatorType = powerbi.visuals.ValidatorType;
 import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 import Card = formattingSettings.SimpleCard;
 import Model = formattingSettings.Model;
-import { PercentType } from './settings/dualKpiPropertiesSettings';
-import { DualKpiChartType } from './enums';
+import { DualKpiChartType, PercentType } from './enums';
 
 const percentTypeOptions: IEnumMember[] = [
     { value: PercentType.lastDate, displayName: "Visual_DualKpiProperties_HoverDataPercentType_LastDate" },
@@ -79,7 +78,6 @@ class DualKpiPropertiesSettingsCard extends Card {
         value: "",
         placeholder: "",
     });
-
 
     bottomChartToolTipText = new formattingSettings.TextInput({
         name: "bottomChartToolTipText",
@@ -239,7 +237,7 @@ class DualKpiTitleFormattingSettingsCard extends Card {
             value: false,
         }),
         underline: new formattingSettings.ToggleSwitch({
-            name: "underline",
+            name: "isUnderline",
             displayName: "Underline",
             displayNameKey: "Visual_Underline",
             value: false,
@@ -300,18 +298,11 @@ class DualKpiValueFormattingSettingsCard extends Card {
             value: false,
         }),
         underline: new formattingSettings.ToggleSwitch({
-            name: "underline",
+            name: "isUnderline",
             displayName: "Underline",
             displayNameKey: "Visual_Underline",
             value: false,
         }),
-    });
-
-    upperCase = new formattingSettings.ToggleSwitch({
-        name: "upperCase",
-        displayName :"Uppercase",
-        displayNameKey: "Visual_Uppercase",
-        value: false,
     });
 
     displayUnits = new formattingSettings.AutoDropdown({
@@ -328,6 +319,7 @@ class DualKpiValueFormattingSettingsCard extends Card {
         value: 0,
         options: {
             minValue: { value: 0, type: ValidatorType.Min },
+            maxValue: { value: 17, type: ValidatorType.Max },
         },
     });
 
@@ -501,14 +493,45 @@ export class DualKpiSettingsModel extends Model {
         this.dualKpiChart,
     ];
 
+    public validateValues(): void {
+        this.dualKpiColors.opacity.value = this.validateOpacity(this.dualKpiColors.opacity.value);
+        this.dualKpiColorsBottom.opacity.value = this.validateOpacity(this.dualKpiColorsBottom.opacity.value);
+
+    }
+
     public setLocalizedOptions(localizationManager: ILocalizationManager) {
+        this.setDefaultValues(localizationManager);
+
         this.setLocalizedDisplayName(percentTypeOptions, localizationManager);
         this.setLocalizedDisplayName(chartTypeOptions, localizationManager);
+    }
+
+    private setDefaultValues(localizationManager: ILocalizationManager): void {
+        if (!this.dualKpiProperties.titleText.value) {
+            this.dualKpiProperties.titleText.value = localizationManager.getDisplayName("Visual_Default_Title");
+        }
+
+        if (!this.dualKpiProperties.warningTooltipText.value) {
+            this.dualKpiProperties.warningTooltipText.value = localizationManager.getDisplayName("Visual_Default_WarningTooltipText");
+        }
     }
 
     private setLocalizedDisplayName(options: IEnumMember[], localizationManager: ILocalizationManager) {
         options.forEach((option: IEnumMember) => {
             option.displayName = localizationManager.getDisplayName(option.displayName.toString());
         });
+    }
+
+    private validateOpacity(opacity: number): number {
+        const min = 0;
+        const max = 100;
+
+        if (opacity < min) {
+            return min;
+        } else if (opacity > max) {
+            return max;
+        } else {
+            return opacity;
+        }
     }
 }

@@ -1,10 +1,12 @@
 ## 2.1.0
 ### Visual changes
+* Add new font settings
 
 ### Code improvements
 * Migrate from tslint to eslint, fix eslint errors
 * Update API to 5.11.0, tools to 5.5.1 and other packages
 * Split d3 into submodules
+* Migrate to new formatting model
 
 ### Other
 

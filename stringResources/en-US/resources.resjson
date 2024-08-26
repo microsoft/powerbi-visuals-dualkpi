@@ -47,6 +47,7 @@
     "Visual_TopChartDefaultKPIText": "Top chart default KPI text",
     "Visual_BottomChartDefaultKPIText": "Bottom chart default KPI text",
     "Visual_TitleFormatting": "Dual KPI Title formatting",
+    "Visual_Font": "Font",
     "Visual_TextAutoSize": "Auto text size",
     "Visual_TextSizeValue": "Value text size",
     "Visual_TextIsBold": "Bold",

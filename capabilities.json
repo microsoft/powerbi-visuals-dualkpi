@@ -332,6 +332,13 @@
                         "bool": true
                     }
                 },
+                "isUnderline": {
+                    "displayName": "Underline",
+                    "displayNameKey": "Visual_TextIsUnderline",
+                    "type": {
+                        "bool": true
+                    }
+                },
                 "fontFamily": {
                     "displayName": "Font family",
                     "displayNameKey": "Visual_TextFontFamily",
@@ -373,6 +380,13 @@
                 "isItalic": {
                     "displayName": "Italic",
                     "displayNameKey": "Visual_TextIsItalic",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "isUnderline": {
+                    "displayName": "Underline",
+                    "displayNameKey": "Visual_TextIsUnderline",
                     "type": {
                         "bool": true
                     }
@@ -573,5 +587,6 @@
                 }
             }
         }
-    }
+    },
+    "privileges": []
 }

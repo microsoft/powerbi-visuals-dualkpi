@@ -128,13 +128,51 @@ describe("DualKpi", () => {
     describe("DOM tests", () => {
         it("svg element created", () => expect(visualBuilder.mainElement).toBeDefined());
 
-        it("update", (done) => {
+        it("both charts should be rendered", (done) => {
+            dataView.metadata.objects = {
+                dualKpiProperties: {
+                    topChartShow: true,
+                    bottomChartShow: true,
+                }
+            };
+
             visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(visualBuilder.pathAreas.length).toBeGreaterThan(0);
+                expect(visualBuilder.pathAreas.length).toBeGreaterThan(2);
                 expect(visualBuilder.axisTicks.length).toBe(4);
                 done();
             });
         });
+
+        it("top chart should be rendered", (done) => {
+            dataView.metadata.objects = {
+                dualKpiProperties: {
+                    topChartShow: true,
+                    bottomChartShow: false,
+                }
+            };
+
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                expect(visualBuilder.pathAreas.length).toBeGreaterThan(1);
+                expect(visualBuilder.axisTicks.length).toBe(2);
+                done();
+            });
+        });
+
+        it("bottom chart should be rendered", (done) => {
+            dataView.metadata.objects = {
+                dualKpiProperties: {
+                    topChartShow: false,
+                    bottomChartShow: true,
+                }
+            };
+
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                expect(visualBuilder.pathAreas.length).toBeGreaterThan(1);
+                expect(visualBuilder.axisTicks.length).toBe(2);
+                done();
+            });
+        });
+
 
         it("update with null values", (done) => {
             dataView.categorical!.categories![0].values[0] = null as unknown as PrimitiveValue;

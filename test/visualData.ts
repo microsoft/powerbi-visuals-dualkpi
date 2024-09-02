@@ -77,8 +77,9 @@ export class VisualData extends TestDataViewBuilder {
 }
 
 export function getRandomHexColor(): string {
-    const numberWithSixSymbolsInHex = 16777215;
-    return getHexColorFromNumber(getRandomInteger(0, numberWithSixSymbolsInHex + 1)); // include max value
+    const value = Math.floor(Math.random() * (16777215 + 1))
+    const hex = value.toString(16).toUpperCase();
+    return "#" + hex.padStart(6, "0");
 }
 
 function getRandomUniqueSortedDates(count: number, start: Date, end: Date): Date[] {
@@ -109,14 +110,5 @@ function getRandomNumber(
     }
 
     return result;
-}
-
-function getHexColorFromNumber(value: number) {
-    const hex = value.toString(16).toUpperCase();
-    return "#" + hex.padStart(6, "0");
-}
-
-function getRandomInteger(min: number, max: number, exceptionList?: number[]): number {
-    return getRandomNumber(max, min, exceptionList, Math.floor);
 }
 

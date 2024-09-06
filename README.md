@@ -2,7 +2,7 @@
 [![build](https://github.com/microsoft/powerbi-visuals-dualkpi/actions/workflows/build.yml/badge.svg)](https://github.com/microsoft/powerbi-visuals-dualkpi/actions/workflows/build.yml) [![Coverage Status](https://coveralls.io/repos/github/Microsoft/powerbi-visuals-dualkpi/badge.svg?branch=main)](https://coveralls.io/github/Microsoft/powerbi-visuals-dualkpi?branch=main)
 [![Known Vulnerabilities](https://snyk.io/test/github/Microsoft/powerbi-visuals-dualkpi/badge.svg)](https://snyk.io/test/github/Microsoft/powerbi-visuals-dualkpi)
 
-![DualKPI screenshot](https://az158878.vo.msecnd.net/marketing/Partner_21474836617/Product_42949680540/Asset_b4fac22d-44ca-49bf-8485-98dfaf6ef18c/DualKPIscreenshot1.png)
+![DualKPI screenshot](/assets/screenshot.png)
 # Overview
 Each KPI can be visualized as line chart or area chart. The visual has dynamic behavior and can show historical value and the change from the latest value when you hover over it. It also has small icons and labels to convey KPI definitions and alerts about data freshness. Customize colors, titles, axis properties, tooltips, and more, to create visually appealing and functional executive dashboards.
 

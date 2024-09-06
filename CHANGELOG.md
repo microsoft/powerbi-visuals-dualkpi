@@ -9,7 +9,7 @@
 * Split d3 into submodules
 * Fix broken tests
 * Fix npm vulnerabilities
-
+* Remove "coveralls" package
 
 ## 2.0.7
 * Context menu support

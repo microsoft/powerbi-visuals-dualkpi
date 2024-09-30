@@ -1374,7 +1374,7 @@ export class DualKpi implements IVisual {
 
         element.attr("font-weight", isBold ? "bold" : "normal");
         element.attr("font-style", isItalic ? "italic" : "normal");
-        element.attr("text-decoration", isUnderline ? "underline" : "normal");
+        element.attr("text-decoration", isUnderline ? "underline" : "none");
         element.attr("font-family", fontFamily);
     }
 

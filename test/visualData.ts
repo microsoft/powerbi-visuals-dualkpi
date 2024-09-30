@@ -77,8 +77,9 @@ export class VisualData extends TestDataViewBuilder {
 }
 
 export function getRandomHexColor(): string {
+    // 16777215 in hex is FFFFFF
     const value = Math.floor(Math.random() * (16777215 + 1))
-    const hex = value.toString(16).toUpperCase();
+    const hex = value.toString(16);
     return "#" + hex.padStart(6, "0");
 }
 

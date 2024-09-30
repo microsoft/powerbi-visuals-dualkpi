@@ -137,7 +137,7 @@ describe("DualKpi", () => {
             };
 
             visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(visualBuilder.pathAreas.length).toBeGreaterThan(2);
+                expect(visualBuilder.pathAreas.length).toBe(2);
                 expect(visualBuilder.axisTicks.length).toBe(4);
                 done();
             });

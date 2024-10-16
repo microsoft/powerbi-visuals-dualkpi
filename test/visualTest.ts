@@ -184,9 +184,36 @@ describe("DualKpi", () => {
             }, DefaultWaitForRender);
         });
 
-        it("changed data with high contrast on", () => {
+        it("changed data with high contrast on with", () => {
             const dataColorTop: string = "#01B8AA",
                 textColorTop: string = "#212121",
+                chartOpacityTop: number = 10;
+
+            dataView.metadata.objects = {
+                dualKpiColors: {
+                    dataColor: getSolidColorStructuralObject(dataColorTop),
+                    textColor: getSolidColorStructuralObject(textColorTop),
+                    opacity: chartOpacityTop
+                },
+            };
+
+            visualBuilder.visualHost.colorPalette.isHighContrast = true;
+
+            visualBuilder.updateFlushAllD3Transitions(dataView);
+            const colorHelper = new ColorHelper(visualBuilder.visualHost.colorPalette);
+            const foreground = colorHelper.getHighContrastColor("foreground");
+
+            const opacityStringTop: string = visualBuilder.pathAreaTop?.style.opacity || "0";
+            const opacityTop: number = Math.round(parseFloat(opacityStringTop) * 10) / 10;
+
+            expect(opacityTop).toBe(chartOpacityTop / 100);
+            assertColorsMatch(getComputedStyle(visualBuilder.pathAreaTop!).fill, foreground);
+            assertColorsMatch(getComputedStyle(visualBuilder.titleTop!).fill, foreground);
+        });
+
+        it("changed data with high contrast on with random colors", () => {
+            const dataColorTop: string = getRandomHexColor(),
+                textColorTop: string = getRandomHexColor(),
                 chartOpacityTop: number = 10;
 
             dataView.metadata.objects = {

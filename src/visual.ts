@@ -34,7 +34,12 @@ import { bisector as d3Bisector, min as d3Min, max as d3Max, extent as d3Extent 
 import { dispatch as d3Dispatch, Dispatch } from "d3-dispatch";
 import { scaleTime as d3ScaleTime, scaleLinear as d3ScaleLinear } from "d3-scale";
 import { axisLeft as d3AxisLeft } from "d3-axis";
-import { area as d3Area, line as d3Line } from "d3-shape"
+import {
+    Area as d3Area,
+    area as d3CreateArea,
+    Line as d3Line,
+    line as d3CreateLine,
+} from "d3-shape"
 
 // powerbi
 import powerbi from "powerbi-visuals-api";
@@ -59,6 +64,7 @@ import IViewport = powerbi.IViewport;
 import FormattingModel = powerbi.visuals.FormattingModel;
 import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
 import DataViewValueColumn = powerbi.DataViewValueColumn;
+import PrimitiveValue = powerbi.PrimitiveValue;
 
 // powerbi.extensibility
 import IVisual = powerbi.extensibility.IVisual;
@@ -74,7 +80,6 @@ import valueFormatter = ValueFormatter;
 import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
 
 type FormatterFunction = (n: number | { valueOf(): number }) => string;
-type Selection = d3Selection<any, any, any, any>;
 
 export interface IDualKpiDataPoint {
     date: Date;
@@ -152,42 +157,42 @@ export interface IDualKpiOptions {
 }
 
 export interface IGroup {
-    group: Selection;
-    icon: Selection;
-    title: Selection;
+    group: d3Selection<SVGGElement, unknown, null, undefined>;
+    icon: d3Selection<SVGPathElement, unknown, null, undefined>;
+    title: d3Selection<SVGPathElement, unknown, null, undefined>;
 }
 
 export interface IBottomContainer {
-    bottomContainer: Selection;
-    chartTitleElement: Selection;
+    bottomContainer: d3Selection<SVGGElement, unknown, null, undefined>
+    chartTitleElement: d3Selection<SVGTextElement, unknown, null, undefined>;
     warning: IGroup;
     info: IGroup;
-    dateRangeText: Selection;
+    dateRangeText: d3Selection<SVGTextElement, unknown, null, undefined>;
 }
 
 export interface IHoverDataContainer {
-    container: Selection;
-    date: Selection;
-    text: Selection;
-    percent: Selection;
+    container: d3Selection<SVGGElement, unknown, null, undefined>;
+    date: d3Selection<SVGTextElement, unknown, null, undefined>;
+    text: d3Selection<SVGTextElement, unknown, null, undefined>;
+    percent: d3Selection<SVGTextElement, unknown, null, undefined>;
 }
 
 export interface IChartOverlay {
-    group: Selection;
-    title: Selection;
-    text: Selection;
-    rect: Selection;
-    rectTitle: Selection;
+    group: d3Selection<SVGGElement, unknown, null, undefined>;
+    title: d3Selection<SVGTextElement, unknown, null, undefined>;
+    text: d3Selection<SVGTextElement, unknown, null, undefined>;
+    rect: d3Selection<SVGRectElement, unknown, null, undefined>;
+    rectTitle: d3Selection<SVGGElement, unknown, null, undefined>;
 }
 
 export interface IChartGroup {
-    group: Selection;
-    area: Selection;
-    yAxis: Selection;
-    hoverLine: Selection;
+    group: d3Selection<SVGGElement, unknown, null, undefined>;
+    area: d3Selection<SVGPathElement, unknown, null, undefined>;
+    yAxis: d3Selection<SVGGElement, unknown, null, undefined>;
+    hoverLine: d3Selection<SVGGElement, unknown, null, undefined>;
+    zeroAxis: d3Selection<SVGPathElement, unknown, null, undefined>;
     hoverDataContainer: IHoverDataContainer;
     chartOverlay: IChartOverlay;
-    zeroAxis: Selection;
 }
 
 export class DualKpi implements IVisual {
@@ -197,7 +202,7 @@ export class DualKpi implements IVisual {
     private size: DualKpiSize;
     private sizeCssClass: DualKpiSizeClass;
 
-    private svgRoot: Selection;
+    private svgRoot: d3Selection<SVGSVGElement, unknown, null, undefined>;
 
     private chartGroupTop: IChartGroup;
     private chartGroupBottom: IChartGroup;
@@ -321,7 +326,6 @@ export class DualKpi implements IVisual {
     }
 
     private initContainer(): void {
-        // eslint-disable-next-line powerbi-visuals/no-http-string
         const xmlns = "http://www.w3.org/2000/svg";
         const svgElem = document.createElementNS(xmlns, "svg");
 
@@ -338,7 +342,7 @@ export class DualKpi implements IVisual {
         this.target.appendChild(svgElem);
     }
 
-    private createBottomContainer(svgRoot: Selection): IBottomContainer {
+    private createBottomContainer(svgRoot: d3Selection<SVGSVGElement, unknown, null, undefined>): IBottomContainer {
         const bottomContainer = svgRoot
             .append("g")
             .attr("class", "bottom-title-container")
@@ -386,8 +390,8 @@ export class DualKpi implements IVisual {
         };
     }
 
-    private createChartGroup(svgRoot: Selection, type: DualKpiChartPositionType): IChartGroup {
-        const chartGroup: Selection = svgRoot
+    private createChartGroup(svgRoot: d3Selection<SVGSVGElement, unknown, null, undefined>, type: DualKpiChartPositionType): IChartGroup {
+        const chartGroup = svgRoot
             .append("g")
             .attr("class", "chartGroup")
             .classed(type === DualKpiChartPositionType.top ? "chartGroupTop" : "chartGroupBottom", true);
@@ -416,13 +420,13 @@ export class DualKpi implements IVisual {
             area: chartArea,
             yAxis: yAxis,
             hoverLine,
+            zeroAxis: zeroAxis,
             hoverDataContainer: hoverDataContainer,
             chartOverlay: chartOverlay,
-            zeroAxis: zeroAxis
         };
     }
 
-    private createChartOverlay(chartGroup: Selection): IChartOverlay {
+    private createChartOverlay(chartGroup: d3Selection<SVGGElement, unknown, null, undefined>): IChartOverlay {
         const chartOverlayTextGroup = chartGroup
             .append("g")
             .classed("group", true);
@@ -952,14 +956,14 @@ export class DualKpi implements IVisual {
         data.bottomValueAsPercent = bottomValueFormatSymbol === "%" ? true : false;
 
         // if percent dates are in data use that, otherwise get from formatting pane/default values
-        data.topPercentCalcDate = topPercentDateCol > -1 && categories[topPercentDateCol].values[0] ? new Date(<any>categories[topPercentDateCol].values[0]) : new Date(data.settings.properties.topPercentCalcDate.value);
-        data.bottomPercentCalcDate = bottomPercentDateCol > -1 && categories[bottomPercentDateCol].values[0] ? new Date(<any>categories[bottomPercentDateCol].values[0]) : new Date(data.settings.properties.bottomPercentCalcDate.value);
+        data.topPercentCalcDate = topPercentDateCol > -1 && categories[topPercentDateCol].values[0] ? new Date(<Exclude<PrimitiveValue, boolean>>categories[topPercentDateCol].values[0]) : new Date(data.settings.properties.topPercentCalcDate.value);
+        data.bottomPercentCalcDate = bottomPercentDateCol > -1 && categories[bottomPercentDateCol].values[0] ? new Date(<Exclude<PrimitiveValue, boolean>>categories[bottomPercentDateCol].values[0]) : new Date(data.settings.properties.bottomPercentCalcDate.value);
 
         for (let i: number = 0; i < rowsLength; i++) {
             let date = null;
 
             if (axisCol > -1) {
-                const timestamp: number = Date.parse(<any>categories[axisCol].values[i]);
+                const timestamp: number = Date.parse(<string>categories[axisCol].values[i]);
 
                 if (!isNaN(timestamp)) {
                     date = new Date(timestamp);
@@ -970,8 +974,8 @@ export class DualKpi implements IVisual {
                 date = new Date();
             }
 
-            let topValue = topValuesCol > -1 ? <any>values[topValuesCol].values[i] : 0;
-            let bottomValue = bottomValuesCol > -1 ? <any>values[bottomValuesCol].values[i] : 0;
+            let topValue: number = topValuesCol > -1 ? <number>values[topValuesCol].values[i] : 0;
+            let bottomValue: number = bottomValuesCol > -1 ? <number>values[bottomValuesCol].values[i] : 0;
 
             if (data.topValueAsPercent) {
                 topValue *= 100;
@@ -993,7 +997,7 @@ export class DualKpi implements IVisual {
         }
 
         if ((warningStateCol > -1) && (rowsLength > 0)) {
-            data.warningState = <any>values[warningStateCol].values[rowsLength - 1];
+            data.warningState = <number>values[warningStateCol].values[rowsLength - 1];
         }
 
         const sortBy = (key) => {
@@ -1005,7 +1009,7 @@ export class DualKpi implements IVisual {
         return data;
     }
 
-    private createHoverDataContainer(chartGroup: Selection): IHoverDataContainer {
+    private createHoverDataContainer(chartGroup: d3Selection<SVGGElement, unknown, null, undefined>): IHoverDataContainer {
         const hoverDataContainer = chartGroup.append("g")
             .attr("class", "hover-data-container")
             .classed(DualKpi.INVISIBLE, true);
@@ -1034,7 +1038,7 @@ export class DualKpi implements IVisual {
 
     private updateHoverDataContainer(hoverDataContainer: IHoverDataContainer, chartBottom: number, chartLeft: number, chartWidth: number, isTopChart: boolean): void {
         const textColor: string = isTopChart ? this.data.settings.colors.textColor.value.value : this.data.settings.colorsBottom.textColor.value.value;
-        const hoverDate: Selection = hoverDataContainer.date;
+        const hoverDate = hoverDataContainer.date;
         let centerX = chartWidth / 2;
 
         if (chartWidth < 300) {
@@ -1047,7 +1051,7 @@ export class DualKpi implements IVisual {
             .attr("fill", textColor)
             .text("0");
 
-        const hoverValue: Selection = hoverDataContainer.text;
+        const hoverValue = hoverDataContainer.text;
         hoverValue
             .attr("class", "hover-text value")
             .classed(this.sizeCssClass, true)
@@ -1055,7 +1059,7 @@ export class DualKpi implements IVisual {
             .attr("fill", textColor)
             .text("0");
 
-        const hoverPercent: Selection = hoverDataContainer.percent;
+        const hoverPercent = hoverDataContainer.percent;
         hoverPercent
             .attr("class", "hover-text percent")
             .classed(this.sizeCssClass, true)
@@ -1068,12 +1072,12 @@ export class DualKpi implements IVisual {
     }
 
     private showHoverData(hoverDataContainer: IHoverDataContainer, dataPoint: IDualKpiDataPoint, latestValue: number, hoverDataPercentType: PercentType, valueAsPercent: boolean, abbreviateValue: boolean) {
-        const hoverDate: Selection = hoverDataContainer.date;
+        const hoverDate = hoverDataContainer.date;
         hoverDate
             .datum(dataPoint)
             .text((d: IDualKpiDataPoint) => this.timeFormatter(d.date));
 
-        const hoverValue: Selection = hoverDataContainer.text;
+        const hoverValue = hoverDataContainer.text;
         hoverValue
             .datum(dataPoint)
             .text((d: IDualKpiDataPoint) => {
@@ -1084,7 +1088,7 @@ export class DualKpi implements IVisual {
                 return value;
             });
 
-        const hoverPercent: Selection = hoverDataContainer.percent;
+        const hoverPercent = hoverDataContainer.percent;
         hoverPercent
             .datum(dataPoint)
             .text((d: IDualKpiDataPoint) => {
@@ -1104,7 +1108,7 @@ export class DualKpi implements IVisual {
         hoverDataContainer.container.classed(DualKpi.INVISIBLE, false);
     }
 
-    private hideHoverData(hoverDataContainer: IHoverDataContainer, hoverLine?: Selection) {
+    private hideHoverData(hoverDataContainer: IHoverDataContainer, hoverLine?: d3Selection<SVGGElement, unknown, null, undefined>) {
         hoverDataContainer.container.classed(DualKpi.INVISIBLE, true);
         this.bottomContainer.bottomContainer.classed("hidden", false);
         if (hoverLine) {
@@ -1164,7 +1168,7 @@ export class DualKpi implements IVisual {
         this.bottomContainer.bottomContainer.classed(DualKpi.INVISIBLE, false);
     }
 
-    private createWarningMessage(chartTitleElement, iconY: number, iconScaleTransform: any, iconWidth: number) {
+    private createWarningMessage(chartTitleElement, iconY: number, iconScaleTransform: string, iconWidth: number) {
         const warning = this.bottomContainer.warning;
         warning.group
             .attr("transform", "translate(0," + (iconY) + ")");
@@ -1192,7 +1196,7 @@ export class DualKpi implements IVisual {
         chartTitleElement.attr("transform", "translate(" + (iconWidth + 6) + ",0)");
     }
 
-    private createInfoMessage(iconY: number, iconScaleTransform: any, iconWidth: number, chartWidth: number, dataDaysOld: number) {
+    private createInfoMessage(iconY: number, iconScaleTransform: string, iconWidth: number, chartWidth: number, dataDaysOld: number) {
         const infoMessage = this.localizationManager.getDisplayName("Visual_InfoMessage_DataIs") + dataDaysOld
             + this.localizationManager.getDisplayName("Visual_InfoMessage_DaysOld") + this.data.settings.properties.staleDataTooltipText.value;
         const info = this.bottomContainer.info;
@@ -1225,7 +1229,6 @@ export class DualKpi implements IVisual {
         info.icon.classed("hidden", true);
     }
 
-    // eslint-disable-next-line max-lines-per-function
     private drawChart(options: IDualKpiOptions) {
         const chartData: Array<IDualKpiDataPoint> = options.chartData;
         const axisConfig: IAxisConfig = options.axisConfig;
@@ -1279,21 +1282,21 @@ export class DualKpi implements IVisual {
                 return axisTickLabel;
             });
 
-        let seriesRenderer, fill, stroke, strokeWidth;
+        let seriesRenderer: d3Area<IDualKpiDataPoint> | d3Line<IDualKpiDataPoint>, fill: string, stroke: string, strokeWidth: number;
 
         if (options.chartType === "area") {
-            seriesRenderer = d3Area()
-                .x((d: any) => xScale(d.date || new Date()))
+            seriesRenderer = d3CreateArea<IDualKpiDataPoint>()
+                .x((d) => xScale(d.date || new Date()))
                 .y0(calcHeight)
-                .y1((d: any) => yScale(d.value || 0));
+                .y1((d) => yScale(d.value || 0));
 
             fill = dataColor;
             stroke = "none";
             strokeWidth = 0;
         } else {
-            seriesRenderer = d3Line()
-                .x((d: any) => xScale(d.date || new Date()))
-                .y((d: any) => yScale(d.value || 0));
+            seriesRenderer = d3CreateLine<IDualKpiDataPoint>()
+                .x((d) => xScale(d.date || new Date()))
+                .y((d) => yScale(d.value || 0));
 
             fill = "none";
             stroke = dataColor;
@@ -1304,36 +1307,36 @@ export class DualKpi implements IVisual {
         chartGroup.group
             .attr("transform", "translate(" + margin.left + "," + (options.top + margin.top) + ")");
 
-        const chartArea: Selection = chartGroup.area;
+        const chartArea = chartGroup.area;
         chartArea
             .datum(chartData)
             .attr("style", "opacity: " + (chartOpacity / 100))
             .attr("fill", fill)
             .attr("stroke", stroke)
             .attr("stroke-width", strokeWidth)
-            .attr("d", seriesRenderer as any);
+            .attr("d", seriesRenderer);
 
-        const zeroAxis: Selection = chartGroup.zeroAxis;
+        const zeroAxis = chartGroup.zeroAxis;
         const zeroPointOnAxis = axisMinValue <= 0 && axisMaxValue >= 0 ? true : false;
 
         // DRAW line for x axis at zero position
         // if formatting option for zero line set to true
         // and if a value of zero is on the y-axis
         if (options.showZeroLine && zeroPointOnAxis) {
-            const axisLine = d3Line()
-                .x((d: any) => xScale(d.date))
+            const axisLine = d3CreateLine<IDualKpiDataPoint>()
+                .x((d) => xScale(d.date))
                 .y(() => yScale(0));
 
             zeroAxis
                 .datum(chartData)
                 .classed("hidden", false)
-                .attr("d", axisLine as any);
+                .attr("d", axisLine);
         } else {
             zeroAxis
                 .classed("hidden", true);
         }
 
-        const axis: Selection = chartGroup.yAxis;
+        const axis = chartGroup.yAxis;
         axis
             .attr("class", "axis")
             .classed(this.sizeCssClass, true)
@@ -1341,7 +1344,7 @@ export class DualKpi implements IVisual {
             .call(yAxis);
 
         if (isHighContrastMode) {
-            const axisTicks: Selection = axis.selectAll("g.tick");
+            const axisTicks = axis.selectAll("g.tick");
             axisTicks.selectAll("text").attr("fill", axisStrokeHighContrastColor);
             axisTicks.select("line").attr("stroke", axisStrokeHighContrastColor);
             axis.select("path").attr("stroke", axisStrokeHighContrastColor);
@@ -1349,7 +1352,7 @@ export class DualKpi implements IVisual {
         }
 
         /* Add elements for hover behavior ******************************************************/
-        const hoverLine: Selection = chartGroup.hoverLine;
+        const hoverLine = chartGroup.hoverLine;
         hoverLine
             .classed(DualKpi.INVISIBLE, true)
             .attr("x1", 0)
@@ -1416,7 +1419,7 @@ export class DualKpi implements IVisual {
         };
     }
 
-    private applyTextStyle(element: Selection, options: IDualKpiOptions, isTitle?: boolean) {
+    private applyTextStyle(element: d3Selection<SVGTextElement, unknown, null, undefined>, options: IDualKpiOptions, isTitle?: boolean) {
         const fontSizeAutoFormatting: boolean = isTitle ? options.fontSizeAutoFormattingTitle : options.fontSizeAutoFormattingValue,
             fontSize: number = isTitle ? options.titleFontSize : options.valueFontSize,
             isBold: boolean = isTitle ? options.isBoldTitle : options.isBoldValue,

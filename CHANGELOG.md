@@ -10,6 +10,7 @@
 * Fix broken tests
 * Fix npm vulnerabilities
 * Remove "coveralls" package
+* Migrate to eslint v9
 
 ## 2.0.7
 * Context menu support

@@ -19,7 +19,7 @@
     "pbiviz": "pbiviz",
     "start": "pbiviz start",
     "package": "pbiviz package",
-    "eslint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
+    "eslint": "npx eslint .",
     "test": "karma start",
     "cert": "pbiviz --install-cert"
   },
@@ -38,7 +38,8 @@
     "powerbi-visuals-utils-colorutils": "^6.0.5",
     "powerbi-visuals-utils-dataviewutils": "^6.1.0",
     "powerbi-visuals-utils-formattingutils": "^6.1.2",
-    "powerbi-visuals-utils-tooltiputils": "^6.0.4"
+    "powerbi-visuals-utils-tooltiputils": "^6.0.4",
+    "typescript-eslint": "^8.9.0"
   },
   "devDependencies": {
     "@types/d3-array": "^3.2.1",
@@ -51,11 +52,11 @@
     "@types/d3-time-format": "^4.0.3",
     "@types/jasmine": "^5.1.4",
     "@types/webpack": "^5.28.5",
-    "@typescript-eslint/eslint-plugin": "^8.7.0",
-    "@typescript-eslint/parser": "^8.7.0",
+    "@typescript-eslint/eslint-plugin": "^8.9.0",
+    "@typescript-eslint/parser": "^8.9.0",
     "css-loader": "^7.1.2",
-    "eslint": "^8.57.1",
-    "eslint-plugin-powerbi-visuals": "^0.8.1",
+    "eslint": "^9.12.0",
+    "eslint-plugin-powerbi-visuals": "^1.0.0",
     "jasmine": "^5.4.0",
     "karma": "^6.4.4",
     "karma-chrome-launcher": "^3.2.0",

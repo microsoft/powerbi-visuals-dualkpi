@@ -234,6 +234,9 @@ export class DualKpi implements IVisual {
     private static OPACITY_MIN: number = 0;
     private static OPACITY_MAX: number = 100;
 
+    private static MinViewportHeight: number = 90;
+    private static MinViewportWidth: number = 220;
+
     private titleSize: number = 0;
     private dispatch: Dispatch<object>;
 
@@ -491,8 +494,8 @@ export class DualKpi implements IVisual {
 
             const data: IDualKpiData = this.data = DualKpi.converter(this.dataView, this.formattingSettings);
 
-            const availableHeight = options.viewport.height < 90 ? 90 : options.viewport.height;
-            const availableWidth = options.viewport.width < 220 ? 220 : options.viewport.width;
+            const availableHeight = options.viewport.height < DualKpi.MinViewportHeight ? DualKpi.MinViewportHeight : options.viewport.height;
+            const availableWidth = options.viewport.width < DualKpi.MinViewportWidth ? DualKpi.MinViewportWidth : options.viewport.width;
             const chartWidth = availableWidth;
 
             const { chartSpaceBetween, chartTitleSpace, iconOffset }: { chartSpaceBetween: number; chartTitleSpace: number; iconOffset: number; } = this.setChartLayout(availableHeight, availableWidth);

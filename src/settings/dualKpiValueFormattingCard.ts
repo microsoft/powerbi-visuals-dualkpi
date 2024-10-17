@@ -82,6 +82,7 @@ export class DualKpiValueFormattingCard extends Card {
         name: "precision",
         displayName: "Decimal Places",
         displayNameKey: "Visual_DecimalPlaces",
+        descriptionKey: "Visual_Description_DecimalPlaces",
         value: 0,
         options: {
             minValue: { value: 0, type: powerbi.visuals.ValidatorType.Min },

@@ -66,5 +66,6 @@
     "Visual_Default_Title": "Title",
     "Visual_Default_WarningTooltipText": "Warning message" ,
     "Visual_DisplayUnits": "Display units",
-    "Visual_DecimalPlaces": "Decimal Places"
+    "Visual_DecimalPlaces": "Decimal Places",
+    "Visual_Description_DecimalPlaces": "Select the number of decimal places to display"
 }

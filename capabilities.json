@@ -126,126 +126,78 @@
     ],
     "objects": {
         "dualKpiProperties": {
-            "displayName": "Dual KPI Properties",
-            "displayNameKey": "Visual_DualKpiProperties",
             "properties": {
                 "topChartShow": {
-                    "displayName": "Show top chart",
-                    "displayNameKey": "Visual_ShowTopChart",
                     "type": {
                         "bool": true
                     }
                 },
                 "bottomChartShow": {
-                    "displayName": "Show bottom chart",
-                    "displayNameKey": "Visual_ShowBottomChart",
                     "type": {
                         "bool": true
                     }
                 },
                 "titleText": {
-                    "displayName": "Title text",
-                    "displayNameKey": "Visual_DualKpiProperties_TitleText",
                     "type": {
                         "text": true
                     }
                 },
                 "abbreviateValues": {
-                    "displayName": "Abbreviate values",
-                    "displayNameKey": "Visual_DualKpiProperties_AbbreviateValues",
                     "type": {
                         "bool": true
                     }
                 },
                 "abbreviateHoverValues": {
-                    "displayName": "Abbreviate hover values only",
-                    "displayNameKey": "Visual_DualKpiProperties_AbbreviateHoverValues",
                     "type": {
                         "bool": true
                     }
                 },
                 "shortKpiTooltip": {
-                    "displayName": "Short KPI tooltip",
-                    "displayNameKey": "Visual_DualKpiProperties_ShortKPITooltip",
                     "type": {
                         "bool": true
                     }
                 },
                 "hoverDataPercentType": {
-                    "displayName": "Variance type",
-                    "displayNameKey": "Visual_VarianceType",
                     "type": {
-                        "enumeration": [
-                            {
-                                "value": "lastDate",
-                                "displayName": "Last date",
-                                "displayNameKey": "Visual_DualKpiProperties_HoverDataPercentType_LastDate"
-                            },
-                            {
-                                "value": "firstDate",
-                                "displayName": "First date",
-                                "displayNameKey": "Visual_DualKpiProperties_HoverDataPercentType_FirstDate"
-                            },
-                            {
-                                "value": "previousDate",
-                                "displayName": "Previous date",
-                                "displayNameKey": "Visual_DualKpiProperties_HoverDataPercentType_PreviousDate"
-                            }
-                        ]
+                        "enumeration": []
                     }
                 },
                 "topChartToolTipText": {
-                    "displayName": "Top chart tooltip text",
-                    "displayNameKey": "Visual_DualKpiProperties_TopChartToolTipText",
                     "type": {
                         "text": true
                     }
                 },
                 "bottomChartToolTipText": {
-                    "displayName": "Bottom chart tooltip text",
-                    "displayNameKey": "Visual_DualKpiProperties_BottomChartToolTipText",
                     "type": {
                         "text": true
                     }
                 },
                 "warningTooltipText": {
-                    "displayName": "Warning tooltip text",
-                    "displayNameKey": "Visual_DualKpiProperties_WarningTooltipText",
                     "type": {
                         "text": true
                     }
                 },
                 "showStaleDataWarning": {
-                    "displayName": "Show stale data warning",
-                    "displayNameKey": "Visual_DualKpiProperties_ShowStaleDataWarning",
                     "type": {
                         "bool": true
                     }
                 },
                 "staleDataTooltipText": {
-                    "displayName": "Stale data tooltip text",
-                    "displayNameKey": "Visual_DualKpiProperties_StaleDataTooltipText",
                     "type": {
                         "text": true
                     }
                 },
                 "staleDataThreshold": {
-                    "displayName": "Stale data threshold",
-                    "displayNameKey": "Visual_DualKpiProperties_StaleDataThreshold",
                     "type": {
                         "numeric": true
                     }
                 },
                 "topPercentCalcDate": {
-                    "displayName": "Top - % change start date (mm/dd/yyyy)",
-                    "displayNameKey": "Visual_DualKpiProperties_TopPercentCalcDate",
                     "type": {
                         "text": true
                     }
                 },
                 "bottomPercentCalcDate": {
-                    "displayName": "Bottom - % change start date (mm/dd/yyyy)",
-                    "displayNameKey": "Visual_DualKpiProperties_BottomPercentCalcDate",
                     "type": {
                         "text": true
                     }
@@ -253,8 +205,6 @@
             }
         },
         "dualKpiValues": {
-            "displayName": "Dual KPI Values",
-            "displayNameKey": "Visual_DualKPIValues",
             "properties": {
                 "show": {
                     "type": {
@@ -262,29 +212,21 @@
                     }
                 },
                 "showKpiValuesTop": {
-                    "displayName": "Show top chart KPI values",
-                    "displayNameKey": "Visual_ShowTopChartKPIValues",
                     "type": {
                         "bool": true
                     }
                 },
                 "topChartDefaultKpiValue": {
-                    "displayName": "Top chart default KPI text",
-                    "displayNameKey": "Visual_TopChartDefaultKPIText",
                     "type": {
                         "text": true
                     }
                 },
                 "showKpiValuesBottom": {
-                    "displayName": "Show bottom chart KPI values",
-                    "displayNameKey": "Visual_ShowBottomChartKPIValues",
                     "type": {
                         "bool": true
                     }
                 },
                 "bottomChartDefaultKpiValue": {
-                    "displayName": "Bottom chart default KPI text",
-                    "displayNameKey": "Visual_BottomChartDefaultKPIText",
                     "type": {
                         "text": true
                     }
@@ -292,26 +234,18 @@
             }
         },
         "dualKpiTitleFormatting": {
-            "displayName": "Dual KPI Title formatting",
-            "displayNameKey": "Visual_TitleFormatting",
             "properties": {
                 "upperCase": {
-                    "displayName": "Uppercase",
-                    "displayNameKey": "Visual_Uppercase",
                     "type": {
                         "bool": true
                     }
                 },
                 "fontSizeAutoFormatting": {
-                    "displayName": "Auto text size",
-                    "displayNameKey": "Visual_TextAutoSize",
                     "type": {
                         "bool": true
                     }
                 },
                 "fontSize": {
-                    "displayName": "Value text size",
-                    "displayNameKey": "Visual_TextSizeValue",
                     "type": {
                         "formatting": {
                             "fontSize": true
@@ -319,29 +253,21 @@
                     }
                 },
                 "isBold": {
-                    "displayName": "Bold",
-                    "displayNameKey": "Visual_TextIsBold",
                     "type": {
                         "bool": true
                     }
                 },
                 "isItalic": {
-                    "displayName": "Italic",
-                    "displayNameKey": "Visual_TextIsItalic",
                     "type": {
                         "bool": true
                     }
                 },
                 "isUnderline": {
-                    "displayName": "Underline",
-                    "displayNameKey": "Visual_TextIsUnderline",
                     "type": {
                         "bool": true
                     }
                 },
                 "fontFamily": {
-                    "displayName": "Font family",
-                    "displayNameKey": "Visual_TextFontFamily",
                     "type": {
                         "formatting": {
                             "fontFamily": true
@@ -351,19 +277,13 @@
             }
         },
         "dualKpiValueFormatting": {
-            "displayName": "Dual KPI Value formatting",
-            "displayNameKey": "Visual_ValueFormatting",
             "properties": {
                 "fontSizeAutoFormatting": {
-                    "displayName": "Auto text size",
-                    "displayNameKey": "Visual_TextAutoSize",
                     "type": {
                         "bool": true
                     }
                 },
                 "fontSize": {
-                    "displayName": "Value text size",
-                    "displayNameKey": "Visual_TextSizeValue",
                     "type": {
                         "formatting": {
                             "fontSize": true
@@ -371,29 +291,21 @@
                     }
                 },
                 "isBold": {
-                    "displayName": "Bold",
-                    "displayNameKey": "Visual_TextIsBold",
                     "type": {
                         "bool": true
                     }
                 },
                 "isItalic": {
-                    "displayName": "Italic",
-                    "displayNameKey": "Visual_TextIsItalic",
                     "type": {
                         "bool": true
                     }
                 },
                 "isUnderline": {
-                    "displayName": "Underline",
-                    "displayNameKey": "Visual_TextIsUnderline",
                     "type": {
                         "bool": true
                     }
                 },
                 "fontFamily": {
-                    "displayName": "Font family",
-                    "displayNameKey": "Visual_TextFontFamily",
                     "type": {
                         "formatting": {
                             "fontFamily": true
@@ -401,8 +313,6 @@
                     }
                 },
                 "displayUnits": {
-                    "displayName": "Display units",
-                    "displayNameKey": "Visual_DisplayUnits",
                     "type": {
                         "formatting": {
                             "labelDisplayUnits": true
@@ -410,9 +320,6 @@
                     }
                 },
                 "precision": {
-                    "displayName": "Decimal Places",
-                    "displayNameKey": "Visual_DecimalPlaces",
-                    "description": "Select the number of decimal places to display",
                     "type": {
                         "numeric": true
                     },
@@ -421,12 +328,8 @@
             }
         },
         "dualKpiColors": {
-            "displayName": "Dual KPI Top Chart Colors",
-            "displayNameKey": "Visual_DualKpiColors",
             "properties": {
                 "dataColor": {
-                    "displayName": "Data color",
-                    "displayNameKey": "Visual_DualKpiColors_DataColor",
                     "type": {
                         "fill": {
                             "solid": {
@@ -436,8 +339,6 @@
                     }
                 },
                 "textColor": {
-                    "displayName": "Text color",
-                    "displayNameKey": "Visual_DualKpiColors_TextColor",
                     "type": {
                         "fill": {
                             "solid": {
@@ -447,8 +348,6 @@
                     }
                 },
                 "opacity": {
-                    "displayName": "Chart opacity",
-                    "displayNameKey": "Visual_DualKpiColors_Opacity",
                     "type": {
                         "numeric": true
                     }
@@ -456,19 +355,13 @@
             }
         },
         "dualKpiColorsBottom": {
-            "displayName": "Dual KPI Bottom Chart Colors",
-            "displayNameKey": "Visual_DualKpiChart_BottomChartColors",
             "properties": {
                 "matchTopChartOptions": {
-                    "displayName": "Match top chart settings",
-                    "displayNameKey": "Visual_DualKpiChart_BottomChartColors_MatchTopChartSettings",
                     "type": {
                         "bool": true
                     }
                 },
                 "dataColor": {
-                    "displayName": "Data color",
-                    "displayNameKey": "Visual_DualKpiColors_DataColor",
                     "type": {
                         "fill": {
                             "solid": {
@@ -478,8 +371,6 @@
                     }
                 },
                 "textColor": {
-                    "displayName": "Text color",
-                    "displayNameKey": "Visual_DualKpiColors_TextColor",
                     "type": {
                         "fill": {
                             "solid": {
@@ -489,8 +380,6 @@
                     }
                 },
                 "opacity": {
-                    "displayName": "Chart opacity",
-                    "displayNameKey": "Visual_DualKpiColors_Opacity",
                     "type": {
                         "numeric": true
                     }
@@ -498,47 +387,33 @@
             }
         },
         "dualKpiAxis": {
-            "displayName": "Dual KPI Axis Settings",
-            "displayNameKey": "Visual_DualKpiAxis",
             "properties": {
                 "topChartAxisMin": {
-                    "displayName": "Top chart axis min",
-                    "displayNameKey": "Visual_DualKpiAxis_TopChartAxisMin",
                     "type": {
                         "numeric": true
                     }
                 },
                 "topChartAxisMax": {
-                    "displayName": "Top chart axis max",
-                    "displayNameKey": "Visual_DualKpiAxis_TopChartAxisMax",
                     "type": {
                         "numeric": true
                     }
                 },
                 "bottomChartAxisMin": {
-                    "displayName": "Bottom chart axis min",
-                    "displayNameKey": "Visual_DualKpiAxis_BottomChartAxisMin",
                     "type": {
                         "numeric": true
                     }
                 },
                 "bottomChartAxisMax": {
-                    "displayName": "Bottom chart axis max",
-                    "displayNameKey": "Visual_DualKpiAxis_BottomChartAxisMax",
                     "type": {
                         "numeric": true
                     }
                 },
                 "topChartZeroLine": {
-                    "displayName": "Top chart zero line",
-                    "displayNameKey": "Visual_DualKpiAxis_TopChartZeroLine",
                     "type": {
                         "bool": true
                     }
                 },
                 "bottomChartZeroLine": {
-                    "displayName": "Bottom chart zero line",
-                    "displayNameKey": "Visual_DualKpiAxis_BottomChartZeroLine",
                     "type": {
                         "bool": true
                     }
@@ -546,43 +421,15 @@
             }
         },
         "dualKpiChart": {
-            "displayName": "Dual KPI Chart Type",
-            "displayNameKey": "Visual_DualKpiChart",
             "properties": {
                 "topChartType": {
-                    "displayName": "Top chart type",
-                    "displayNameKey": "Visual_DualKpiChart_TopChartType",
                     "type": {
-                        "enumeration": [
-                            {
-                                "value": "area",
-                                "displayName": "Area",
-                                "displayNameKey": "Visual_DualKpiChart_Area"
-                            },
-                            {
-                                "value": "line",
-                                "displayName": "Line",
-                                "displayNameKey": "Visual_DualKpiChart_Line"
-                            }
-                        ]
+                        "enumeration": []
                     }
                 },
                 "bottomChartType": {
-                    "displayName": "Bottom chart type",
-                    "displayNameKey": "Visual_DualKpiChart_BottomChartType",
                     "type": {
-                        "enumeration": [
-                            {
-                                "value": "area",
-                                "displayName": "Area",
-                                "displayNameKey": "Visual_DualKpiChart_Area"
-                            },
-                            {
-                                "value": "line",
-                                "displayName": "Line",
-                                "displayNameKey": "Visual_DualKpiChart_Line"
-                            }
-                        ]
+                        "enumeration": []
                     }
                 }
             }

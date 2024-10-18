@@ -2,6 +2,7 @@
 ### Visual changes
 * Add new font settings
 * Migrate to new formatting model
+* Fix the bug with axis label being not visible by adding a padding
 
 ### Code improvements
 * Migrate from tslint to eslint, fix eslint errors

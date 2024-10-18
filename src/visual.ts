@@ -32,7 +32,7 @@ import { format as d3Format } from "d3-format";
 import { timeFormat as d3TimeFormat } from "d3-time-format";
 import { bisector as d3Bisector, min as d3Min, max as d3Max, extent as d3Extent } from "d3-array";
 import { dispatch as d3Dispatch, Dispatch } from "d3-dispatch";
-import { scaleTime as d3ScaleTime, scaleLinear as d3ScaleLinear } from "d3-scale";
+import { scaleTime as d3ScaleTime, scaleLinear as d3ScaleLinear, NumberValue } from "d3-scale";
 import { axisLeft as d3AxisLeft } from "d3-axis";
 import {
     Area as d3Area,
@@ -46,11 +46,11 @@ import powerbi from "powerbi-visuals-api";
 import { ColorHelper } from "powerbi-visuals-utils-colorutils";
 // powerbi.extensibility.utils.formatting
 import {
-    valueFormatter as ValueFormatter
+    valueFormatter as ValueFormatter,
+    displayUnitSystemType,
 } from "powerbi-visuals-utils-formattingutils";
-import {
-    DisplayUnitSystemType
-} from "powerbi-visuals-utils-formattingutils/lib/src/displayUnitSystem/displayUnitSystemType";
+import DisplayUnitSystemType = displayUnitSystemType.DisplayUnitSystemType;
+
 // powerbi.extensibility.utils.tooltip
 import { ITooltipServiceWrapper, TooltipServiceWrapper } from "powerbi-visuals-utils-tooltiputils";
 
@@ -213,10 +213,10 @@ export class DualKpi implements IVisual {
     private timeFormatter: (date: Date) => string;
     private dataBisector: (array: ArrayLike<IDualKpiDataPoint>, x: Date, lo?: number, hi?: number) => number;
 
-    private chartLeftMargin = 35;
+    private chartLeftMargin = 45;
     private viewport: IViewport;
 
-    private axisNumberFormatter;
+    private axisNumberFormatter: (d: NumberValue) => string;
 
     private static DefaultTitleSizes = {
         "super-small": 10,
@@ -1252,7 +1252,7 @@ export class DualKpi implements IVisual {
         };
 
         if (this.size === DualKpiSize.medium || this.size === DualKpiSize.large) {
-            margin.left = 40;
+            margin.left = 45;
         }
 
         const calcWidth = options.width - margin.right - margin.left,
@@ -1271,16 +1271,6 @@ export class DualKpi implements IVisual {
             .domain([axisMinValue, axisMaxValue])
             .clamp(true)
             .range([calcHeight, 0]);
-
-        const yAxis = d3AxisLeft(yScale)
-            .tickValues([axisMinValue, axisMaxValue])
-            .tickFormat((d) => {
-                let axisTickLabel: string = String(this.axisNumberFormatter(d));
-                if (options.valueAsPercent) {
-                    axisTickLabel = axisTickLabel + "%";
-                }
-                return axisTickLabel;
-            });
 
         let seriesRenderer: d3Area<IDualKpiDataPoint> | d3Line<IDualKpiDataPoint>, fill: string, stroke: string, strokeWidth: number;
 
@@ -1305,7 +1295,7 @@ export class DualKpi implements IVisual {
 
         const chartGroup: IChartGroup = options.element;
         chartGroup.group
-            .attr("transform", "translate(" + margin.left + "," + (options.top + margin.top) + ")");
+            .attr("transform", `translate(${margin.left}, ${options.top + margin.top})`)
 
         const chartArea = chartGroup.area;
         chartArea
@@ -1336,9 +1326,20 @@ export class DualKpi implements IVisual {
                 .classed("hidden", true);
         }
 
+        const yAxis = d3AxisLeft(yScale)
+            .tickValues([axisMinValue, axisMaxValue])
+            .tickFormat((d: NumberValue) => {
+                let axisTickLabel: string = String(this.axisNumberFormatter(d));
+                if (options.valueAsPercent) {
+                    axisTickLabel = axisTickLabel + "%";
+                }
+                return axisTickLabel;
+            })
+            .tickPadding(0)
+
         const axis = chartGroup.yAxis;
         axis
-            .attr("class", "axis")
+            .classed("axis", true)
             .classed(this.sizeCssClass, true)
             .classed("axis-colored", !isHighContrastMode)
             .call(yAxis);

@@ -27,14 +27,18 @@
 import powerbi from 'powerbi-visuals-api';
 import { formattingSettings } from 'powerbi-visuals-utils-formattingmodel';
 
-import { DualKpiPropertiesCard, percentTypeOptions } from './settings/dualKpiPropertiesCard';
-import { DualKpiValuesCard } from './settings/dualKpiValuesCard';
-import { DualKpiTitleFormattingCard } from './settings/dualKpiTitleFormattingCard';
-import { DualKpiValueFormattingCard } from './settings/dualKpiValueFormattingCard';
-import { DualKpiColorsCard } from './settings/dualKpiColorsCard';
-import { DualKpiColorsBottomCard } from './settings/dualKpiColorsBottomCard';
-import { DualKpiAxisCard } from './settings/dualKpiAxisCard';
-import { DualKpiChartCard, chartTypeOptions } from './settings/dualKpiChartCard';
+import {
+    DualKpiPropertiesCard,
+    percentTypeOptions,
+    DualKpiValuesCard,
+    DualKpiTitleFormattingCard,
+    DualKpiValueFormattingCard,
+    DualKpiColorsCard,
+    DualKpiColorsBottomCard,
+    DualKpiAxisCard,
+    DualKpiChartCard,
+    chartTypeOptions
+} from './settings';
 
 import IEnumMember = powerbi.IEnumMember;
 import ILocalizationManager = powerbi.extensibility.ILocalizationManager;

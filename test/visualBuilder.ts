@@ -40,44 +40,93 @@ export class VisualBuilder extends VisualBuilderBase<DualKpi> {
         super(width, height);
     }
 
-    public get mainElement() {
-        return $(this.element).children("svg.dualKpi");
+    public get mainElement(): SVGSVGElement {
+        return this.element.querySelector("svg.dualKpi")!;
     }
 
-    public get chartGroup() {
-        return this.mainElement.children("g.chartGroup");
+    public get chartGroups(): SVGGElement[] {
+        return Array.from(this.mainElement.querySelectorAll("g.chartGroup"));
     }
 
-    public get group() {
-        return this.chartGroup.children("g.group");
+    public get groups(): SVGGElement[] {
+        return this.chartGroups.map((chartGroup) => chartGroup.querySelector("g.group") as SVGGElement);
     }
 
-    public get dataArea() {
-        return this.group.children("path.area");
+    public get pathAreas() {
+        return this.chartGroups.map((chartGroup) => chartGroup.querySelector("path.area") as SVGPathElement);
     }
 
-    public get dataTitle() {
-        return this.group.children("text.data-title");
+    public get axis(): SVGGElement[] {
+        return this.chartGroups.map((chartGroup) => chartGroup.querySelector("g.axis") as SVGGElement);
     }
 
-    public get dataTitleValue() {
-        return this.group.children("text.data-value");
+    public get axisTicks(): SVGGElement[] {
+        const axis = this.axis.map((axis) => Array.from(axis.querySelectorAll<SVGGElement>("g.tick")));
+        return axis.reduce((acc, val) => acc.concat(val), []);
     }
 
-    public get title() {
-        return this.group.children("title");
+    public get chartGroupTop(): SVGGElement | null {
+        return this.mainElement.querySelector("g.chartGroupTop") as SVGGElement;
     }
 
-    public get chartGroupTop() {
-        return this.mainElement.children("g.chartGroupTop");
+    public get chartGroupBottom(): SVGGElement | null {
+        return this.mainElement.querySelector("g.chartGroupBottom");
     }
 
-    public get chartGroupBottom() {
-        return this.mainElement.children("g.chartGroupBottom");
+    public get groupTop(): SVGGElement | null {
+        if (!this.chartGroupTop) {
+            return null;
+        }
+        return this.chartGroupTop.querySelector("g.group") as SVGGElement;
     }
 
-    public get instance(): DualKpi {
-        return this.visual;
+    public get groupBottom(): SVGGElement | null {
+        if (!this.chartGroupBottom) {
+            return null;
+        }
+        return this.chartGroupBottom.querySelector("g.group") as SVGGElement;
+    }
+
+    public get pathAreaTop(): SVGPathElement | null {
+        if (!this.chartGroupTop) {
+            return null;
+        }
+        return this.chartGroupTop.querySelector("path.area") as SVGPathElement;
+    }
+
+    public get pathAreaBottom(): SVGPathElement | null {
+        if (!this.chartGroupBottom) {
+            return null;
+        }
+        return this.chartGroupBottom.querySelector("path.area") as SVGPathElement;
+    }
+
+    public get titleTop(): SVGTitleElement | null {
+        if (!this.groupTop) {
+            return null;
+        }
+        return this.groupTop.querySelector<SVGTitleElement>("text.data-title");
+    }
+
+    public get titleBottom(): SVGTitleElement | null {
+        if (!this.groupBottom) {
+            return null;
+        }
+        return this.groupBottom.querySelector<SVGTitleElement>("text.data-title");
+    }
+
+    public get textTop(): SVGTextElement | null {
+        if (!this.groupTop) {
+            return null;
+        }
+        return this.groupTop.querySelector<SVGTextElement>("text.data-value");
+    }
+
+    public get textBottom(): SVGTextElement | null {
+        if (!this.groupBottom) {
+            return null;
+        }
+        return this.groupBottom.querySelector<SVGTextElement>("text.data-value");
     }
 
     protected build(options: VisualConstructorOptions): DualKpi {

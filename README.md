@@ -1,8 +1,8 @@
 # Dual KPI Custom Visual
-[![Build Status](https://travis-ci.org/Microsoft/powerbi-visuals-dualkpi.svg?branch=master)](https://travis-ci.org/Microsoft/powerbi-visuals-dualkpi) [![Coverage Status](https://coveralls.io/repos/github/Microsoft/powerbi-visuals-dualkpi/badge.svg?branch=master)](https://coveralls.io/github/Microsoft/powerbi-visuals-dualkpi?branch=master)
-[![Build Status](https://dev.azure.com/customvisuals/public/_apis/build/status/Microsoft.powerbi-visuals-dualkpi)](https://dev.azure.com/customvisuals/public/_build/latest?definitionId=9) [![Known Vulnerabilities](https://snyk.io/test/github/Microsoft/powerbi-visuals-dualkpi/badge.svg)](https://snyk.io/test/github/Microsoft/powerbi-visuals-dualkpi)
+[![build](https://github.com/microsoft/powerbi-visuals-dualkpi/actions/workflows/build.yml/badge.svg)](https://github.com/microsoft/powerbi-visuals-dualkpi/actions/workflows/build.yml) [![Coverage Status](https://coveralls.io/repos/github/Microsoft/powerbi-visuals-dualkpi/badge.svg?branch=main)](https://coveralls.io/github/Microsoft/powerbi-visuals-dualkpi?branch=main)
+[![Known Vulnerabilities](https://snyk.io/test/github/Microsoft/powerbi-visuals-dualkpi/badge.svg)](https://snyk.io/test/github/Microsoft/powerbi-visuals-dualkpi)
 
-![DualKPI screenshot](https://az158878.vo.msecnd.net/marketing/Partner_21474836617/Product_42949680540/Asset_b4fac22d-44ca-49bf-8485-98dfaf6ef18c/DualKPIscreenshot1.png)
+![DualKPI screenshot](/assets/screenshot.png)
 # Overview
 Each KPI can be visualized as line chart or area chart. The visual has dynamic behavior and can show historical value and the change from the latest value when you hover over it. It also has small icons and labels to convey KPI definitions and alerts about data freshness. Customize colors, titles, axis properties, tooltips, and more, to create visually appealing and functional executive dashboards.
 
@@ -92,5 +92,5 @@ Toggle the top chart between an area chart or a line chart
 **Bottom chart type**
 Toggle the bottom chart between an area chart or a line chart
 
-See also [Dual KPI at Microsoft Office store](https://store.office.com/en-us/app.aspx?assetid=WA104380774&sourcecorrid=22a9c675-007c-43ad-9448-8e7a49e1ee75&searchapppos=0&ui=en-US&rs=en-US&ad=US&appredirect=false)
+See also [Dual KPI at Microsoft Office store](https://appsource.microsoft.com/en-us/product/PowerBIVisuals/WA104380774)
 

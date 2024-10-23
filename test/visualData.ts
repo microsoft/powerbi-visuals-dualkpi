@@ -24,8 +24,6 @@
  *  THE SOFTWARE.
  */
 
-import { range as lodashRange } from "lodash";
-
 import powerbi from "powerbi-visuals-api";
 import DataView = powerbi.DataView;
 
@@ -74,12 +72,15 @@ export class VisualData extends TestDataViewBuilder {
                     },
                     values: this.valuesBottomValues
                 }
-            ], columnNames).build();
+            ], <string[]>columnNames).build();
     }
 }
 
 export function getRandomHexColor(): string {
-    return getHexColorFromNumber(getRandomInteger(0, 16777215 + 1));
+    // 16777215 in hex is FFFFFF
+    const value = Math.floor(Math.random() * (16777215 + 1))
+    const hex = value.toString(16);
+    return "#" + hex.padStart(6, "0");
 }
 
 function getRandomUniqueSortedDates(count: number, start: Date, end: Date): Date[] {
@@ -110,14 +111,5 @@ function getRandomNumber(
     }
 
     return result;
-}
-
-function getHexColorFromNumber(value: number) {
-    let hex = value.toString(16).toUpperCase();
-    return "#" + (hex.length === 6 ? hex : lodashRange(0, 6 - hex.length, 0).join("") + hex);
-}
-
-function getRandomInteger(min: number, max: number, exceptionList?: number[]): number {
-    return getRandomNumber(max, min, exceptionList, Math.floor);
 }
 

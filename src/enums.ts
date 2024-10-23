@@ -39,3 +39,9 @@ export enum DualKpiHoverDataPercentType {
     firstDate = "First date",
     previousDate = "Previous date"
 }
+
+export enum PercentType {
+    lastDate = "lastDate",
+    firstDate = "firstDate",
+    previousDate = "previousDate"
+}

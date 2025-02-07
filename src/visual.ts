@@ -48,6 +48,7 @@ import { ColorHelper } from "powerbi-visuals-utils-colorutils";
 import {
     valueFormatter as ValueFormatter,
     displayUnitSystemType,
+    textMeasurementService,
 } from "powerbi-visuals-utils-formattingutils";
 import DisplayUnitSystemType = displayUnitSystemType.DisplayUnitSystemType;
 
@@ -1199,10 +1200,23 @@ export class DualKpi implements IVisual {
                 dayRangeLeft -= (iconWidth); // width of icon + 8px padding
             }
             dayRangeElement.attr("transform", "translate(" + (dayRangeLeft) + ",0)");
+
+            const titleMaxWidth = dayRangeLeft - dayRangeElement.node().getBBox().width;
+            this.tailorTextByMaxWidth(chartTitleElement, titleMaxWidth);
         }
 
         this.bottomContainer.bottomContainer.attr("transform", "translate(5," + (this.viewport.height - 5) + ")");
         this.bottomContainer.bottomContainer.classed(DualKpi.INVISIBLE, false);
+    }
+
+    private tailorTextByMaxWidth(text: d3Selection<SVGTextElement, unknown, null, undefined>, maxWidth: number) {
+        const tailoredText = textMeasurementService.getTailoredTextOrDefault({
+            text: text.text(),
+            fontSize: text.style("font-size"),
+            fontFamily: text.style("font-family"),
+        }, maxWidth);
+
+        text.text(tailoredText);
     }
 
     private createWarningMessage(chartTitleElement, iconY: number, iconScaleTransform: string, iconWidth: number) {

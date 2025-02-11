@@ -553,15 +553,19 @@ export class DualKpi implements IVisual {
     }
 
     private getGroupTransformValue(group: SVGGElement) {
-        const transform = group?.transform?.baseVal?.[0];
-        if (!transform) {
+        const transformList = group?.transform?.baseVal;
+        if (!transformList || transformList.length === 0) {
             return { x: 0, y: 0 };
         }
 
-        const x = transform.matrix.e;
-        const y = transform.matrix.f;
+        for (let i = 0; i < transformList.length; i++) {
+            const transform = transformList[i];
+            if (transform.type === SVGTransform.SVG_TRANSFORM_TRANSLATE) {
+                return { x: transform.matrix.e, y: transform.matrix.f };
+            }
+        }
 
-        return { x, y };
+        return { x: 0, y: 0 };
     }
 
     private setChartLayout(availableHeight: number, availableWidth: number) {

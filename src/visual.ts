@@ -558,14 +558,12 @@ export class DualKpi implements IVisual {
             return { x: 0, y: 0 };
         }
 
-        for (let i = 0; i < transformList.length; i++) {
-            const transform = transformList[i];
-            if (transform.type === SVGTransform.SVG_TRANSFORM_TRANSLATE) {
-                return { x: transform.matrix.e, y: transform.matrix.f };
-            }
-        }
 
-        return { x: 0, y: 0 };
+        const translate = Array.from(transformList).find((x) => x.type === SVGTransform.SVG_TRANSFORM_TRANSLATE);
+
+        return translate
+            ? { x: translate.matrix.e, y: translate.matrix.f }
+            : { x: 0, y: 0 };
     }
 
     private setChartLayout(availableHeight: number, availableWidth: number) {

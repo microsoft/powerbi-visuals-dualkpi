@@ -552,17 +552,17 @@ export class DualKpi implements IVisual {
         }
     }
 
-    private getGroupTransformValue(group: SVGGElement) {
+    private getGroupTransformValue(group: SVGGElement): { x: number; y: number; } {
         const transformList = group?.transform?.baseVal;
         if (!transformList || transformList.length === 0) {
             return { x: 0, y: 0 };
         }
 
 
-        const translate = Array.from(transformList).find((x) => x.type === SVGTransform.SVG_TRANSFORM_TRANSLATE);
+        const svgTransformTranslate = Array.from(transformList).find((x) => x.type === SVGTransform.SVG_TRANSFORM_TRANSLATE);
 
-        return translate
-            ? { x: translate.matrix.e, y: translate.matrix.f }
+        return svgTransformTranslate
+            ? { x: svgTransformTranslate.matrix.e, y: svgTransformTranslate.matrix.f }
             : { x: 0, y: 0 };
     }
 

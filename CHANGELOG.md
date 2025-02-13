@@ -1,3 +1,12 @@
+## 2.1.2
+### Visual changes
+* Tailor title text if it's too long
+
+## 2.1.1
+### Visual changes
+* Fix axis ticks by computing the required width
+* Add report tooltip support
+
 ## 2.1.0
 ### Visual changes
 * Add new font settings

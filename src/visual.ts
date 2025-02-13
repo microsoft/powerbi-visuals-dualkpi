@@ -48,6 +48,7 @@ import { ColorHelper } from "powerbi-visuals-utils-colorutils";
 import {
     valueFormatter as ValueFormatter,
     displayUnitSystemType,
+    textMeasurementService,
 } from "powerbi-visuals-utils-formattingutils";
 import DisplayUnitSystemType = displayUnitSystemType.DisplayUnitSystemType;
 
@@ -213,7 +214,7 @@ export class DualKpi implements IVisual {
     private timeFormatter: (date: Date) => string;
     private dataBisector: (array: ArrayLike<IDualKpiDataPoint>, x: Date, lo?: number, hi?: number) => number;
 
-    private chartLeftMargin = 45;
+    private chartLeftMargin = 35;
     private viewport: IViewport;
 
     private axisNumberFormatter: (d: NumberValue) => string;
@@ -517,6 +518,7 @@ export class DualKpi implements IVisual {
             this.displayRootElement(wasDataSetRendered);
             this.drawTopChart({data, chartHeight, chartWidth, chartSpaceBetween});
             this.drawBottomChart({data, chartHeight, chartWidth, chartSpaceBetween});
+            this.adjustAxisGroupPosition();
 
             if (wasDataSetRendered) {
                 this.drawBottomContainer(chartWidth, chartHeight, chartTitleSpace, chartSpaceBetween, iconOffset);
@@ -524,6 +526,44 @@ export class DualKpi implements IVisual {
         } catch (e) {
             console.error(e);
         }
+    }
+
+    private adjustAxisGroupPosition() {
+        const axisTicks = this.svgRoot.selectAll("g.tick");
+        const axisMaxWidth = Math.ceil(Math.max(...axisTicks.nodes().map((x: SVGGElement) => x.getBBox().width))) || 0;
+
+        const topGroupTransform = this.getGroupTransformValue(this.chartGroupTop.group.node());
+        const bottomGroupTransform = this.getGroupTransformValue(this.chartGroupBottom.group.node());
+        let transformX: number = axisMaxWidth;
+
+        if (this.formattingSettings.properties.topChartShow.value) {
+            transformX = Math.max(transformX, topGroupTransform.x);
+        }
+        if (this.formattingSettings.properties.bottomChartShow.value) {
+            transformX = Math.max(transformX, bottomGroupTransform.x);
+        }
+
+        if (this.formattingSettings.properties.topChartShow.value) {
+            this.chartGroupTop.group.attr("transform", `translate(${Math.max(transformX)}, ${topGroupTransform.y})`);
+        }
+
+        if (this.formattingSettings.properties.bottomChartShow.value) {
+            this.chartGroupBottom.group.attr("transform", `translate(${Math.max(transformX)}, ${bottomGroupTransform.y})`);
+        }
+    }
+
+    private getGroupTransformValue(group: SVGGElement): { x: number; y: number; } {
+        const transformList = group?.transform?.baseVal;
+        if (!transformList || transformList.length === 0) {
+            return { x: 0, y: 0 };
+        }
+
+
+        const svgTransformTranslate = Array.from(transformList).find((x) => x.type === SVGTransform.SVG_TRANSFORM_TRANSLATE);
+
+        return svgTransformTranslate
+            ? { x: svgTransformTranslate.matrix.e, y: svgTransformTranslate.matrix.f }
+            : { x: 0, y: 0 };
     }
 
     private setChartLayout(availableHeight: number, availableWidth: number) {
@@ -1162,10 +1202,23 @@ export class DualKpi implements IVisual {
                 dayRangeLeft -= (iconWidth); // width of icon + 8px padding
             }
             dayRangeElement.attr("transform", "translate(" + (dayRangeLeft) + ",0)");
+
+            const titleMaxWidth = dayRangeLeft - dayRangeElement.node().getBBox().width;
+            this.tailorTextByMaxWidth(chartTitleElement, titleMaxWidth);
         }
 
         this.bottomContainer.bottomContainer.attr("transform", "translate(5," + (this.viewport.height - 5) + ")");
         this.bottomContainer.bottomContainer.classed(DualKpi.INVISIBLE, false);
+    }
+
+    private tailorTextByMaxWidth(text: d3Selection<SVGTextElement, unknown, null, undefined>, maxWidth: number) {
+        const tailoredText = textMeasurementService.getTailoredTextOrDefault({
+            text: text.text(),
+            fontSize: text.style("font-size"),
+            fontFamily: text.style("font-family"),
+        }, maxWidth);
+
+        text.text(tailoredText);
     }
 
     private createWarningMessage(chartTitleElement, iconY: number, iconScaleTransform: string, iconWidth: number) {
@@ -1252,7 +1305,7 @@ export class DualKpi implements IVisual {
         };
 
         if (this.size === DualKpiSize.medium || this.size === DualKpiSize.large) {
-            margin.left = 45;
+            margin.left = 40;
         }
 
         const calcWidth = options.width - margin.right - margin.left,
@@ -1335,7 +1388,6 @@ export class DualKpi implements IVisual {
                 }
                 return axisTickLabel;
             })
-            .tickPadding(0)
 
         const axis = chartGroup.yAxis;
         axis

@@ -203,7 +203,7 @@ export class DualKpi implements IVisual {
     private target: HTMLElement;
     private size: DualKpiSize;
     private sizeCssClass: DualKpiSizeClass;
-    private events:IVisualEventService
+    private eventService: IVisualEventService
 
     private svgRoot: d3Selection<SVGSVGElement, unknown, null, undefined>;
 
@@ -265,7 +265,7 @@ export class DualKpi implements IVisual {
 
     private init(options: VisualConstructorOptions): void {
         this.target = options.element;
-        this.events = options.host.eventService
+        this.eventService = options.host.eventService
         this.size = DualKpiSize.small;
         this.sizeCssClass = "small";
         this.valueFormatter = d3Format(".3s");
@@ -483,7 +483,7 @@ export class DualKpi implements IVisual {
     }
 
     public update(options: VisualUpdateOptions) {
-        this.events.renderingStarted(options)
+        this.eventService.renderingStarted(options)
         try {
             const dataView: DataView = this.dataView = options.dataViews && options.dataViews[0];
             if (!dataView ||
@@ -526,10 +526,10 @@ export class DualKpi implements IVisual {
             if (wasDataSetRendered) {
                 this.drawBottomContainer(chartWidth, chartHeight, chartTitleSpace, chartSpaceBetween, iconOffset);
             }
-            this.events.renderingFinished(options)
+            this.eventService.renderingFinished(options)
         } catch (e) {
             console.error(e);
-            this.events.renderingFailed(options)
+            this.eventService.renderingFailed(options , e)
         }
     }
 

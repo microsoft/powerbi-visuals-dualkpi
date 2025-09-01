@@ -69,5 +69,8 @@
   "Visual_Uppercase": "Huruf besar",
   "Visual_ValueFormatting": "Pemformatan Nilai Dual KPI",
   "Visual_VarianceType": "Jenis varians",
-  "Visual_WarningState": "Keadaan amaran"
+  "Visual_WarningState": "Keadaan amaran",
+  "Visual_DualKpi_General": "Umum",
+  "Visual_DualKpi_Title": "Tajuk",
+  "Visual_DualKpi_Tooltip": "Petua alat"
 }

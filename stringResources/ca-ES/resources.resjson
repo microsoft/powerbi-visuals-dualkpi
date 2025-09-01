@@ -69,5 +69,8 @@
   "Visual_Uppercase": "Majúscules",
   "Visual_ValueFormatting": "Format de valor de Dual KPI",
   "Visual_VarianceType": "Tipus de variància",
-  "Visual_WarningState": "Estat d'advertiment"
+  "Visual_WarningState": "Estat d'advertiment",
+  "Visual_DualKpi_General": "General",
+  "Visual_DualKpi_Title": "Títol",
+  "Visual_DualKpi_Tooltip": "Informació sobre eines"
 }

@@ -69,5 +69,8 @@
   "Visual_Uppercase": "Store bogstaver",
   "Visual_ValueFormatting": "Formatering af Dual KPI-værdi",
   "Visual_VarianceType": "Varianstype",
-  "Visual_WarningState": "Advarselstilstand"
+  "Visual_WarningState": "Advarselstilstand",
+  "Visual_DualKpi_General": "Generelt",
+  "Visual_DualKpi_Title": "Titel",
+  "Visual_DualKpi_Tooltip": "Værktøjstip"
 }

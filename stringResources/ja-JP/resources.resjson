@@ -69,5 +69,8 @@
   "Visual_Uppercase": "大文字",
   "Visual_ValueFormatting": "Dual KPI 値の書式設定",
   "Visual_VarianceType": "分散の種類",
-  "Visual_WarningState": "警告状態"
+  "Visual_WarningState": "警告状態",
+  "Visual_DualKpi_General": "全般",
+  "Visual_DualKpi_Title": "タイトル",
+  "Visual_DualKpi_Tooltip": "ツールチップ"
 }

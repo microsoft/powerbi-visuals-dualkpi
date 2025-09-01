@@ -69,5 +69,8 @@
   "Visual_Uppercase": "대문자",
   "Visual_ValueFormatting": "Dual KPI 값 서식",
   "Visual_VarianceType": "차이 유형",
-  "Visual_WarningState": "경고 상태"
+  "Visual_WarningState": "경고 상태",
+  "Visual_DualKpi_General": "일반",
+  "Visual_DualKpi_Title": "제목",
+  "Visual_DualKpi_Tooltip": "도구 설명"
 }

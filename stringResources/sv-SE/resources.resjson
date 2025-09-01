@@ -69,5 +69,8 @@
   "Visual_Uppercase": "Versaler",
   "Visual_ValueFormatting": "Dual KPI-värdeformatering",
   "Visual_VarianceType": "Avvikelsetyp",
-  "Visual_WarningState": "Varningstillstånd"
+  "Visual_WarningState": "Varningstillstånd",
+  "Visual_DualKpi_General": "Allmänt",
+  "Visual_DualKpi_Title": "Rubrik",
+  "Visual_DualKpi_Tooltip": "Verktygstips"
 }

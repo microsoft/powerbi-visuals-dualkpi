@@ -69,5 +69,8 @@
   "Visual_Uppercase": "Velikim slovima",
   "Visual_ValueFormatting": "Dual KPI formatiranje vrednosti",
   "Visual_VarianceType": "Tip odstupanja",
-  "Visual_WarningState": "Stanje za upozorenje"
+  "Visual_WarningState": "Stanje za upozorenje",
+  "Visual_DualKpi_General": "Opšte",
+  "Visual_DualKpi_Title": "Naslov",
+  "Visual_DualKpi_Tooltip": "Opis alatke"
 }

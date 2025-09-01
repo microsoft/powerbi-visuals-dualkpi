@@ -69,5 +69,8 @@
   "Visual_Uppercase": "Chữ hoa",
   "Visual_ValueFormatting": "Định dạng giá trị Dual KPI",
   "Visual_VarianceType": "Loại phương sai",
-  "Visual_WarningState": "Trạng thái cảnh báo"
+  "Visual_WarningState": "Trạng thái cảnh báo",
+  "Visual_DualKpi_General": "Tổng quát",
+  "Visual_DualKpi_Title": "Tiêu đề",
+  "Visual_DualKpi_Tooltip": "Chú giải công cụ"
 }

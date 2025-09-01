@@ -69,5 +69,8 @@
   "Visual_Uppercase": "Hoofdletters",
   "Visual_ValueFormatting": "Dual KPI-waardeopmaak",
   "Visual_VarianceType": "Afwijkingstype",
-  "Visual_WarningState": "Waarschuwingsstatus"
+  "Visual_WarningState": "Waarschuwingsstatus",
+  "Visual_DualKpi_General": "Algemeen",
+  "Visual_DualKpi_Title": "Titel",
+  "Visual_DualKpi_Tooltip": "Knopinfo"
 }

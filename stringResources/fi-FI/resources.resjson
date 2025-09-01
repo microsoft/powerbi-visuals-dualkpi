@@ -69,5 +69,8 @@
   "Visual_Uppercase": "Isot kirjaimet",
   "Visual_ValueFormatting": "Dual KPI -arvojen muotoilu",
   "Visual_VarianceType": "Varianssityyppi",
-  "Visual_WarningState": "Varoitustila"
+  "Visual_WarningState": "Varoitustila",
+  "Visual_DualKpi_General": "Yleiset",
+  "Visual_DualKpi_Title": "Otsikko",
+  "Visual_DualKpi_Tooltip": "Työkaluvihje"
 }

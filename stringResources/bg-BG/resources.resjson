@@ -69,5 +69,8 @@
   "Visual_Uppercase": "С главни букви",
   "Visual_ValueFormatting": "Форматиране на стойности на Dual KPI",
   "Visual_VarianceType": "Тип дисперсия",
-  "Visual_WarningState": "Състояние на предупреждение"
+  "Visual_WarningState": "Състояние на предупреждение",
+  "Visual_DualKpi_General": "Общи",
+  "Visual_DualKpi_Title": "Заглавие",
+  "Visual_DualKpi_Tooltip": "Подсказка"
 }

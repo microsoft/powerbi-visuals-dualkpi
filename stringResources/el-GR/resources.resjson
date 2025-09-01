@@ -69,5 +69,8 @@
   "Visual_Uppercase": "Κεφαλαία",
   "Visual_ValueFormatting": "Μορφοποίηση τιμής Dual KPI",
   "Visual_VarianceType": "Τύπος διακύμανσης",
-  "Visual_WarningState": "Κατάσταση προειδοποίησης"
+  "Visual_WarningState": "Κατάσταση προειδοποίησης",
+  "Visual_DualKpi_General": "Γενικά",
+  "Visual_DualKpi_Title": "Τίτλος",
+  "Visual_DualKpi_Tooltip": "Επεξήγηση εργαλείου"
 }

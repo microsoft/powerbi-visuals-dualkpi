@@ -70,4 +70,8 @@
   "Visual_ValueFormatting": "Mise en forme de la valeur du Dual KPI",
   "Visual_VarianceType": "Type de variance",
   "Visual_WarningState": "Ã‰tat d’avertissement"
+,
+    "Visual_DualKpi_General": "Général",
+    "Visual_DualKpi_Title": "Titre",
+    "Visual_DualKpi_Tooltip": "Info-bulle"
 }

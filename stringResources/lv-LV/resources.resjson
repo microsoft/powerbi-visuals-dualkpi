@@ -69,5 +69,8 @@
   "Visual_Uppercase": "Lielie burti",
   "Visual_ValueFormatting": "Dual KPI vērtības formatējums",
   "Visual_VarianceType": "Novirzes tips",
-  "Visual_WarningState": "Brīdinājuma stāvoklis"
+  "Visual_WarningState": "Brīdinājuma stāvoklis",
+  "Visual_DualKpi_General": "Vispārīgi",
+  "Visual_DualKpi_Title": "Virsraksts",
+  "Visual_DualKpi_Tooltip": "Rīka padoms"
 }

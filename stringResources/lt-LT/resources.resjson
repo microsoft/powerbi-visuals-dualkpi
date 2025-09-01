@@ -69,5 +69,8 @@
   "Visual_Uppercase": "Didžiosios raidės",
   "Visual_ValueFormatting": "„Dual KPI“ reikšmių formatavimas",
   "Visual_VarianceType": "Nuokrypio tipas",
-  "Visual_WarningState": "Įspėjimo būsena"
+  "Visual_WarningState": "Įspėjimo būsena",
+  "Visual_DualKpi_General": "Bendroji",
+  "Visual_DualKpi_Title": "Pavadinimas",
+  "Visual_DualKpi_Tooltip": "Patarimas"
 }

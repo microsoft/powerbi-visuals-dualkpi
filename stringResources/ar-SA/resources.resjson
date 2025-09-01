@@ -69,5 +69,8 @@
   "Visual_Uppercase": "أحرف كبيرة",
   "Visual_ValueFormatting": "تنسيق قيمة Dual KPI",
   "Visual_VarianceType": "نوع الفرق",
-  "Visual_WarningState": "حالة التحذير"
+  "Visual_WarningState": "حالة التحذير",
+  "Visual_DualKpi_General": "عام",
+  "Visual_DualKpi_Title": "العنوان",
+  "Visual_DualKpi_Tooltip": "تلميح الأداة"
 }

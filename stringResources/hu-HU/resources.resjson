@@ -69,5 +69,8 @@
   "Visual_Uppercase": "Nagybetűs",
   "Visual_ValueFormatting": "Dual KPI értékformátum",
   "Visual_VarianceType": "Eltéréstípus",
-  "Visual_WarningState": "Figyelmeztetési állapot"
+  "Visual_WarningState": "Figyelmeztetési állapot",
+  "Visual_DualKpi_General": "Általános",
+  "Visual_DualKpi_Title": "Cím",
+  "Visual_DualKpi_Tooltip": "Elemleírás"
 }

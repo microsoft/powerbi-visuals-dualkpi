@@ -69,5 +69,8 @@
   "Visual_Uppercase": "अपरकेस",
   "Visual_ValueFormatting": "Dual KPI मान की फ़ॉर्मेटिंग",
   "Visual_VarianceType": "वेरिएंस प्रकार",
-  "Visual_WarningState": "चेतावनी स्थिति"
+  "Visual_WarningState": "चेतावनी स्थिति",
+  "Visual_DualKpi_General": "सामान्य",
+  "Visual_DualKpi_Title": "शीर्षक",
+  "Visual_DualKpi_Tooltip": "टूलटिप"
 }

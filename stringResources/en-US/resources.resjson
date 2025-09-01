@@ -69,5 +69,8 @@
     "Visual_Uppercase": "Uppercase",
     "Visual_ValueFormatting": "Dual KPI Value formatting",
     "Visual_VarianceType": "Variance type",
-    "Visual_WarningState": "Warning state"
+    "Visual_WarningState": "Warning state",
+    "Visual_DualKpi_General": "General",
+    "Visual_DualKpi_Title": "Title",
+    "Visual_DualKpi_Tooltip": "Tooltip"
 }

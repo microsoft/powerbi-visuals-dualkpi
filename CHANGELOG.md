@@ -1,3 +1,7 @@
+## 2.2.0
+### Visual changes
+*Add rendering events. 
+
 ## 2.1.2
 ### Visual changes
 * Tailor title text if it's too long

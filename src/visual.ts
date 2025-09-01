@@ -75,6 +75,7 @@ import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructor
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IColorPalette = powerbi.extensibility.IColorPalette;
 import ISelectionManager = powerbi.extensibility.ISelectionManager;
+import IVisualEventService = powerbi.extensibility.IVisualEventService;
 
 import IValueFormatter = ValueFormatter.IValueFormatter;
 import valueFormatter = ValueFormatter;
@@ -202,6 +203,7 @@ export class DualKpi implements IVisual {
     private target: HTMLElement;
     private size: DualKpiSize;
     private sizeCssClass: DualKpiSizeClass;
+    private eventService: IVisualEventService
 
     private svgRoot: d3Selection<SVGSVGElement, unknown, null, undefined>;
 
@@ -263,6 +265,7 @@ export class DualKpi implements IVisual {
 
     private init(options: VisualConstructorOptions): void {
         this.target = options.element;
+        this.eventService = options.host.eventService
         this.size = DualKpiSize.small;
         this.sizeCssClass = "small";
         this.valueFormatter = d3Format(".3s");
@@ -480,9 +483,9 @@ export class DualKpi implements IVisual {
     }
 
     public update(options: VisualUpdateOptions) {
+        this.eventService.renderingStarted(options)
         try {
             const dataView: DataView = this.dataView = options.dataViews && options.dataViews[0];
-
             if (!dataView ||
                 !dataView.metadata ||
                 !dataView.metadata.columns) {
@@ -523,8 +526,10 @@ export class DualKpi implements IVisual {
             if (wasDataSetRendered) {
                 this.drawBottomContainer(chartWidth, chartHeight, chartTitleSpace, chartSpaceBetween, iconOffset);
             }
+            this.eventService.renderingFinished(options)
         } catch (e) {
             console.error(e);
+            this.eventService.renderingFailed(options , e)
         }
     }
 

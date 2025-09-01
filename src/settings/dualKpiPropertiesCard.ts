@@ -30,6 +30,7 @@ import { PercentType } from '../enums';
 
 import IEnumMember = powerbi.IEnumMember;
 import Card = formattingSettings.SimpleCard;
+import CompositeCard = formattingSettings.CompositeCard;
 
 export const percentTypeOptions: IEnumMember[] = [
     { value: PercentType.lastDate, displayName: "Visual_DualKpiProperties_HoverDataPercentType_LastDate" },
@@ -37,7 +38,10 @@ export const percentTypeOptions: IEnumMember[] = [
     { value: PercentType.previousDate, displayName: "Visual_DualKpiProperties_HoverDataPercentType_PreviousDate" },
 ];
 
-export class DualKpiPropertiesCard extends Card {
+class GeneralSetting extends Card {
+    name = "generalSetting";
+    displayName = "General";
+    displayNameKey = "Visual_DualKpi_General";
     topChartShow = new formattingSettings.ToggleSwitch({
         name: "topChartShow",
         displayName: "Show top chart",
@@ -52,6 +56,83 @@ export class DualKpiPropertiesCard extends Card {
         value: true
     });
 
+
+
+    abbreviateValues = new formattingSettings.ToggleSwitch({
+        name: "abbreviateValues",
+        displayName: "Abbreviate values",
+        displayNameKey: "Visual_DualKpiProperties_AbbreviateValues",
+        value: false,
+
+    });
+
+    abbreviateHoverValues = new formattingSettings.ToggleSwitch({
+        name: "abbreviateHoverValues",
+        displayName: "Abbreviate hover values only",
+        displayNameKey: "Visual_DualKpiProperties_AbbreviateHoverValues",
+        value: false
+    });
+
+
+
+    hoverDataPercentType = new formattingSettings.ItemDropdown({
+        name: "hoverDataPercentType",
+        displayName: "Variance type",
+        displayNameKey: "Visual_VarianceType",
+        items: percentTypeOptions,
+        value: percentTypeOptions[0]
+    });
+
+    showStaleDataWarning = new formattingSettings.ToggleSwitch({
+        name: "showStaleDataWarning",
+        displayName: "Show stale data warning",
+        displayNameKey: "Visual_DualKpiProperties_ShowStaleDataWarning",
+        value: true
+    });
+
+
+
+    staleDataThreshold = new formattingSettings.NumUpDown({
+        name: "staleDataThreshold",
+        displayName: "Stale data threshold",
+        displayNameKey: "Visual_DualKpiProperties_StaleDataThreshold",
+        value: 2,
+    });
+
+    topPercentCalcDate = new formattingSettings.TextInput({
+        name: "topPercentCalcDate",
+        displayName: "Top - % change start date (mm/dd/yyyy)",
+        displayNameKey: "Visual_DualKpiProperties_TopPercentCalcDate",
+        value: "",
+        placeholder: "",
+    });
+
+    bottomPercentCalcDate = new formattingSettings.TextInput({
+        name: "bottomPercentCalcDate",
+        displayName: "Bottom - % change start date (mm/dd/yyyy)",
+        displayNameKey: "Visual_DualKpiProperties_BottomPercentCalcDate",
+        value: "",
+        placeholder: "",
+    });
+
+
+    slices?: formattingSettings.Slice[] = [
+        this.topChartShow,
+        this.bottomChartShow,
+        this.abbreviateValues,
+        this.abbreviateHoverValues,
+        this.hoverDataPercentType,
+        this.showStaleDataWarning,
+        this.staleDataThreshold,
+        this.topPercentCalcDate,
+        this.bottomPercentCalcDate
+    ]
+}
+
+class TitleSetting extends Card {
+    name = "titleSetting";
+    displayName = "Title";
+    displayNameKey = "Visual_DualKpi_Title";
     titleText = new formattingSettings.TextInput({
         name: "titleText",
         displayName: "Title text",
@@ -110,38 +191,23 @@ export class DualKpiPropertiesCard extends Card {
         value: true,
 
     });
-
-
-    abbreviateValues = new formattingSettings.ToggleSwitch({
-        name: "abbreviateValues",
-        displayName: "Abbreviate values",
-        displayNameKey: "Visual_DualKpiProperties_AbbreviateValues",
-        value: false,
-
-    });
-
-    abbreviateHoverValues = new formattingSettings.ToggleSwitch({
-        name: "abbreviateHoverValues",
-        displayName: "Abbreviate hover values only",
-        displayNameKey: "Visual_DualKpiProperties_AbbreviateHoverValues",
-        value: false
-    });
-
+    slices?: formattingSettings.Slice[] = [
+        this.titleText,
+        this.font,
+        this.textColor,
+        this.fontSizeAutoFormatting,
+    ]
+}
+class TooltipSettings extends Card {
+    name = "tooltipSetting";
+    displayName = "Tooltip";
+    displayNameKey = "Visual_DualKpi_Tooltip";
     shortKpiTooltip = new formattingSettings.ToggleSwitch({
         name: "shortKpiTooltip",
         displayName: "Short KPI tooltip",
         displayNameKey: "Visual_DualKpiProperties_ShortKPITooltip",
         value: false
     });
-
-    hoverDataPercentType = new formattingSettings.ItemDropdown({
-        name: "hoverDataPercentType",
-        displayName: "Variance type",
-        displayNameKey: "Visual_VarianceType",
-        items: percentTypeOptions,
-        value: percentTypeOptions[0]
-    });
-
     topChartToolTipText = new formattingSettings.TextInput({
         name: "topChartToolTipText",
         displayName: "Top chart tooltip text",
@@ -166,13 +232,6 @@ export class DualKpiPropertiesCard extends Card {
         placeholder: "",
     });
 
-    showStaleDataWarning = new formattingSettings.ToggleSwitch({
-        name: "showStaleDataWarning",
-        displayName: "Show stale data warning",
-        displayNameKey: "Visual_DualKpiProperties_ShowStaleDataWarning",
-        value: true
-    });
-
     staleDataTooltipText = new formattingSettings.TextInput({
         name: "staleDataTooltipText",
         displayName: "Stale data tooltip text",
@@ -181,50 +240,26 @@ export class DualKpiPropertiesCard extends Card {
         placeholder: "",
     });
 
-    staleDataThreshold = new formattingSettings.NumUpDown({
-        name: "staleDataThreshold",
-        displayName: "Stale data threshold",
-        displayNameKey: "Visual_DualKpiProperties_StaleDataThreshold",
-        value: 2,
-    });
+    slices?: formattingSettings.Slice[] = [
+        this.shortKpiTooltip,
+        this.topChartToolTipText,
+        this.bottomChartToolTipText,
+        this.warningTooltipText,
+    ]
+}
 
-    topPercentCalcDate = new formattingSettings.TextInput({
-        name: "topPercentCalcDate",
-        displayName: "Top - % change start date (mm/dd/yyyy)",
-        displayNameKey: "Visual_DualKpiProperties_TopPercentCalcDate",
-        value: "",
-        placeholder: "",
-    });
+export class DualKpiPropertiesCard extends CompositeCard {
 
-    bottomPercentCalcDate = new formattingSettings.TextInput({
-        name: "bottomPercentCalcDate",
-        displayName: "Bottom - % change start date (mm/dd/yyyy)",
-        displayNameKey: "Visual_DualKpiProperties_BottomPercentCalcDate",
-        value: "",
-        placeholder: "",
-    });
+    public generalGroup = new GeneralSetting();
+    public titleGroup = new TitleSetting();
+    public tooltipGroup = new TooltipSettings();
 
     name = "dualKpiProperties";
     displayName = "Dual KPI Properties";
     displayNameKey = "Visual_DualKpiProperties";
-    slices = [
-        this.topChartShow,
-        this.bottomChartShow,
-        this.titleText,
-        this.fontSizeAutoFormatting,
-        this.font,
-        this.textColor,
-        this.abbreviateValues,
-        this.abbreviateHoverValues,
-        this.shortKpiTooltip,
-        this.hoverDataPercentType,
-        this.topChartToolTipText,
-        this.bottomChartToolTipText,
-        this.warningTooltipText,
-        this.showStaleDataWarning,
-        this.staleDataTooltipText,
-        this.staleDataThreshold,
-        this.topPercentCalcDate,
-        this.bottomPercentCalcDate
+    groups = [
+        this.titleGroup,
+        this.tooltipGroup,
+        this.generalGroup,
     ];
 }

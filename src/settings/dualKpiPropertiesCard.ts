@@ -60,11 +60,64 @@ export class DualKpiPropertiesCard extends Card {
         placeholder: "",
     });
 
+    font = new formattingSettings.FontControl({
+        name: "font",
+        displayName: "Font",
+        displayNameKey: "Visual_Font",
+        fontSize: new formattingSettings.NumUpDown({
+            name: "fontSize",
+            displayName: "Value text size",
+            displayNameKey: "Visual_TextSizeValue",
+            value: 32
+        }),
+        fontFamily: new formattingSettings.FontPicker({
+            name: "fontFamily",
+            displayName: "Font family",
+            displayNameKey: "Visual_TextFontFamily",
+            value: "helvetica, arial, sans-serif",
+        }),
+        bold: new formattingSettings.ToggleSwitch({
+            name: "isBold",
+            displayName: "Bold",
+            displayNameKey: "Visual_TextIsBold",
+            value: false,
+        }),
+        italic: new formattingSettings.ToggleSwitch({
+            name: "isItalic",
+            displayName: "Italic",
+            displayNameKey: "Visual_TextIsItalic",
+            value: false,
+        }),
+        underline: new formattingSettings.ToggleSwitch({
+            name: "isUnderline",
+            displayName: "Underline",
+            displayNameKey: "Visual_Underline",
+            value: false,
+        }),
+    });
+
+    textColor = new formattingSettings.ColorPicker({
+        name: "textColor",
+        displayName: "Text color",
+        displayNameKey: "Visual_DualKpiColors_TextColor",
+        value: { value: "#212121" },
+    });
+
+    fontSizeAutoFormatting = new formattingSettings.ToggleSwitch({
+        name: "fontSizeAutoFormatting",
+        displayName: "Auto text size",
+        displayNameKey: "Visual_TextAutoSize",
+        value: true,
+
+    });
+
+
     abbreviateValues = new formattingSettings.ToggleSwitch({
         name: "abbreviateValues",
         displayName: "Abbreviate values",
         displayNameKey: "Visual_DualKpiProperties_AbbreviateValues",
-        value: false
+        value: false,
+
     });
 
     abbreviateHoverValues = new formattingSettings.ToggleSwitch({
@@ -158,6 +211,9 @@ export class DualKpiPropertiesCard extends Card {
         this.topChartShow,
         this.bottomChartShow,
         this.titleText,
+        this.fontSizeAutoFormatting,
+        this.font,
+        this.textColor,
         this.abbreviateValues,
         this.abbreviateHoverValues,
         this.shortKpiTooltip,

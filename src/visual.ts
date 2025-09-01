@@ -80,6 +80,7 @@ import IVisualEventService = powerbi.extensibility.IVisualEventService;
 import IValueFormatter = ValueFormatter.IValueFormatter;
 import valueFormatter = ValueFormatter;
 import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
+import { DualKpiPropertiesCard } from "./settings";
 
 type FormatterFunction = (n: number | { valueOf(): number }) => string;
 
@@ -282,7 +283,7 @@ export class DualKpi implements IVisual {
 
         this.colorPalette = this.host.colorPalette;
         this.colorHelper = new ColorHelper(this.colorPalette);
-        
+
         this.tooltipServiceWrapper = new TooltipServiceWrapper(
             {
                 tooltipService: this.host.tooltipService,
@@ -354,7 +355,7 @@ export class DualKpi implements IVisual {
 
         const chartTitleElement = bottomContainer
             .append("text")
-            .classed("title", true);
+            .attr("class", "title")
 
         const warningGroup = bottomContainer
             .append("g")
@@ -519,8 +520,8 @@ export class DualKpi implements IVisual {
             const wasDataSetRendered: boolean = data.topValues.length > 0 || data.bottomValues.length > 0;
 
             this.displayRootElement(wasDataSetRendered);
-            this.drawTopChart({data, chartHeight, chartWidth, chartSpaceBetween});
-            this.drawBottomChart({data, chartHeight, chartWidth, chartSpaceBetween});
+            this.drawTopChart({ data, chartHeight, chartWidth, chartSpaceBetween });
+            this.drawBottomChart({ data, chartHeight, chartWidth, chartSpaceBetween });
             this.adjustAxisGroupPosition();
 
             if (wasDataSetRendered) {
@@ -529,7 +530,7 @@ export class DualKpi implements IVisual {
             this.eventService.renderingFinished(options)
         } catch (e) {
             console.error(e);
-            this.eventService.renderingFailed(options , e)
+            this.eventService.renderingFailed(options, e)
         }
     }
 
@@ -1165,9 +1166,8 @@ export class DualKpi implements IVisual {
         let infoIconShowing = false;
 
         const chartTitleElement = this.bottomContainer.chartTitleElement
-            .attr("class", "title")
-            .classed(this.sizeCssClass, true)
-            .text(this.data.settings.properties.titleText.value);
+            .text(this.data.settings.properties.titleText.value)
+        this.applyTitleStyle(chartTitleElement, this.data.settings.properties);
 
         let iconWidth = 22;
         let iconScaleTransform = "";
@@ -1605,5 +1605,21 @@ export class DualKpi implements IVisual {
                 }];
             }
         );
+    }
+
+    private applyTitleStyle(element: d3Selection<SVGTextElement, unknown, null, undefined>, settings: DualKpiPropertiesCard) {
+        const { fontSize, fontFamily, bold, italic, underline } = settings.font;
+        const textColor = settings.textColor.value;
+        element.attr("class", "title")
+        if (settings.fontSizeAutoFormatting.value) {
+            element.classed(this.sizeCssClass, true)
+        } else {
+            element.attr("font-size", fontSize.value)
+        }
+        element.attr("font-weight", bold.value ? "bold" : "normal")
+            .attr("font-style", italic.value ? "italic" : "normal")
+            .attr("font-family", fontFamily.value)
+            .attr("fill", textColor.value)
+            .attr("text-decoration", underline.value ? "underline" : "none")
     }
 }  /*close IVisual*/

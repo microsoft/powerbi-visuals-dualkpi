@@ -1171,6 +1171,20 @@ export class DualKpi implements IVisual {
             .text(this.data.settings.properties.titleText.value)
             .attr("fill", this.data.settings.titleFormatting.textColor.value.value);
 
+        // Apply font formatting to the main title
+        const titleFormatting = this.data.settings.titleFormatting;
+        if (titleFormatting.fontSizeAutoFormatting.value) {
+            chartTitleElement.classed(this.sizeCssClass, true);
+        } else {
+            chartTitleElement.attr("font-size", titleFormatting.font.fontSize.value);
+        }
+        chartTitleElement
+            .attr("font-weight", titleFormatting.font.bold.value ? "bold" : "normal")
+            .attr("font-style", titleFormatting.font.italic.value ? "italic" : "normal")
+            .attr("text-decoration", titleFormatting.font.underline.value ? "underline" : "none")
+            .attr("font-family", titleFormatting.font.fontFamily.value)
+            .classed("uppercased", titleFormatting.upperCase.value);
+
         let iconWidth = 22;
         let iconScaleTransform = "";
         const iconY = (-chartTitleSpace + (chartTitleSpace / 2) + iconOffset);

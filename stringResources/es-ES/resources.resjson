@@ -69,8 +69,5 @@
   "Visual_Uppercase": "Mayúsculas",
   "Visual_ValueFormatting": "Formato de valor de Dual KPI",
   "Visual_VarianceType": "Tipo de varianza",
-  "Visual_WarningState": "Estado de advertencia",
-  "Visual_DualKpi_General": "General",
-  "Visual_DualKpi_Title": "Título",
-  "Visual_DualKpi_Tooltip": "Información sobre herramientas"
+  "Visual_WarningState": "Estado de advertencia"
 }

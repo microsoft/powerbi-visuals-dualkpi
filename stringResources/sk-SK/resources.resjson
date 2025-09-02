@@ -69,8 +69,5 @@
   "Visual_Uppercase": "Veľké písmená",
   "Visual_ValueFormatting": "Formátovanie hodnoty Dual KPI",
   "Visual_VarianceType": "Typ odchýlky",
-  "Visual_WarningState": "Stav upozornenia",
-  "Visual_DualKpi_General": "Všeobecné",
-  "Visual_DualKpi_Title": "Nadpis",
-  "Visual_DualKpi_Tooltip": "Popis"
+  "Visual_WarningState": "Stav upozornenia"
 }

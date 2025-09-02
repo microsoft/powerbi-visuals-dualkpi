@@ -69,8 +69,5 @@
   "Visual_Uppercase": "大寫",
   "Visual_ValueFormatting": "Dual KPI 值格式化",
   "Visual_VarianceType": "變異數類型",
-  "Visual_WarningState": "警告狀態",
-  "Visual_DualKpi_General": "一般",
-  "Visual_DualKpi_Title": "標題",
-  "Visual_DualKpi_Tooltip": "工具提示"
+  "Visual_WarningState": "警告狀態"
 }

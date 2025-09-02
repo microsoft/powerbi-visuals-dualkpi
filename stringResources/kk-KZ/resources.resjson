@@ -69,8 +69,5 @@
   "Visual_Uppercase": "Бас әріптер",
   "Visual_ValueFormatting": "Dual KPI мәнін пішімдеу",
   "Visual_VarianceType": "Айырмашылық түрі",
-  "Visual_WarningState": "Ескерту күйі",
-  "Visual_DualKpi_General": "Жалпы",
-  "Visual_DualKpi_Title": "Тақырып",
-  "Visual_DualKpi_Tooltip": "Құралдың кеңесі"
+  "Visual_WarningState": "Ескерту күйі"
 }

@@ -69,8 +69,5 @@
   "Visual_Uppercase": "Верхній регістр",
   "Visual_ValueFormatting": "Форматування значення Dual KPI",
   "Visual_VarianceType": "Тип відхилення",
-  "Visual_WarningState": "Стан попередження",
-  "Visual_DualKpi_General": "Загальні",
-  "Visual_DualKpi_Title": "Назва",
-  "Visual_DualKpi_Tooltip": "Підказка"
+  "Visual_WarningState": "Стан попередження"
 }

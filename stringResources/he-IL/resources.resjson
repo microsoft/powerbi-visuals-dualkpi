@@ -69,8 +69,5 @@
   "Visual_Uppercase": "אותיות רישיות",
   "Visual_ValueFormatting": "עיצוב ערך של Dual KPI",
   "Visual_VarianceType": "סוג שונות",
-  "Visual_WarningState": "מצב אזהרה",
-  "Visual_DualKpi_General": "כללי",
-  "Visual_DualKpi_Title": "כותרת",
-  "Visual_DualKpi_Tooltip": "תיאור מצב"
+  "Visual_WarningState": "מצב אזהרה"
 }

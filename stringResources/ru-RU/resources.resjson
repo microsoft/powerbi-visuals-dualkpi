@@ -69,8 +69,5 @@
   "Visual_Uppercase": "Верхний регистр",
   "Visual_ValueFormatting": "Форматирование значения Dual KPI",
   "Visual_VarianceType": "Тип отклонения",
-  "Visual_WarningState": "Состояние предупреждения",
-  "Visual_DualKpi_General": "Общие",
-  "Visual_DualKpi_Title": "Заголовок",
-  "Visual_DualKpi_Tooltip": "Подсказка"
+  "Visual_WarningState": "Состояние предупреждения"
 }

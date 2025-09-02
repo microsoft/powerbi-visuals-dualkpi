@@ -72,5 +72,20 @@
     "Visual_WarningState": "Warning state",
     "Visual_DualKpi_General": "General",
     "Visual_DualKpi_Title": "Title",
-    "Visual_DualKpi_Tooltip": "Tooltip"
+    "Visual_DualKpi_Tooltip": "Tooltip",
+    "Visual_DualKpi_Title_Description": "Title text formatting setting",
+    "Visual_DualKpi_Tooltip_Description": "Tooltip settings",
+    "Visual_DualKpi_General_Description":"General settings",
+    "Visual_DualKpiProperties_AbbreviateHoverValues_Description":"Abbreviate hover values only",
+    "Visual_DualKpiProperties_ShowStaleDataWarning_Description":"Show stale data warning",
+    "Visual_DualKpiProperties_BottomPercentCalcDate_Description": "Bottom - % change start date (mm/dd/yyyy)",
+    "Visual_DualKpiProperties_TopPercentCalcDate_Description":"Top - % change start date (mm/dd/yyyy)",
+    "Visual_DualKpiProperties_AbbreviateValues_Description":"Abbreviate values (e.g. 60000 → 60k)",
+    "Visual_ShowTopChartKPIValues_Description":"Show top chart KPI values",
+    "Visual_ShowBottomChartKPIValues_Description":"Show bottom chart KPI values",
+    "Visual_TopChartDefaultKPIText_Description":"Top chart default KPI text",
+    "Visual_BottomChartDefaultKPIText_Description":"Bottom chart default KPI text",
+    "Visual_DualKpiChart_BottomChartColors_MatchTopChartSettings_Description":"Match top chart settings",
+    "Visual_DualKpiChart_BottomChartColors_Description":"Bottom chart colors",
+    "Visual_TextAutoSize_Description":"Automatically adjust the text size to fit the visual"
 }

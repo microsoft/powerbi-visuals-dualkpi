@@ -32,6 +32,8 @@ export class DualKpiValueFormattingCard extends Card {
         name: "fontSizeAutoFormatting",
         displayName: "Auto text size",
         displayNameKey: "Visual_TextAutoSize",
+        description: "Automatically adjust the text size to fit the visual",
+        descriptionKey: "Visual_TextAutoSize_Description",
         value: true
     });
 

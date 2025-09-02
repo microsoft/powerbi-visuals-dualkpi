@@ -69,8 +69,5 @@
   "Visual_Uppercase": "Maiuskula",
   "Visual_ValueFormatting": "KPI dualaren balioaren formatua",
   "Visual_VarianceType": "Bariantza mota",
-  "Visual_WarningState": "Abisuaren egoera",
-  "Visual_DualKpi_General": "Orokorra",
-  "Visual_DualKpi_Title": "Titulua",
-  "Visual_DualKpi_Tooltip": "Tresna-argibidea"
+  "Visual_WarningState": "Abisuaren egoera"
 }

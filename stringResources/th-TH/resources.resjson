@@ -69,8 +69,5 @@
   "Visual_Uppercase": "ตัวพิมพ์ใหญ่",
   "Visual_ValueFormatting": "การจัดรูปแบบค่า Dual KPI",
   "Visual_VarianceType": "ชนิดค่าความแปรปรวน",
-  "Visual_WarningState": "สถานะคำเตือน",
-  "Visual_DualKpi_General": "ทั่วไป",
-  "Visual_DualKpi_Title": "ชื่อเรื่อง",
-  "Visual_DualKpi_Tooltip": "คำแนะนำเครื่องมือ"
+  "Visual_WarningState": "สถานะคำเตือน"
 }

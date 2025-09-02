@@ -42,6 +42,8 @@ class GeneralSetting extends Card {
     name = "generalSetting";
     displayName = "General";
     displayNameKey = "Visual_DualKpi_General";
+    description = "General settings";
+    descriptionKey = "Visual_DualKpi_General_Description";
     topChartShow = new formattingSettings.ToggleSwitch({
         name: "topChartShow",
         displayName: "Show top chart",
@@ -62,6 +64,8 @@ class GeneralSetting extends Card {
         name: "abbreviateValues",
         displayName: "Abbreviate values",
         displayNameKey: "Visual_DualKpiProperties_AbbreviateValues",
+        description:"Abbreviate values (e.g. 60190 → 60.19k)",
+        descriptionKey: "Visual_DualKpiProperties_AbbreviateValues_Description",
         value: false,
 
     });
@@ -70,6 +74,8 @@ class GeneralSetting extends Card {
         name: "abbreviateHoverValues",
         displayName: "Abbreviate hover values only",
         displayNameKey: "Visual_DualKpiProperties_AbbreviateHoverValues",
+        description: "Abbreviate hover values only",
+        descriptionKey: "Visual_DualKpiProperties_AbbreviateHoverValues_Description",
         value: false
     });
 
@@ -87,6 +93,8 @@ class GeneralSetting extends Card {
         name: "showStaleDataWarning",
         displayName: "Show stale data warning",
         displayNameKey: "Visual_DualKpiProperties_ShowStaleDataWarning",
+        description: "Show stale data warning",
+        descriptionKey: "Visual_DualKpiProperties_ShowStaleDataWarning_Description",
         value: true
     });
 
@@ -103,6 +111,8 @@ class GeneralSetting extends Card {
         name: "topPercentCalcDate",
         displayName: "Top - % change start date (mm/dd/yyyy)",
         displayNameKey: "Visual_DualKpiProperties_TopPercentCalcDate",
+        description: "Top - % change start date (mm/dd/yyyy)",
+        descriptionKey: "Visual_DualKpiProperties_TopPercentCalcDate_Description",
         value: "",
         placeholder: "",
     });
@@ -111,6 +121,8 @@ class GeneralSetting extends Card {
         name: "bottomPercentCalcDate",
         displayName: "Bottom - % change start date (mm/dd/yyyy)",
         displayNameKey: "Visual_DualKpiProperties_BottomPercentCalcDate",
+        description: "Bottom - % change start date (mm/dd/yyyy)",
+        descriptionKey: "Visual_DualKpiProperties_BottomPercentCalcDate_Description",
         value: "",
         placeholder: "",
     });
@@ -133,6 +145,8 @@ class TitleSetting extends Card {
     name = "titleSetting";
     displayName = "Title";
     displayNameKey = "Visual_DualKpi_Title";
+    description = "Title text formatting setting";
+    descriptionKey = "Visual_DualKpi_Title_Description";
     titleText = new formattingSettings.TextInput({
         name: "titleText",
         displayName: "Title text",
@@ -149,7 +163,7 @@ class TitleSetting extends Card {
             name: "fontSize",
             displayName: "Value text size",
             displayNameKey: "Visual_TextSizeValue",
-            value: 32
+            value: 32,
         }),
         fontFamily: new formattingSettings.FontPicker({
             name: "fontFamily",
@@ -188,8 +202,9 @@ class TitleSetting extends Card {
         name: "fontSizeAutoFormatting",
         displayName: "Auto text size",
         displayNameKey: "Visual_TextAutoSize",
+        description: "Automatically adjust the text size to fit the visual",
+        descriptionKey: "Visual_TextAutoSize_Description",
         value: true,
-
     });
     slices?: formattingSettings.Slice[] = [
         this.titleText,
@@ -197,16 +212,19 @@ class TitleSetting extends Card {
         this.textColor,
         this.fontSizeAutoFormatting,
     ]
+
 }
 class TooltipSettings extends Card {
     name = "tooltipSetting";
     displayName = "Tooltip";
     displayNameKey = "Visual_DualKpi_Tooltip";
+    description = "Tooltip text and display settings";
+    descriptionKey = "Visual_DualKpi_Tooltip_Description";
     shortKpiTooltip = new formattingSettings.ToggleSwitch({
         name: "shortKpiTooltip",
         displayName: "Short KPI tooltip",
         displayNameKey: "Visual_DualKpiProperties_ShortKPITooltip",
-        value: false
+        value: false,
     });
     topChartToolTipText = new formattingSettings.TextInput({
         name: "topChartToolTipText",

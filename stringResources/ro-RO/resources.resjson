@@ -69,8 +69,5 @@
   "Visual_Uppercase": "Majuscule",
   "Visual_ValueFormatting": "Formatare de valoare Dual KPI",
   "Visual_VarianceType": "Tip de varianță",
-  "Visual_WarningState": "Stare de avertizare",
-  "Visual_DualKpi_General": "General",
-  "Visual_DualKpi_Title": "Titlu",
-  "Visual_DualKpi_Tooltip": "Sfat ecran"
+  "Visual_WarningState": "Stare de avertizare"
 }

@@ -69,8 +69,5 @@
   "Visual_Uppercase": "Suurtähtedega",
   "Visual_ValueFormatting": "Dual KPI väärtusevorming",
   "Visual_VarianceType": "Hälbe tüüp",
-  "Visual_WarningState": "Hoiatusolek",
-  "Visual_DualKpi_General": "Üldine",
-  "Visual_DualKpi_Title": "Pealkiri",
-  "Visual_DualKpi_Tooltip": "Tööriistavihjed"
+  "Visual_WarningState": "Hoiatusolek"
 }

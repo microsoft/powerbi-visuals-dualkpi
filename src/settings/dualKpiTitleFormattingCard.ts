@@ -71,6 +71,13 @@ export class DualKpiTitleFormattingCard extends Card {
         }),
     });
 
+    textColor = new formattingSettings.ColorPicker({
+        name: "textColor",
+        displayName: "Text color",
+        displayNameKey: "Visual_TextColor",
+        value: { value: "#212121" },
+    });
+
     upperCase = new formattingSettings.ToggleSwitch({
         name: "upperCase",
         displayName :"Uppercase",
@@ -84,6 +91,7 @@ export class DualKpiTitleFormattingCard extends Card {
     slices = [
         this.fontSizeAutoFormatting,
         this.font,
+        this.textColor,
         this.upperCase,
     ];
 }

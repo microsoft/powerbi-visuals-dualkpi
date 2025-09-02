@@ -273,6 +273,15 @@
                             "fontFamily": true
                         }
                     }
+                },
+                "textColor": {
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
                 }
             }
         },

@@ -836,6 +836,7 @@ export class DualKpi implements IVisual {
             this.formattingSettings.colors.textColor.value.value = colorHelper.getHighContrastColor("foreground", this.formattingSettings.colors.textColor.value.value);
             this.formattingSettings.colorsBottom.dataColor.value.value = colorHelper.getHighContrastColor("foreground", this.formattingSettings.colorsBottom.dataColor.value.value);
             this.formattingSettings.colorsBottom.textColor.value.value = colorHelper.getHighContrastColor("foreground", this.formattingSettings.colorsBottom.textColor.value.value);
+            this.formattingSettings.titleFormatting.textColor.value.value = colorHelper.getHighContrastColor("foreground", this.formattingSettings.titleFormatting.textColor.value.value);
         }
     }
 
@@ -1167,7 +1168,8 @@ export class DualKpi implements IVisual {
         const chartTitleElement = this.bottomContainer.chartTitleElement
             .attr("class", "title")
             .classed(this.sizeCssClass, true)
-            .text(this.data.settings.properties.titleText.value);
+            .text(this.data.settings.properties.titleText.value)
+            .attr("fill", this.data.settings.titleFormatting.textColor.value.value);
 
         let iconWidth = 22;
         let iconScaleTransform = "";

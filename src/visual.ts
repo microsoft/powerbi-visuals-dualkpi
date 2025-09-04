@@ -1609,9 +1609,9 @@ export class DualKpi implements IVisual {
     private applyTitleStyle(element: d3Selection<SVGTextElement, unknown, null, undefined>, settings: DualKpiPropertiesCard) {
         const { fontSize, fontFamily, bold, italic, underline } = settings.titleGroup.font;
         const textColor = settings.titleGroup.textColor.value;
-        element.attr("class", "title")
+        element.attr("class", "title");
         if (settings.titleGroup.fontSizeAutoFormatting.value) {
-            element.classed(this.sizeCssClass, true)
+            element.classed(this.sizeCssClass, true);
         } else {
             element.attr("font-size", fontSize.value)
         }
@@ -1619,6 +1619,6 @@ export class DualKpi implements IVisual {
             .attr("font-style", italic.value ? "italic" : "normal")
             .attr("font-family", fontFamily.value)
             .attr("fill", textColor.value)
-            .attr("text-decoration", underline.value ? "underline" : "none")
+            .attr("text-decoration", underline.value ? "underline" : "none");
     }
 }  /*close IVisual*/

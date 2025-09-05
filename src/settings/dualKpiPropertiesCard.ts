@@ -64,7 +64,7 @@ class GeneralSetting extends Card {
         name: "abbreviateValues",
         displayName: "Abbreviate values",
         displayNameKey: "Visual_DualKpiProperties_AbbreviateValues",
-        description:"Abbreviate values (e.g. 60190 → 60.19k)",
+        description: "Abbreviate values (e.g. 60000 → 60k)",
         descriptionKey: "Visual_DualKpiProperties_AbbreviateValues_Description",
         value: false,
 

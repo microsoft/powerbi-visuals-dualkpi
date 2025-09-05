@@ -528,8 +528,8 @@ export class DualKpi implements IVisual {
                 this.drawBottomContainer(chartWidth, chartHeight, chartTitleSpace, chartSpaceBetween, iconOffset);
             }
             this.eventService.renderingFinished(options)
-        } catch (e) {
-            console.error(e);
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -1613,7 +1613,7 @@ export class DualKpi implements IVisual {
         if (settings.titleGroup.fontSizeAutoFormatting.value) {
             element.classed(this.sizeCssClass, true);
         } else {
-            element.attr("font-size", settings.titleGroup.font.fontSize.value)
+            element.attr("font-size", settings.titleGroup.font.fontSize.value);
         }
         element.attr("font-weight", bold.value ? "bold" : "normal")
             .attr("font-style", italic.value ? "italic" : "normal")

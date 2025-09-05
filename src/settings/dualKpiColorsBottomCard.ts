@@ -34,6 +34,8 @@ export class DualKpiColorsBottomCard extends Card {
         name: "matchTopChartOptions",
         displayName: "Match top chart settings",
         displayNameKey: "Visual_DualKpiChart_BottomChartColors_MatchTopChartSettings",
+        description: "Match top chart settings",
+        descriptionKey: "Visual_DualKpiChart_BottomChartColors_MatchTopChartSettings_Description",
         value: true
     });
 
@@ -65,5 +67,7 @@ export class DualKpiColorsBottomCard extends Card {
     name = "dualKpiColorsBottom";
     displayName = "Dual KPI Bottom Chart Colors";
     displayNameKey = "Visual_DualKpiChart_BottomChartColors";
+    description = "Bottom chart colors";
+    descriptionKey = "Visual_DualKpiChart_BottomChartColors_Description";
     slices = [this.matchTopChartOptions, this.dataColor, this.textColor, this.opacity];
 }

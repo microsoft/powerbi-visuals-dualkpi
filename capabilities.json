@@ -142,6 +142,49 @@
                         "text": true
                     }
                 },
+                "fontSizeAutoFormatting": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fontSize": {
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                },
+                "isBold": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "isItalic": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "isUnderline": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fontFamily": {
+                    "type": {
+                        "formatting": {
+                            "fontFamily": true
+                        }
+                    }
+                },
+                "textColor": {
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
                 "abbreviateValues": {
                     "type": {
                         "bool": true

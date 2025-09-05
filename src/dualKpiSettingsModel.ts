@@ -78,12 +78,12 @@ export class DualKpiSettingsModel extends Model {
     }
 
     private setDefaultValues(localizationManager: ILocalizationManager): void {
-        if (!this.properties.titleText.value) {
-            this.properties.titleText.value = localizationManager.getDisplayName("Visual_Default_Title");
+        if (!this.properties.titleGroup.titleText.value) {
+            this.properties.titleGroup.titleText.value = localizationManager.getDisplayName("Visual_Default_Title");
         }
 
-        if (!this.properties.warningTooltipText.value) {
-            this.properties.warningTooltipText.value = localizationManager.getDisplayName("Visual_Default_WarningTooltipText");
+        if (!this.properties.tooltipGroup.warningTooltipText.value) {
+            this.properties.tooltipGroup.warningTooltipText.value = localizationManager.getDisplayName("Visual_Default_WarningTooltipText");
         }
     }
 

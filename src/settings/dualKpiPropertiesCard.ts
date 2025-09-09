@@ -42,8 +42,8 @@ class GeneralSetting extends Card {
     name = "generalSetting";
     displayName = "General";
     displayNameKey = "Visual_DualKpi_General";
-    description = "General settings";
-    descriptionKey = "Visual_DualKpi_General_Description";
+    description = "Basic visual settings";
+    descriptionKey = "Visual_Description_GeneralSetting";
     topChartShow = new formattingSettings.ToggleSwitch({
         name: "topChartShow",
         displayName: "Show top chart",
@@ -64,8 +64,8 @@ class GeneralSetting extends Card {
         name: "abbreviateValues",
         displayName: "Abbreviate values",
         displayNameKey: "Visual_DualKpiProperties_AbbreviateValues",
-        description: "Abbreviate values (e.g. 60000 → 60k)",
-        descriptionKey: "Visual_DualKpiProperties_AbbreviateValues_Description",
+        description: "Shortens large numbers using standard abbreviations (e.g., 1K, 1M).",
+        descriptionKey: "Visual_Description_AbbreviateValues",
         value: false,
 
     });
@@ -75,7 +75,7 @@ class GeneralSetting extends Card {
         displayName: "Abbreviate hover values only",
         displayNameKey: "Visual_DualKpiProperties_AbbreviateHoverValues",
         description: "Abbreviate hover values only",
-        descriptionKey: "Visual_DualKpiProperties_AbbreviateHoverValues_Description",
+        descriptionKey: "Visual_Description_AbbreviateHoverValues",
         value: false
     });
 
@@ -93,8 +93,8 @@ class GeneralSetting extends Card {
         name: "showStaleDataWarning",
         displayName: "Show stale data warning",
         displayNameKey: "Visual_DualKpiProperties_ShowStaleDataWarning",
-        description: "Show stale data warning",
-        descriptionKey: "Visual_DualKpiProperties_ShowStaleDataWarning_Description",
+        description: "Display warning when data is outdated",
+        descriptionKey: "Visual_Description_ShowStaleDataWarning",
         value: true
     });
 
@@ -112,7 +112,7 @@ class GeneralSetting extends Card {
         displayName: "Top - % change start date (mm/dd/yyyy)",
         displayNameKey: "Visual_DualKpiProperties_TopPercentCalcDate",
         description: "Top - % change start date (mm/dd/yyyy)",
-        descriptionKey: "Visual_DualKpiProperties_TopPercentCalcDate_Description",
+        descriptionKey: "Visual_Description_TopPercentCalcDate",
         value: "",
         placeholder: "",
     });
@@ -122,7 +122,7 @@ class GeneralSetting extends Card {
         displayName: "Bottom - % change start date (mm/dd/yyyy)",
         displayNameKey: "Visual_DualKpiProperties_BottomPercentCalcDate",
         description: "Bottom - % change start date (mm/dd/yyyy)",
-        descriptionKey: "Visual_DualKpiProperties_BottomPercentCalcDate_Description",
+        descriptionKey: "Visual_Description_BottomPercentCalcDate",
         value: "",
         placeholder: "",
     });
@@ -146,7 +146,7 @@ class TitleSetting extends Card {
     displayName = "Title";
     displayNameKey = "Visual_DualKpi_Title";
     description = "Title text formatting setting";
-    descriptionKey = "Visual_DualKpi_Title_Description";
+    descriptionKey = "Visual_Description_TitleSetting";
     titleText = new formattingSettings.TextInput({
         name: "titleText",
         displayName: "Title text",
@@ -203,7 +203,7 @@ class TitleSetting extends Card {
         displayName: "Auto text size",
         displayNameKey: "Visual_TextAutoSize",
         description: "Automatically adjust the text size to fit the visual",
-        descriptionKey: "Visual_TextAutoSize_Description",
+        descriptionKey: "Visual_Description_FontSizeAutoFormatting",
         value: true,
     });
     slices?: formattingSettings.Slice[] = [
@@ -219,7 +219,7 @@ class TooltipSettings extends Card {
     displayName = "Tooltip";
     displayNameKey = "Visual_DualKpi_Tooltip";
     description = "Tooltip text and display settings";
-    descriptionKey = "Visual_DualKpi_Tooltip_Description";
+    descriptionKey = "Visual_Description_TooltipSetting";
     shortKpiTooltip = new formattingSettings.ToggleSwitch({
         name: "shortKpiTooltip",
         displayName: "Short KPI tooltip",

@@ -34,8 +34,8 @@ export class DualKpiColorsBottomCard extends Card {
         name: "matchTopChartOptions",
         displayName: "Match top chart settings",
         displayNameKey: "Visual_DualKpiChart_BottomChartColors_MatchTopChartSettings",
-        description: "Match top chart settings",
-        descriptionKey: "Visual_DualKpiChart_BottomChartColors_MatchTopChartSettings_Description",
+        description: "Apply top chart's visual settings to the bottom chart for consistent appearance",
+        descriptionKey: "Visual_Description_MatchTopChartOptions",
         value: true
     });
 
@@ -43,7 +43,7 @@ export class DualKpiColorsBottomCard extends Card {
         name: "dataColor",
         displayName: "Data color",
         displayNameKey: "Visual_DualKpiColors_DataColor",
-        value: { value:  "#01b8aa" },
+        value: { value: "#01b8aa" },
     });
 
     textColor = new formattingSettings.ColorPicker({
@@ -68,6 +68,6 @@ export class DualKpiColorsBottomCard extends Card {
     displayName = "Dual KPI Bottom Chart Colors";
     displayNameKey = "Visual_DualKpiChart_BottomChartColors";
     description = "Bottom chart colors";
-    descriptionKey = "Visual_DualKpiChart_BottomChartColors_Description";
+    descriptionKey = "Visual_Description_DualKpiColorsBottom";
     slices = [this.matchTopChartOptions, this.dataColor, this.textColor, this.opacity];
 }

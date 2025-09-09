@@ -67,7 +67,6 @@ class GeneralSetting extends Card {
         description: "Shortens large numbers using standard abbreviations (e.g., 1K, 1M).",
         descriptionKey: "Visual_Description_AbbreviateValues",
         value: false,
-
     });
 
     abbreviateHoverValues = new formattingSettings.ToggleSwitch({
@@ -207,10 +206,10 @@ class TitleSetting extends Card {
         value: true,
     });
     slices?: formattingSettings.Slice[] = [
+        this.fontSizeAutoFormatting,
         this.titleText,
         this.font,
         this.textColor,
-        this.fontSizeAutoFormatting,
     ]
 
 }
@@ -276,8 +275,8 @@ export class DualKpiPropertiesCard extends CompositeCard {
     displayName = "Dual KPI Properties";
     displayNameKey = "Visual_DualKpiProperties";
     groups = [
+        this.generalGroup,
         this.titleGroup,
         this.tooltipGroup,
-        this.generalGroup,
     ];
 }

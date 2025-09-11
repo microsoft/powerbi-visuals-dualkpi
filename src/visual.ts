@@ -529,6 +529,7 @@ export class DualKpi implements IVisual {
             }
             this.eventService.renderingFinished(options)
         } catch (error) {
+            this.eventService.renderingFailed(options, error);
             console.error(error);
         }
     }

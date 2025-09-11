@@ -206,8 +206,8 @@ class TitleSetting extends Card {
         value: true,
     });
     slices?: formattingSettings.Slice[] = [
-        this.fontSizeAutoFormatting,
         this.titleText,
+        this.fontSizeAutoFormatting,
         this.font,
         this.textColor,
     ]

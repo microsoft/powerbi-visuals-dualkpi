@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "Kursiiv",
   "Visual_TextIsUnderline": "Allakriipsutatud",
   "Visual_TextSizeValue": "Väärtuse teksti suurus",
-  "Visual_Default_TitleFormatting": "Dual KPI pealkirjavorming",
+  "Visual_TitleFormatting": "Dual KPI pealkirjavorming",
   "Visual_TooltipForPercentageChangeTime": " muuda alates ",
   "Visual_TopChartDefaultKPIText": "Ülemise diagrammi KPI vaiketekst",
   "Visual_TopPercentDate": "Üleval – % muuda alguskuupäeva",

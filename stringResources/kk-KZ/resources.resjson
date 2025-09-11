@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "Көлбеу",
   "Visual_TextIsUnderline": "Астын сызу",
   "Visual_TextSizeValue": "Мән мәтінінің өлшемі",
-  "Visual_Default_TitleFormatting": "Dual KPI тақырыбын пішімдеу",
+  "Visual_TitleFormatting": "Dual KPI тақырыбын пішімдеу",
   "Visual_TooltipForPercentageChangeTime": " өзгерген ",
   "Visual_TopChartDefaultKPIText": "Жоғарғы диаграмманың әдепкі KPI мәтіні",
   "Visual_TopPercentDate": "Жоғарғы – % өзгеріс бастау күні",

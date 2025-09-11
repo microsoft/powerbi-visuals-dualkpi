@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "Курсив",
   "Visual_TextIsUnderline": "Підкреслення",
   "Visual_TextSizeValue": "Розмір тексту значення",
-  "Visual_Default_TitleFormatting": "Форматування назви Dual KPI",
+  "Visual_TitleFormatting": "Форматування назви Dual KPI",
   "Visual_TooltipForPercentageChangeTime": " змінити з ",
   "Visual_TopChartDefaultKPIText": "Стандартний текст KPI верхньої діаграми",
   "Visual_TopPercentDate": "Угорі – дата початку зміни в %",

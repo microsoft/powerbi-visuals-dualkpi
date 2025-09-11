@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "Dőlt",
   "Visual_TextIsUnderline": "Aláhúzás",
   "Visual_TextSizeValue": "Érték szövegmérete",
-  "Visual_Default_TitleFormatting": "Dual KPI cím formázása",
+  "Visual_TitleFormatting": "Dual KPI cím formázása",
   "Visual_TooltipForPercentageChangeTime": " módosítás ezóta: ",
   "Visual_TopChartDefaultKPIText": "Toplista alapértelmezett KPI-szövege",
   "Visual_TopPercentDate": "Felső – %-os változás kezdő dátuma",

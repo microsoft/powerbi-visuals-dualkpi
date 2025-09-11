@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "ตัวเอียง",
   "Visual_TextIsUnderline": "ขีดเส้นใต้",
   "Visual_TextSizeValue": "ขนาดข้อความค่า",
-  "Visual_Default_TitleFormatting": "การจัดรูปแบบชื่อเรื่อง Dual KPI",
+  "Visual_TitleFormatting": "การจัดรูปแบบชื่อเรื่อง Dual KPI",
   "Visual_TooltipForPercentageChangeTime": " เปลี่ยนตั้งแต่ ",
   "Visual_TopChartDefaultKPIText": "ข้อความ KPI เริ่มต้นของแผนภูมิด้านบน",
   "Visual_TopPercentDate": "ด้านบน - % เปลี่ยนวันที่เริ่มต้น",

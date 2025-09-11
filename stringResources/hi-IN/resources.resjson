@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "इटैलिक",
   "Visual_TextIsUnderline": "अंडरलाइन",
   "Visual_TextSizeValue": "मान के टेक्स्ट का आकार",
-  "Visual_Default_TitleFormatting": "Dual KPI शीर्षक का फ़ॉर्मेट",
+  "Visual_TitleFormatting": "Dual KPI शीर्षक का फ़ॉर्मेट",
   "Visual_TooltipForPercentageChangeTime": " तब से बदलें ",
   "Visual_TopChartDefaultKPIText": "शीर्ष चार्ट का डिफ़ॉल्ट KPI टेक्स्ट",
   "Visual_TopPercentDate": "शीर्ष - % परिवर्तन प्रारंभ दिनांक",

@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "斜体",
   "Visual_TextIsUnderline": "下線",
   "Visual_TextSizeValue": "値のテキスト サイズ",
-  "Visual_Default_TitleFormatting": "Dual KPI タイトルの書式設定",
+  "Visual_TitleFormatting": "Dual KPI タイトルの書式設定",
   "Visual_TooltipForPercentageChangeTime": " 以降の変更 ",
   "Visual_TopChartDefaultKPIText": "上位のグラフの既定の KPI テキスト",
   "Visual_TopPercentDate": "上位 - % の変更の開始日",

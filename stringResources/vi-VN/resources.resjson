@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "Nghiêng",
   "Visual_TextIsUnderline": "Gạch dưới",
   "Visual_TextSizeValue": "Kích cỡ văn bản giá trị",
-  "Visual_Default_TitleFormatting": "Định dạng tiêu đề Dual KPI",
+  "Visual_TitleFormatting": "Định dạng tiêu đề Dual KPI",
   "Visual_TooltipForPercentageChangeTime": " thay đổi kể từ ",
   "Visual_TopChartDefaultKPIText": "Văn bản KPI mặc định trong biểu đồ trên cùng",
   "Visual_TopPercentDate": "Trên cùng - Ngày bắt đầu thay đổi %",

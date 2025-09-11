@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "Ležeče",
   "Visual_TextIsUnderline": "Podčrtano",
   "Visual_TextSizeValue": "Vrednost velikosti besedila",
-  "Visual_Default_TitleFormatting": "Oblikovanje naslova vizualizacije Dual KPI",
+  "Visual_TitleFormatting": "Oblikovanje naslova vizualizacije Dual KPI",
   "Visual_TooltipForPercentageChangeTime": " spremeni od ",
   "Visual_TopChartDefaultKPIText": "Privzeto besedilo KPI-ja za zgornji grafikon",
   "Visual_TopPercentDate": "Zgoraj – % spremembe začetnega datuma",

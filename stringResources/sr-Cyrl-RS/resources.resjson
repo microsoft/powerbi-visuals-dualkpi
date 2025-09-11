@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "Курзив",
   "Visual_TextIsUnderline": "Подвучено",
   "Visual_TextSizeValue": "Величина текста вредности",
-  "Visual_Default_TitleFormatting": "Обликовање наслова за Dual KPI",
+  "Visual_TitleFormatting": "Обликовање наслова за Dual KPI",
   "Visual_TooltipForPercentageChangeTime": " промена од ",
   "Visual_TopChartDefaultKPIText": "Подразумевани текст за KPI горњег графикона",
   "Visual_TopPercentDate": "Врх – % промене датума почетак",

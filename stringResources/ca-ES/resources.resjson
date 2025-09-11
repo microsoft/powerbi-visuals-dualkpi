@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "Cursiva",
   "Visual_TextIsUnderline": "Subratllat",
   "Visual_TextSizeValue": "Mida del text del valor",
-  "Visual_Default_TitleFormatting": "Format de títol de Dual KPI",
+  "Visual_TitleFormatting": "Format de títol de Dual KPI",
   "Visual_TooltipForPercentageChangeTime": " canvia des de ",
   "Visual_TopChartDefaultKPIText": "Text de l'indicador clau de rendiment per defecte del gràfic principal",
   "Visual_TopPercentDate": "Superior: data d'inici del canvi de percentatge",

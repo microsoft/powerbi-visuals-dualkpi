@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "Etzana",
   "Visual_TextIsUnderline": "Azpimarratu",
   "Visual_TextSizeValue": "Balio-testuaren tamaina",
-  "Visual_Default_TitleFormatting": "KPI dualaren izenburuaren formatua",
+  "Visual_TitleFormatting": "KPI dualaren izenburuaren formatua",
   "Visual_TooltipForPercentageChangeTime": " aldaketa hemendik aurrera: ",
   "Visual_TopChartDefaultKPIText": "Goiko diagramaren KPIaren testu lehenetsia",
   "Visual_TopPercentDate": "Goikoa - % aldatu hasiera-data",

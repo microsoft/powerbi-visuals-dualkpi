@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "Cursiv",
   "Visual_TextIsUnderline": "Subliniere",
   "Visual_TextSizeValue": "Dimensiune de text de valoare",
-  "Visual_Default_TitleFormatting": "Formatare de titlu Dual KPI",
+  "Visual_TitleFormatting": "Formatare de titlu Dual KPI",
   "Visual_TooltipForPercentageChangeTime": " modificare de la ",
   "Visual_TopChartDefaultKPIText": "Textul KPI implicit de diagramă superioară",
   "Visual_TopPercentDate": "Superior - % modificare dată de început",

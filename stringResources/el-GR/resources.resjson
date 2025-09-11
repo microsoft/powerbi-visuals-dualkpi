@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "Πλάγια",
   "Visual_TextIsUnderline": "Υπογράμμιση",
   "Visual_TextSizeValue": "Μέγεθος κειμένου τιμής",
-  "Visual_Default_TitleFormatting": "Μορφοποίηση τίτλου Dual KPI",
+  "Visual_TitleFormatting": "Μορφοποίηση τίτλου Dual KPI",
   "Visual_TooltipForPercentageChangeTime": " αλλαγή από ",
   "Visual_TopChartDefaultKPIText": "Προεπιλεγμένο κείμενο πάνω γραφήματος KPI",
   "Visual_TopPercentDate": "Επάνω - % αλλαγή ημερομηνίας έναρξης",

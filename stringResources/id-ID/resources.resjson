@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "Miring",
   "Visual_TextIsUnderline": "Garis bawah",
   "Visual_TextSizeValue": "Ukuran teks nilai",
-  "Visual_Default_TitleFormatting": "Pemformatan Judul Dual KPI",
+  "Visual_TitleFormatting": "Pemformatan Judul Dual KPI",
   "Visual_TooltipForPercentageChangeTime": " berubah sejak ",
   "Visual_TopChartDefaultKPIText": "Teks KPI default bagan atas",
   "Visual_TopPercentDate": "Atas - % mengubah tanggal mulai",

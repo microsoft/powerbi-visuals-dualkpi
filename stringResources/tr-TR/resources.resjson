@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "İtalik",
   "Visual_TextIsUnderline": "Altı çizili",
   "Visual_TextSizeValue": "Değer metni boyutu",
-  "Visual_Default_TitleFormatting": "Dual KPI Başlık biçimlendirmesi",
+  "Visual_TitleFormatting": "Dual KPI Başlık biçimlendirmesi",
   "Visual_TooltipForPercentageChangeTime": " şundan itibaren değiştir: ",
   "Visual_TopChartDefaultKPIText": "Üst grafik varsayılan KPI metni",
   "Visual_TopPercentDate": "Üst - % başlangıç tarihini değiştir",

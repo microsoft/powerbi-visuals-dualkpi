@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "Kursivointi",
   "Visual_TextIsUnderline": "Alleviivaus",
   "Visual_TextSizeValue": "Arvon tekstin koko",
-  "Visual_Default_TitleFormatting": "Dual KPI -otsikon muotoilu",
+  "Visual_TitleFormatting": "Dual KPI -otsikon muotoilu",
   "Visual_TooltipForPercentageChangeTime": " muutos alkaen ",
   "Visual_TopChartDefaultKPIText": "Yläkaavion KPI-oletusteksti",
   "Visual_TopPercentDate": "Ylin – muutosprosentin alkamispäivämäärä",

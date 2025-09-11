@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "Pasvirasis",
   "Visual_TextIsUnderline": "Pabraukimas",
   "Visual_TextSizeValue": "Reikšmės teksto dydis",
-  "Visual_Default_TitleFormatting": "„Dual KPI“ pavadinimo formatavimas",
+  "Visual_TitleFormatting": "„Dual KPI“ pavadinimo formatavimas",
   "Visual_TooltipForPercentageChangeTime": " pokytis nuo ",
   "Visual_TopChartDefaultKPIText": "Viršutinės diagramos numatytasis KPI tekstas",
   "Visual_TopPercentDate": "Viršutinė – % pokyčio pradžios data",

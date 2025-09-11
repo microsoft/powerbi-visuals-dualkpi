@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "Cursief",
   "Visual_TextIsUnderline": "Onderstrepen",
   "Visual_TextSizeValue": "Tekstgrootte van waarde",
-  "Visual_Default_TitleFormatting": "Dual KPI-titelopmaak",
+  "Visual_TitleFormatting": "Dual KPI-titelopmaak",
   "Visual_TooltipForPercentageChangeTime": " wijzing sinds ",
   "Visual_TopChartDefaultKPIText": "Standaard-KPI-tekst voor bovenste grafiek",
   "Visual_TopPercentDate": "Boven - startdatum % gewijzigd",

@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "נטוי",
   "Visual_TextIsUnderline": "קו תחתון",
   "Visual_TextSizeValue": "גודל טקסט של ערך",
-  "Visual_Default_TitleFormatting": "עיצוב כותרת של Dual KPI",
+  "Visual_TitleFormatting": "עיצוב כותרת של Dual KPI",
   "Visual_TooltipForPercentageChangeTime": " שינוי מאז ",
   "Visual_TopChartDefaultKPIText": "טקסט KPI המהווה ברירת מחדל של תרשים עליון",
   "Visual_TopPercentDate": "חלק עליון - תאריך התחלה של אחוז השינוי",

@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "Slīpraksts",
   "Visual_TextIsUnderline": "Pasvītrojums",
   "Visual_TextSizeValue": "Vērtību teksta lielums",
-  "Visual_Default_TitleFormatting": "Dual KPI virsraksta formatējums",
+  "Visual_TitleFormatting": "Dual KPI virsraksta formatējums",
   "Visual_TooltipForPercentageChangeTime": " izmaiņas kopš ",
   "Visual_TopChartDefaultKPIText": "Augšējās diagrammas noklusējuma KPI teksts",
   "Visual_TopPercentDate": "Augšdaļa — procentuālo izmaiņu sākuma datums",

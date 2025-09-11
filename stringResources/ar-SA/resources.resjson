@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "مائل",
   "Visual_TextIsUnderline": "تسطير",
   "Visual_TextSizeValue": "حجم نص القيمة",
-  "Visual_Default_TitleFormatting": "تنسيق عنوان Dual KPI",
+  "Visual_TitleFormatting": "تنسيق عنوان Dual KPI",
   "Visual_TooltipForPercentageChangeTime": " تغيير منذ ",
   "Visual_TopChartDefaultKPIText": "نص KPI الافتراضي للمخطط العلوي",
   "Visual_TopPercentDate": "العلوي - تاريخ بدء تغيير النسبة",

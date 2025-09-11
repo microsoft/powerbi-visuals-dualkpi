@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "Kurzíva",
   "Visual_TextIsUnderline": "Podtržení",
   "Visual_TextSizeValue": "Velikost textu hodnoty",
-  "Visual_Default_TitleFormatting": "Formátování názvu Dual KPI",
+  "Visual_TitleFormatting": "Formátování názvu Dual KPI",
   "Visual_TooltipForPercentageChangeTime": " změnit od ",
   "Visual_TopChartDefaultKPIText": "Výchozí text klíčového ukazatele výkonu horního grafu",
   "Visual_TopPercentDate": "Horní – % změna počátečního data",

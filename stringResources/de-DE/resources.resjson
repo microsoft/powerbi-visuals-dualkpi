@@ -61,7 +61,7 @@
   "Visual_TextIsItalic": "Kursiv",
   "Visual_TextIsUnderline": "Unterstrichen",
   "Visual_TextSizeValue": "Größe des Werttexts",
-  "Visual_Default_TitleFormatting": "Dual KPI-Titelformatierung",
+  "Visual_TitleFormatting": "Dual KPI-Titelformatierung",
   "Visual_TooltipForPercentageChangeTime": " Änderung seit ",
   "Visual_TopChartDefaultKPIText": "Standard-KPI-Text des oberen Diagramms",
   "Visual_TopPercentDate": "Oben – % geändert, Startdatum",

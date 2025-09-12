@@ -44,6 +44,7 @@ class GeneralSetting extends Card {
     displayNameKey = "Visual_General";
     description = "Basic visual settings";
     descriptionKey = "Visual_Description_GeneralSetting";
+
     topChartShow = new formattingSettings.ToggleSwitch({
         name: "topChartShow",
         displayName: "Show top chart",
@@ -57,8 +58,6 @@ class GeneralSetting extends Card {
         displayNameKey: "Visual_ShowBottomChart",
         value: true
     });
-
-
 
     abbreviateValues = new formattingSettings.ToggleSwitch({
         name: "abbreviateValues",
@@ -78,8 +77,6 @@ class GeneralSetting extends Card {
         value: false
     });
 
-
-
     hoverDataPercentType = new formattingSettings.ItemDropdown({
         name: "hoverDataPercentType",
         displayName: "Variance type",
@@ -96,8 +93,6 @@ class GeneralSetting extends Card {
         descriptionKey: "Visual_Description_ShowStaleDataWarning",
         value: true
     });
-
-
 
     staleDataThreshold = new formattingSettings.NumUpDown({
         name: "staleDataThreshold",
@@ -126,7 +121,6 @@ class GeneralSetting extends Card {
         placeholder: "",
     });
 
-
     slices?: formattingSettings.Slice[] = [
         this.topChartShow,
         this.bottomChartShow,
@@ -144,9 +138,9 @@ class TitleSetting extends Card {
     name = "titleSetting";
     displayName = "Title";
     displayNameKey = "Visual_Title";
-
     description = "Title text formatting settingss";
     descriptionKey = "Visual_Description_TitleSettings";
+
     titleText = new formattingSettings.TextInput({
         name: "titleText",
         displayName: "Title text",
@@ -206,6 +200,7 @@ class TitleSetting extends Card {
         descriptionKey: "Visual_Description_FontSizeAutoFormatting",
         value: true,
     });
+    
     slices?: formattingSettings.Slice[] = [
         this.titleText,
         this.fontSizeAutoFormatting,
@@ -227,6 +222,7 @@ class TooltipSettings extends Card {
         displayNameKey: "Visual_DualKpiProperties_ShortKPITooltip",
         value: false,
     });
+
     topChartToolTipText = new formattingSettings.TextInput({
         name: "topChartToolTipText",
         displayName: "Top chart tooltip text",
@@ -269,7 +265,6 @@ class TooltipSettings extends Card {
 }
 
 export class DualKpiPropertiesCard extends CompositeCard {
-
     public generalGroup = new GeneralSetting();
     public titleGroup = new TitleSetting();
     public tooltipGroup = new TooltipSettings();

@@ -80,7 +80,6 @@ import IVisualEventService = powerbi.extensibility.IVisualEventService;
 import IValueFormatter = ValueFormatter.IValueFormatter;
 import valueFormatter = ValueFormatter;
 import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
-import { DualKpiPropertiesCard } from "./settings";
 
 type FormatterFunction = (n: number | { valueOf(): number }) => string;
 
@@ -1607,7 +1606,7 @@ export class DualKpi implements IVisual {
         );
     }
 
-    private applyTitleStyle(element: d3Selection<SVGTextElement, unknown, null, undefined>, settings: DualKpiPropertiesCard) {
+    private applyTitleStyle(element: d3Selection<SVGTextElement, unknown, null, undefined>, settings: DualKpiSettingsModel["properties"]) {
         const { fontFamily, bold, italic, underline } = settings.titleGroup.font;
         const textColor = settings.titleGroup.textColor.value;
         element.attr("class", "title");

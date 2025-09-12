@@ -67,7 +67,7 @@ export class DualKpiColorsBottomCard extends Card {
     name = "dualKpiColorsBottom";
     displayName = "Dual KPI Bottom Chart Colors";
     displayNameKey = "Visual_DualKpiChart_BottomChartColors";
-    description = "Bottom chart colors";
-    descriptionKey = "Visual_Description_DualKpiColorsBottom";
+    description = "Dual KPI Bottom Chart Colors";
+    descriptionKey = "Visual_DualKpiChart_BottomChartColors";
     slices = [this.matchTopChartOptions, this.dataColor, this.textColor, this.opacity];
 }

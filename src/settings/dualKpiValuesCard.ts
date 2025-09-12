@@ -40,7 +40,7 @@ export class DualKpiValuesCard extends Card {
         displayName: "Show top chart KPI values",
         displayNameKey: "Visual_ShowTopChartKPIValues",
         description: "Show top chart KPI values",
-        descriptionKey: "Visual_Description_ShowKpiValuesTop",
+        descriptionKey: "Visual_ShowTopChartKPIValues",
         value: true
     });
 
@@ -59,7 +59,7 @@ export class DualKpiValuesCard extends Card {
         displayName: "Show bottom chart KPI values",
         displayNameKey: "Visual_ShowBottomChartKPIValues",
         description: "Show bottom chart KPI values",
-        descriptionKey: "Visual_Description_ShowKpiValuesBottom",
+        descriptionKey: "Visual_ShowBottomChartKPIValues",
         value: true
     });
 
@@ -68,7 +68,7 @@ export class DualKpiValuesCard extends Card {
         displayName: "Bottom chart default KPI text",
         displayNameKey: "Visual_BottomChartDefaultKPIText",
         description: "Bottom chart default KPI text",
-        descriptionKey: "Visual_Description_BottomChartDefaultKpiValue",
+        descriptionKey: "Visual_BottomChartDefaultKPIText",
         value: "N/A",
         placeholder: "",
     });

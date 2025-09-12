@@ -41,7 +41,7 @@ export const percentTypeOptions: IEnumMember[] = [
 class GeneralSetting extends Card {
     name = "generalSetting";
     displayName = "General";
-    displayNameKey = "Visual_DualKpi_General";
+    displayNameKey = "Visual_General";
     description = "Basic visual settings";
     descriptionKey = "Visual_Description_GeneralSetting";
     topChartShow = new formattingSettings.ToggleSwitch({
@@ -111,7 +111,7 @@ class GeneralSetting extends Card {
         displayName: "Top - % change start date (mm/dd/yyyy)",
         displayNameKey: "Visual_DualKpiProperties_TopPercentCalcDate",
         description: "Top - % change start date (mm/dd/yyyy)",
-        descriptionKey: "Visual_Description_TopPercentCalcDate",
+        descriptionKey: "Visual_DualKpiProperties_TopPercentCalcDate",
         value: "",
         placeholder: "",
     });
@@ -121,7 +121,7 @@ class GeneralSetting extends Card {
         displayName: "Bottom - % change start date (mm/dd/yyyy)",
         displayNameKey: "Visual_DualKpiProperties_BottomPercentCalcDate",
         description: "Bottom - % change start date (mm/dd/yyyy)",
-        descriptionKey: "Visual_Description_BottomPercentCalcDate",
+        descriptionKey: "Visual_DualKpiProperties_BottomPercentCalcDate",
         value: "",
         placeholder: "",
     });
@@ -143,9 +143,10 @@ class GeneralSetting extends Card {
 class TitleSetting extends Card {
     name = "titleSetting";
     displayName = "Title";
-    displayNameKey = "Visual_DualKpi_Title";
-    description = "Title text formatting setting";
-    descriptionKey = "Visual_Description_TitleSetting";
+    displayNameKey = "Visual_Title";
+
+    description = "Title text formatting settingss";
+    descriptionKey = "Visual_Description_TitleSettings";
     titleText = new formattingSettings.TextInput({
         name: "titleText",
         displayName: "Title text",
@@ -216,9 +217,10 @@ class TitleSetting extends Card {
 class TooltipSettings extends Card {
     name = "tooltipSetting";
     displayName = "Tooltip";
-    displayNameKey = "Visual_DualKpi_Tooltip";
+    displayNameKey = "Visual_Tooltip";
     description = "Tooltip text and display settings";
     descriptionKey = "Visual_Description_TooltipSetting";
+
     shortKpiTooltip = new formattingSettings.ToggleSwitch({
         name: "shortKpiTooltip",
         displayName: "Short KPI tooltip",
@@ -262,6 +264,7 @@ class TooltipSettings extends Card {
         this.topChartToolTipText,
         this.bottomChartToolTipText,
         this.warningTooltipText,
+        this.staleDataTooltipText,
     ]
 }
 

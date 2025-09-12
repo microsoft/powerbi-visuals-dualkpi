@@ -282,7 +282,7 @@ export class DualKpi implements IVisual {
 
         this.colorPalette = this.host.colorPalette;
         this.colorHelper = new ColorHelper(this.colorPalette);
-        
+
         this.tooltipServiceWrapper = new TooltipServiceWrapper(
             {
                 tooltipService: this.host.tooltipService,
@@ -354,7 +354,7 @@ export class DualKpi implements IVisual {
 
         const chartTitleElement = bottomContainer
             .append("text")
-            .classed("title", true);
+            .attr("class", "title")
 
         const warningGroup = bottomContainer
             .append("g")
@@ -519,17 +519,17 @@ export class DualKpi implements IVisual {
             const wasDataSetRendered: boolean = data.topValues.length > 0 || data.bottomValues.length > 0;
 
             this.displayRootElement(wasDataSetRendered);
-            this.drawTopChart({data, chartHeight, chartWidth, chartSpaceBetween});
-            this.drawBottomChart({data, chartHeight, chartWidth, chartSpaceBetween});
+            this.drawTopChart({ data, chartHeight, chartWidth, chartSpaceBetween });
+            this.drawBottomChart({ data, chartHeight, chartWidth, chartSpaceBetween });
             this.adjustAxisGroupPosition();
 
             if (wasDataSetRendered) {
                 this.drawBottomContainer(chartWidth, chartHeight, chartTitleSpace, chartSpaceBetween, iconOffset);
             }
             this.eventService.renderingFinished(options)
-        } catch (e) {
-            console.error(e);
-            this.eventService.renderingFailed(options , e)
+        } catch (error) {
+            this.eventService.renderingFailed(options, error);
+            console.error(error);
         }
     }
 
@@ -541,18 +541,18 @@ export class DualKpi implements IVisual {
         const bottomGroupTransform = this.getGroupTransformValue(this.chartGroupBottom.group.node());
         let transformX: number = axisMaxWidth;
 
-        if (this.formattingSettings.properties.topChartShow.value) {
+        if (this.formattingSettings.properties.generalGroup.topChartShow.value) {
             transformX = Math.max(transformX, topGroupTransform.x);
         }
-        if (this.formattingSettings.properties.bottomChartShow.value) {
+        if (this.formattingSettings.properties.generalGroup.bottomChartShow.value) {
             transformX = Math.max(transformX, bottomGroupTransform.x);
         }
 
-        if (this.formattingSettings.properties.topChartShow.value) {
+        if (this.formattingSettings.properties.generalGroup.topChartShow.value) {
             this.chartGroupTop.group.attr("transform", `translate(${Math.max(transformX)}, ${topGroupTransform.y})`);
         }
 
-        if (this.formattingSettings.properties.bottomChartShow.value) {
+        if (this.formattingSettings.properties.generalGroup.bottomChartShow.value) {
             this.chartGroupBottom.group.attr("transform", `translate(${Math.max(transformX)}, ${bottomGroupTransform.y})`);
         }
     }
@@ -629,7 +629,7 @@ export class DualKpi implements IVisual {
         chartWidth: number;
         chartSpaceBetween: number;
     }) {
-        if (data.settings.properties.topChartShow.value) {
+        if (data.settings.properties.generalGroup.topChartShow.value) {
             this.chartGroupTop.group.classed(DualKpi.INVISIBLE, false);
             this.chartGroupTop.hoverDataContainer.container.classed(DualKpi.INVISIBLE, true);
 
@@ -665,7 +665,7 @@ export class DualKpi implements IVisual {
         chartSpaceBetween: number;
         chartWidth: number;
     }) {
-        if (data.settings.properties.bottomChartShow.value) {
+        if (data.settings.properties.generalGroup.bottomChartShow.value) {
             this.chartGroupBottom.group.classed(DualKpi.INVISIBLE, false);
             this.chartGroupBottom.hoverDataContainer.container.classed(DualKpi.INVISIBLE, true);
 
@@ -709,17 +709,17 @@ export class DualKpi implements IVisual {
     }): IDualKpiOptions {
         const chartOptions: IDualKpiOptions = {
             element: element,
-            abbreviateValue: data.settings.properties.abbreviateValues.value,
-            abbreviateHoverValue: data.settings.properties.abbreviateHoverValues.value,
-            hoverDataPercentType: <PercentType>data.settings.properties.hoverDataPercentType.value.value,
+            abbreviateValue: data.settings.properties.generalGroup.abbreviateValues.value,
+            abbreviateHoverValue: data.settings.properties.generalGroup.abbreviateHoverValues.value,
+            hoverDataPercentType: <PercentType>data.settings.properties.generalGroup.hoverDataPercentType.value.value,
             axisConfig: axisConfig,
             chartData: data.topValues,
             chartTitle: data.topChartName,
             chartType: <DualKpiChartType>data.settings.chart.topChartType.value.value,
-            height: data.settings.properties.bottomChartShow.value && data.settings.properties.topChartShow.value ? chartHeight : chartHeight * 2 + chartSpaceBetween,
+            height: data.settings.properties.generalGroup.bottomChartShow.value && data.settings.properties.generalGroup.topChartShow.value ? chartHeight : chartHeight * 2 + chartSpaceBetween,
             percentChangeStartPoint: percentChangeStartPoint,
             showZeroLine: data.settings.axis.topChartZeroLine.value,
-            tooltipText: data.settings.properties.topChartToolTipText.value,
+            tooltipText: data.settings.properties.tooltipGroup.topChartToolTipText.value,
             top: 0,
             valueAsPercent: data.topValueAsPercent,
             width: chartWidth,
@@ -764,18 +764,18 @@ export class DualKpi implements IVisual {
     }): IDualKpiOptions {
         const chartOptions: IDualKpiOptions = {
             element: element,
-            abbreviateValue: data.settings.properties.abbreviateValues.value,
-            abbreviateHoverValue: data.settings.properties.abbreviateHoverValues.value,
-            hoverDataPercentType: <PercentType>data.settings.properties.hoverDataPercentType.value.value,
+            abbreviateValue: data.settings.properties.generalGroup.abbreviateValues.value,
+            abbreviateHoverValue: data.settings.properties.generalGroup.abbreviateHoverValues.value,
+            hoverDataPercentType: <PercentType>data.settings.properties.generalGroup.hoverDataPercentType.value.value,
             axisConfig: axisConfig,
             chartData: data.bottomValues,
             chartTitle: data.bottomChartName,
             chartType: <DualKpiChartType>data.settings.chart.bottomChartType.value.value,
-            height: data.settings.properties.bottomChartShow.value && data.settings.properties.topChartShow.value ? chartHeight : chartHeight * 2 + chartSpaceBetween,
+            height: data.settings.properties.generalGroup.bottomChartShow.value && data.settings.properties.generalGroup.topChartShow.value ? chartHeight : chartHeight * 2 + chartSpaceBetween,
             percentChangeStartPoint: percentChangeStartPoint,
             showZeroLine: data.settings.axis.bottomChartZeroLine.value,
-            tooltipText: data.settings.properties.bottomChartToolTipText.value,
-            top: data.settings.properties.bottomChartShow.value && data.settings.properties.topChartShow.value ? chartHeight + chartSpaceBetween : 0,
+            tooltipText: data.settings.properties.tooltipGroup.bottomChartToolTipText.value,
+            top: data.settings.properties.generalGroup.bottomChartShow.value && data.settings.properties.generalGroup.topChartShow.value ? chartHeight + chartSpaceBetween : 0,
             valueAsPercent: data.bottomValueAsPercent,
             width: chartWidth,
             position: DualKpiChartPositionType["bottom"],
@@ -1001,8 +1001,8 @@ export class DualKpi implements IVisual {
         data.bottomValueAsPercent = bottomValueFormatSymbol === "%" ? true : false;
 
         // if percent dates are in data use that, otherwise get from formatting pane/default values
-        data.topPercentCalcDate = topPercentDateCol > -1 && categories[topPercentDateCol].values[0] ? new Date(<Exclude<PrimitiveValue, boolean>>categories[topPercentDateCol].values[0]) : new Date(data.settings.properties.topPercentCalcDate.value);
-        data.bottomPercentCalcDate = bottomPercentDateCol > -1 && categories[bottomPercentDateCol].values[0] ? new Date(<Exclude<PrimitiveValue, boolean>>categories[bottomPercentDateCol].values[0]) : new Date(data.settings.properties.bottomPercentCalcDate.value);
+        data.topPercentCalcDate = topPercentDateCol > -1 && categories[topPercentDateCol].values[0] ? new Date(<Exclude<PrimitiveValue, boolean>>categories[topPercentDateCol].values[0]) : new Date(data.settings.properties.generalGroup.topPercentCalcDate.value);
+        data.bottomPercentCalcDate = bottomPercentDateCol > -1 && categories[bottomPercentDateCol].values[0] ? new Date(<Exclude<PrimitiveValue, boolean>>categories[bottomPercentDateCol].values[0]) : new Date(data.settings.properties.generalGroup.bottomPercentCalcDate.value);
 
         for (let i: number = 0; i < rowsLength; i++) {
             let date = null;
@@ -1165,9 +1165,8 @@ export class DualKpi implements IVisual {
         let infoIconShowing = false;
 
         const chartTitleElement = this.bottomContainer.chartTitleElement
-            .attr("class", "title")
-            .classed(this.sizeCssClass, true)
-            .text(this.data.settings.properties.titleText.value);
+            .text(this.data.settings.properties.titleGroup.titleText.value)
+        this.applyTitleStyle(chartTitleElement, this.data.settings.properties);
 
         let iconWidth = 22;
         let iconScaleTransform = "";
@@ -1187,7 +1186,7 @@ export class DualKpi implements IVisual {
         if (this.data.topValues.length > 0) {
             const today = new Date();
             const dataDaysOld = DualKpi.getDaysBetween(this.data.topValues[this.data.topValues.length - 1].date, today);
-            if (dataDaysOld >= this.data.settings.properties.staleDataThreshold.value && this.data.settings.properties.showStaleDataWarning.value) {
+            if (dataDaysOld >= this.data.settings.properties.generalGroup.staleDataThreshold.value && this.data.settings.properties.generalGroup.showStaleDataWarning.value) {
                 infoIconShowing = true;
                 this.createInfoMessage(iconY, iconScaleTransform, iconWidth, chartWidth, dataDaysOld);
             } else {
@@ -1246,7 +1245,7 @@ export class DualKpi implements IVisual {
             () => {
                 return [{
                     displayName: null,
-                    value: this.data.settings.properties.warningTooltipText.value
+                    value: this.data.settings.properties.tooltipGroup.warningTooltipText.value
                 }];
             });
 
@@ -1256,7 +1255,7 @@ export class DualKpi implements IVisual {
 
     private createInfoMessage(iconY: number, iconScaleTransform: string, iconWidth: number, chartWidth: number, dataDaysOld: number) {
         const infoMessage = this.localizationManager.getDisplayName("Visual_InfoMessage_DataIs") + dataDaysOld
-            + this.localizationManager.getDisplayName("Visual_InfoMessage_DaysOld") + this.data.settings.properties.staleDataTooltipText.value;
+            + this.localizationManager.getDisplayName("Visual_InfoMessage_DaysOld") + this.data.settings.properties.tooltipGroup.staleDataTooltipText.value;
         const info = this.bottomContainer.info;
         info.group
             .attr("transform", "translate(" + (chartWidth - iconWidth - 8) + "," + (iconY) + ")");
@@ -1584,7 +1583,7 @@ export class DualKpi implements IVisual {
 
         // add tooltip
         let percentChangeDesc = percentChange;
-        if (!this.data.settings.properties.shortKpiTooltip.value) {
+        if (!this.data.settings.properties.tooltipGroup.shortKpiTooltip.value) {
             percentChangeDesc += this.localizationManager.getDisplayName("Visual_TooltipForPercentageChangeTime")
                 + this.timeFormatter(options.percentChangeStartPoint.date);
         }
@@ -1605,5 +1604,21 @@ export class DualKpi implements IVisual {
                 }];
             }
         );
+    }
+
+    private applyTitleStyle(element: d3Selection<SVGTextElement, unknown, null, undefined>, settings: DualKpiSettingsModel["properties"]) {
+        const { fontFamily, bold, italic, underline } = settings.titleGroup.font;
+        const textColor = settings.titleGroup.textColor.value;
+        element.attr("class", "title");
+        if (settings.titleGroup.fontSizeAutoFormatting.value) {
+            element.classed(this.sizeCssClass, true);
+        } else {
+            element.attr("font-size", settings.titleGroup.font.fontSize.value);
+        }
+        element.attr("font-weight", bold.value ? "bold" : "normal")
+            .attr("font-style", italic.value ? "italic" : "normal")
+            .attr("font-family", fontFamily.value)
+            .attr("fill", textColor.value)
+            .attr("text-decoration", underline.value ? "underline" : "none");
     }
 }  /*close IVisual*/

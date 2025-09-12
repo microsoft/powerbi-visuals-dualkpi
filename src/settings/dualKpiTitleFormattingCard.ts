@@ -32,6 +32,8 @@ export class DualKpiTitleFormattingCard extends Card {
         name: "fontSizeAutoFormatting",
         displayName: "Auto text size",
         displayNameKey: "Visual_TextAutoSize",
+        description: "Automatically adjust the text size to fit the visual",
+        descriptionKey: "Visual_Description_FontSizeAutoFormatting",
         value: true
     });
 
@@ -73,7 +75,7 @@ export class DualKpiTitleFormattingCard extends Card {
 
     upperCase = new formattingSettings.ToggleSwitch({
         name: "upperCase",
-        displayName :"Uppercase",
+        displayName: "Uppercase",
         displayNameKey: "Visual_Uppercase",
         value: false,
     });

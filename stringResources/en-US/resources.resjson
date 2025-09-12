@@ -81,5 +81,6 @@
     "Visual_Description_AbbreviateValues":"Shortens large numbers using standard abbreviations (e.g., 1K, 1M).",
     "Visual_Description_TopChartDefaultKpiValue":"Default text when no KPI value is available",
     "Visual_Description_MatchTopChartOptions":"Apply top chart's visual settings to the bottom chart for consistent appearance",
-    "Visual_Description_FontSizeAutoFormatting":"Automatically adjust the text size to fit the visual"
+    "Visual_Description_FontSizeAutoFormatting":"Automatically adjust the text size to fit the visual",
+    "Visual_Description_StaleDataThreshold":"Defines the time limit to warn if data becomes outdated"
 }

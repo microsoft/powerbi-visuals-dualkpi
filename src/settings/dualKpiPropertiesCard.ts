@@ -98,6 +98,8 @@ class GeneralSetting extends Card {
         name: "staleDataThreshold",
         displayName: "Stale data threshold",
         displayNameKey: "Visual_DualKpiProperties_StaleDataThreshold",
+        description: "Defines the time limit to warn if data becomes outdated",
+        descriptionKey: "Visual_Description_StaleDataThreshold",
         value: 2,
     });
 
@@ -200,7 +202,7 @@ class TitleSetting extends Card {
         descriptionKey: "Visual_Description_FontSizeAutoFormatting",
         value: true,
     });
-    
+
     slices?: formattingSettings.Slice[] = [
         this.titleText,
         this.fontSizeAutoFormatting,

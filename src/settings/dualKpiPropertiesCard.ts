@@ -140,7 +140,7 @@ class TitleSetting extends Card {
     name = "titleSetting";
     displayName = "Title";
     displayNameKey = "Visual_Title";
-    description = "Title text formatting settingss";
+    description = "Title text formatting settings";
     descriptionKey = "Visual_Description_TitleSettings";
 
     titleText = new formattingSettings.TextInput({

@@ -91,7 +91,7 @@ export class VisualBuilder extends VisualBuilderBase<DualKpi> {
         if (!this.chartGroupTop) {
             return null;
         }
-        return this.chartGroupTop.querySelector("path.area") as SVGPathElement;
+        return this.chartGroupTop.querySelector("path.area") as SVGPathElement;4
     }
 
     public get pathAreaBottom(): SVGPathElement | null {
@@ -127,6 +127,13 @@ export class VisualBuilder extends VisualBuilderBase<DualKpi> {
             return null;
         }
         return this.groupBottom.querySelector<SVGTextElement>("text.data-value");
+    }
+
+    public get chartTitle(): HTMLElement | null {
+        if(!this.mainElement) {
+            return null;
+        }
+        return this.mainElement.querySelector<HTMLElement>("text.title");
     }
 
     protected build(options: VisualConstructorOptions): DualKpi {

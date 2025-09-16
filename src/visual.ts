@@ -355,6 +355,8 @@ export class DualKpi implements IVisual {
         const chartTitleElement = bottomContainer
             .append("text")
             .attr("class", "title")
+            .attr("tabindex", "0")
+            .attr("focusable", "true");
 
         const warningGroup = bottomContainer
             .append("g")
@@ -362,20 +364,22 @@ export class DualKpi implements IVisual {
 
         const warningIcon = warningGroup
             .append("path")
-            .classed("warning-icon", true);
+            .classed("warning-icon", true)
 
         const infoGroup = bottomContainer
             .append("g")
-            .classed("info-group", true);
+            .classed("info-group", true)
 
         const infoIcon = infoGroup
             .append("path")
-            .classed("info-icon", true);
+            .classed("info-icon", true)
 
         const dateRangeText = bottomContainer
             .append("text")
             .classed("date-range-text", true)
-            .attr("text-anchor", "end");
+            .attr("text-anchor", "end")
+            .attr("tabindex", "0")
+            .attr("focusable", "true");
 
         return {
             bottomContainer: bottomContainer,
@@ -1619,6 +1623,7 @@ export class DualKpi implements IVisual {
             .attr("font-style", italic.value ? "italic" : "normal")
             .attr("font-family", fontFamily.value)
             .attr("fill", textColor.value)
-            .attr("text-decoration", underline.value ? "underline" : "none");
+            .attr("text-decoration", underline.value ? "underline" : "none")
+
     }
 }  /*close IVisual*/

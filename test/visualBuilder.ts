@@ -91,7 +91,7 @@ export class VisualBuilder extends VisualBuilderBase<DualKpi> {
         if (!this.chartGroupTop) {
             return null;
         }
-        return this.chartGroupTop.querySelector("path.area") as SVGPathElement;4
+        return this.chartGroupTop.querySelector("path.area") as SVGPathElement;
     }
 
     public get pathAreaBottom(): SVGPathElement | null {
@@ -130,7 +130,7 @@ export class VisualBuilder extends VisualBuilderBase<DualKpi> {
     }
 
     public get chartTitle(): HTMLElement | null {
-        if(!this.mainElement) {
+        if (!this.mainElement) {
             return null;
         }
         return this.mainElement.querySelector<HTMLElement>("text.title");

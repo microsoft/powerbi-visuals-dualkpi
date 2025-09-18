@@ -1,6 +1,9 @@
 ## 2.2.0
 ### Visual changes
-*Add rendering events. 
+* Add rendering events. 
+* Added hover descriptions for unclear settings
+* Customize axis Title formatting
+* Split "Properties" setting on groups
 
 ## 2.1.2
 ### Visual changes

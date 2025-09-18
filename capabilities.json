@@ -487,5 +487,7 @@
             "tooltips"
         ]
     },
-    "privileges": []
+    "privileges": [],
+    "supportsKeyboardFocus": true,
+    "supportsMultiVisualSelection": true
 }

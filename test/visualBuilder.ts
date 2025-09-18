@@ -129,6 +129,13 @@ export class VisualBuilder extends VisualBuilderBase<DualKpi> {
         return this.groupBottom.querySelector<SVGTextElement>("text.data-value");
     }
 
+    public get chartTitle(): HTMLElement | null {
+        if (!this.mainElement) {
+            return null;
+        }
+        return this.mainElement.querySelector<HTMLElement>("text.title");
+    }
+
     protected build(options: VisualConstructorOptions): DualKpi {
         return new DualKpi(options);
     }

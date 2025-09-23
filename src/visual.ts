@@ -1495,11 +1495,21 @@ export class DualKpi implements IVisual {
         } else {
             element.attr("font-size", fontSize);
         }
+        console.log("width", options.width);
 
         element.attr("font-weight", isBold ? "bold" : "normal");
         element.attr("font-style", isItalic ? "italic" : "normal");
         element.attr("text-decoration", isUnderline ? "underline" : "none");
         element.attr("font-family", fontFamily);
+
+        const tailoredText = textMeasurementService.getTailoredTextOrDefault({
+            text: element.text(),
+            fontSize: element.style("font-size"),
+            fontFamily: element.style("font-family"),
+        }, options.width * 0.9); // allow for some padding
+
+        element.text(tailoredText);
+
     }
 
     private addOverlayText(options: IDualKpiOptions, latestValue: number, calcHeight: number, calcWidth: number, isTopChart: boolean): void {

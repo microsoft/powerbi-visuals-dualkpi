@@ -1495,7 +1495,6 @@ export class DualKpi implements IVisual {
         } else {
             element.attr("font-size", fontSize);
         }
-        console.log("width", options.width);
 
         element.attr("font-weight", isBold ? "bold" : "normal");
         element.attr("font-style", isItalic ? "italic" : "normal");

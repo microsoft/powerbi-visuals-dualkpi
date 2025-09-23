@@ -840,6 +840,7 @@ export class DualKpi implements IVisual {
             this.formattingSettings.colors.textColor.value.value = colorHelper.getHighContrastColor("foreground", this.formattingSettings.colors.textColor.value.value);
             this.formattingSettings.colorsBottom.dataColor.value.value = colorHelper.getHighContrastColor("foreground", this.formattingSettings.colorsBottom.dataColor.value.value);
             this.formattingSettings.colorsBottom.textColor.value.value = colorHelper.getHighContrastColor("foreground", this.formattingSettings.colorsBottom.textColor.value.value);
+            this.formattingSettings.properties.titleGroup.textColor.value.value = colorHelper.getHighContrastColor("foreground", this.formattingSettings.properties.titleGroup.textColor.value.value);
         }
     }
 

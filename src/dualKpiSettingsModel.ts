@@ -68,6 +68,20 @@ export class DualKpiSettingsModel extends Model {
     public validateValues(): void {
         this.colors.opacity.value = this.validateOpacity(this.colors.opacity.value);
         this.colorsBottom.opacity.value = this.validateOpacity(this.colorsBottom.opacity.value);
+        console.log('Abbreviate values: ', this.properties.generalGroup.abbreviateValues.value);
+        // Disable display units when abbreviate values is on
+        console.log(this.properties.generalGroup.abbreviateValues.value)
+        if (this.properties.generalGroup.abbreviateValues.value) {
+            this.valueFormatting.displayUnits.value = 1;
+            this.valueFormatting.displayUnits.disabled = true;
+            this.valueFormatting.displayUnits.disabledReasonKey = "Visual_Description_AbbreviateValues_On";
+            this.valueFormatting.displayUnits.disabledReason = "Visual_Description_AbbreviateValues_On";
+
+            this.valueFormatting.precision.value = 0;
+            this.valueFormatting.precision.disabled = true;
+            this.valueFormatting.precision.disabledReason = "Visual_Description_AbbreviateValues_On";
+            this.valueFormatting.precision.disabledReasonKey = "Visual_Description_AbbreviateValues_On";
+        }
     }
 
     public setLocalizedOptions(localizationManager: ILocalizationManager) {

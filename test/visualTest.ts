@@ -425,18 +425,26 @@ describe("DualKpi", () => {
         it("changes data text style via formatting options", () => {
             dataView.metadata.objects = {
                 dualKpiTitleFormatting: {
-                    titleFontSizeAutoFormatting: false,
+                    fontSizeAutoFormatting: false,
                     isBold: true
                 },
                 dualKpiValueFormatting: {
-                    titleFontSizeAutoFormatting: false,
+                    fontSizeAutoFormatting: false,
                     isItalic: true
+                },
+                dualKpiProperties: {
+                    fontSizeAutoFormatting: false,
+                    isItalic: true,
+                    fontSize: 16
                 }
+
             };
 
             visualBuilder.updateFlushAllD3Transitions(dataView);
             expect(getComputedStyle(visualBuilder.titleTop!).fontWeight).toMatch("^((bold)|(700))$");
             expect(getComputedStyle(visualBuilder.textTop!).fontStyle).toBe("italic");
+            expect(getComputedStyle(visualBuilder.chartTitle!).fontStyle).toBe("italic");
+            expect(getComputedStyle(visualBuilder.chartTitle!).fontSize).toBe("16px");
         });
 
         it("check value format", () => {

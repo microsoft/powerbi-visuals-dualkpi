@@ -238,6 +238,7 @@ export class DualKpi implements IVisual {
     };
 
     private static INVISIBLE: string = "invisible";
+    private static readonly TEXT_WIDTH_PADDING_RATIO = 0.9
 
     private static OPACITY_MIN: number = 0;
     private static OPACITY_MAX: number = 100;
@@ -1505,7 +1506,7 @@ export class DualKpi implements IVisual {
             text: element.text(),
             fontSize: element.style("font-size"),
             fontFamily: element.style("font-family"),
-        }, options.width * 0.9); // allow for some padding
+        }, options.width * DualKpi.TEXT_WIDTH_PADDING_RATIO); // allow for some padding
 
         element.text(tailoredText);
 

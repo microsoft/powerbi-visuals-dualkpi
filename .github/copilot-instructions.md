@@ -1,203 +1,157 @@
-# GitHub Copilot Instructions for Certified Power BI Custom Visual
+# Agent-oriented Copilot instructions for PR checks
 
-## Project Overview
-This repository contains a Power BI custom visual that aims to achieve Microsoft certification. Certified Power BI visuals must meet strict code requirements and security standards set by the Microsoft Power BI team.
+**Purpose.** Keep only the checks and guidance that an automated coding agent (Copilot-style) can perform reliably during a PR review for a Power BI custom visual repository. Interactive/manual steps live in `HUMAN-certification-checklist.md`.
 
-## Certification Goals
-- Meet all Microsoft certification requirements for Power BI custom visuals
-- Pass code reviews, static code analysis, and security testing
-- Maintain compatibility with PowerPoint export and email subscriptions
-- Ensure safe DOM manipulation and secure coding practices
-- Support the latest Power BI SDK and rendering events API
+**Context.** This repository contains a Microsoft custom visual for Power BI. All contributions must follow Microsoft coding standards and Power BI custom visual guidelines. The agent prioritizes checks that enforce those standards and flags deviations for human review.
 
-## Technology Stack
-- **TypeScript**: Primary development language (strongly typed, object-oriented)
-- **D3.js**: Core library for data visualization and DOM manipulation
-- **Power BI Visuals SDK**: Latest version of powerbi-visuals-tools
-- **Node.js**: Development environment and build tools
-- **npm**: Package management
+---
 
-## Required Files and Structure
-The repository must contain these essential files:
-- `capabilities.json` - Visual configuration and data mappings
-- `pbiviz.json` - Visual metadata and build configuration
-- `package.json` - Dependencies and build scripts
-- `package-lock.json` - Dependency lock file
-- `tsconfig.json` - TypeScript compiler configuration
-- `.gitignore` - Must exclude node_modules, .tmp, and dist folders
-- `src/visual.ts` - Main visual implementation file
+## Summary of agent-capable checks (categories)
 
-## Coding Standards and Conventions
+- **PR metadata**: non-empty description; conventional commit title.
+- **Manifests & capabilities (Power BI)**: presence & schema sanity of `capabilities.json`, `pbiviz.json`, `package.json`, `tsconfig.json`, `src/visual.ts`; no `WebAccess`; version bump rules.
+- **Security & forbidden patterns**: unsafe DOM, dynamic scripts, timers-with-strings, `eval/new Function`, network APIs, unsafe bindings.
+- **Secrets scanning**: common tokens/keys; urgent human review.
+- **Build artifacts & minification & assets**: `.min.*` in `src/`, overly large or minified-looking files.
+- **Linting, tests, CI**: scripts present; ESLint config; CI status present if `src/**` changed.
+- **Dependencies**: lockfile updated on dependency change; major version bumps flagged.
+- **Tests & localization**: unit tests reminder on logic changes; `stringResources/en-US/**` coverage; spellcheck.
+- **Documentation & changelog**: `changelog.md` on non-trivial changes; usage examples for public APIs.
+- **Code quality & architecture**: scope summary, performance & accessibility hints, state/event cleanup, error handling, maintainability notes.
+- **Reporting**: one-line summary counts; per-finding snippets; suggested fixes; auto-labels.
 
-### TypeScript Best Practices
-- Use strict TypeScript configuration with type safety enabled
-- Prefer strongly typed interfaces and classes over any types
-- Use arrow functions for callbacks and event handlers
-- Implement proper error handling for all operations
-- Follow object-oriented programming principles
+> Maintainers: thresholds, regexes and message templates are the **single source of truth** in this file to avoid divergence.
 
-### Naming Conventions
-- Use PascalCase for classes and interfaces
-- Use camelCase for variables, methods, and properties
-- Use UPPER_CASE for constants
-- Use descriptive names that clearly indicate purpose
+---
 
-### Code Organization
-- Separate concerns into logical modules and classes
-- Keep the main visual class focused on visualization logic
-- Extract utility functions into separate modules
-- Maintain clean separation between data processing and rendering
+## Detailed rules
 
-## Certification Requirements - CRITICAL SECURITY RULES
+### 1) Manifests & capabilities (Power BI)
+- **Presence**: `capabilities.json`, `pbiviz.json`, `package.json`, `tsconfig.json`, `src/visual.ts`.  
+  Missing → `error`.
+- **Capabilities**:
+  - No `WebAccess` or privileges that permit arbitrary network calls → `error`.
+  - `dataRoles` and `dataViewMappings` must be present → `error`.
+- **`pbiviz.json`**:
+  - `visual.version` must bump for functional changes (semver).  
+  - `visual.guid`, `visual.displayName`, `author`, `supportUrl`, `apiVersion` present.  
+  - `apiVersion` compatible with `@types/powerbi-visuals-api` (major alignment) → mismatch → `warning`.
 
-### STRICTLY FORBIDDEN - These will cause certification failure:
-- **NO external network requests**: Never use `fetch()`, `XMLHttpRequest`, or WebSocket connections
-- **NO dynamic code execution**: Never use `eval()`, `Function()` constructor, or similar methods
-- **NO unsafe DOM manipulation**: Never use `innerHTML` with user data or `D3.html()` with user input
-- **NO arbitrary timeouts**: Avoid unsafe use of `setTimeout()`, `setInterval()` with user-provided functions
-- **NO minified code**: All JavaScript/TypeScript must be readable and reviewable
-- **NO private/commercial libraries**: Only use public, reviewable open-source components
-- **NO external service access**: WebAccess privileges must be empty or omitted in capabilities.json
+### 2) Security & forbidden patterns (report file:line)
+- Unsafe DOM:
+  - `innerHTML\s*=` → `error` with safe alternative.
+  - `.html\(` (D3 selections) → `error` when D3 imported; otherwise `warning`.
+- Dynamic scripts / code eval:
+  - `createElement\(['"]script['"]\)` / `appendChild` of scripts → `error`.
+  - `eval\(` or `new Function\(` → `error`.
+  - String-based timers:  
+    `set(?:Timeout|Interval)\(\s*(['"]).*?\1` → `error`.
+- Network / runtime:
+  - `fetch\(`, `XMLHttpRequest`, `WebSocket` → `error` (Power BI certified visuals constraint).
+- Prefer safe APIs:
+  - `textContent`, `setAttribute` over `innerHTML`. Provide auto-fix snippet if RHS is a simple string literal.
 
-### Required Security Practices:
-- **Sanitize all user input** before adding to DOM
-- **Use safe DOM methods** like `textContent`, `setAttribute`, or D3's safe methods
-- **Implement proper error handling** to prevent JavaScript exceptions
-- **Support Rendering Events API** for proper lifecycle management
-- **Validate all data inputs** before processing
+### 3) Secrets & credentials
+- Run regex scans on changed text files (exclude binaries and lock files).
+- Examples (non-exhaustive):
+  - `AKIA[0-9A-Z]{16}` (AWS)
+  - `ghp_[A-Za-z0-9]{36,}` (GitHub)
+  - `xox[baprs]-[A-Za-z0-9-]{10,48}` (Slack)
+  - `eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}` (JWT)
+  - `(AccountKey|SharedAccessKey|SAS|Sig|se=|sp=|sr=|spr=|sv=|st=|sk=|connection\s*string)\s*=\s*[^;'\n]+` (Azure)
+  - `npm_[A-Za-z0-9]{36,}` (NPM)
+  - `-----BEGIN (?:RSA |EC |DSA )?PRIVATE KEY-----`
+- Any hit → `error` + urgent human review. **Do not auto-edit.**
 
-## Package Management Requirements
+### 4) Build artifacts, minification & large assets
+- `error`: any `\.min\.(js|ts|css)$` under `src/**`.
+- `warning`: likely-minified file (avg line length > 300 and median > 120) in `src/**`.
+- `warning`: large files in `src/**` > 250 KB (exclude `assets/**` and PBIVIZ icons).
+- `warning`: assets > 500 KB — recommend re-evaluating bundling, compression, or CDN prohibition (if applicable).
 
-### Required Dependencies in package.json:
-```json
-{
-  "devDependencies": {
-    "typescript": "latest",
-    "eslint": "latest",
-    "eslint-plugin-powerbi-visuals": "latest"
-  },
-  "scripts": {
-    "eslint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
-    "package": "pbiviz package"
-  }
-}
+### 5) Linting, tests
+- `package.json` scripts must include:
+  - `lint`, `test`, `package` (or `pbiviz package`) → missing → `warning`.
+- ESLint configuration must exist at repo root:
+  - Prefer `eslint.config.mjs`; if `.eslintrc.*` or `.eslintignore` or `eslintConfig` in `package.json` -> ask to migrate to `eslint.config.mjs`.
+  - Missing → `warning` + suggest basic config for Power BI visuals.
+
+### 6) Dependencies
+- On `dependencies`/`devDependencies` changes require updated `package-lock.json` or `yarn.lock` → `warning`.
+- Major-bump in `package.json` → `warning` with request to describe motivation/test-case.
+- When adding new features → ensure minor-version is bumped.
+- (Optional, as `info`) suggest running `npm audit` (at maintainers' discretion).
+
+### 7) Tests & localization
+- If logic touched in `src/**` and no new/updated tests nearby → `warning`-reminder.
+- UI strings:
+  - Check `stringResources/en-US/resources.resjson` and string correspondence from code.
+  - Missing localization keys → `warning`.
+- Spellcheck (en-US as source):
+  - Report probable typos with level (`info`/`warning`) and replacement suggestion.
+  - Exclude identifiers/acronyms/brand-names based on `.spellcheck-whitelist`.
+
+### 8) Documentation & changelog
+- For non-trivial changes — update `changelog.md` → `info`/`warning`.
+- For new public APIs — add usage examples → `info`.
+
+### 9) Code quality & architecture (senior review mindset)
+- Briefly summarize PR purpose and affected areas (render, data, settings, UI).
+- Highlight:
+  - Potential performance bottlenecks (DOM in hot paths, unnecessary loops, re-renders).
+  - Accessibility (ARIA, contrasts, keyboard navigation, screen reader).
+  - Errors/edge-cases: null/undefined/empty data.
+  - Resource management: cleanup D3-selectors, event handlers, timers.
+  - State/races/leaks; excessive coupling; duplication.
+  - Power BI SDK/utilities compliance, formatting, API contracts.
+
+## Spellcheck Configuration
+
+### What to Check:
+- UI strings in code (`src/**`)
+- localization files (`stringResources/en-US/**`)
+- PR title and description.
+
+### Severity:
+- `warning` — UI strings and localization.
+- `info` — PR metadata and comments.
+
+---
+
+## Severity & automated labels
+
+- **error** — must fix before merge (e.g., secrets, `WebAccess`, minified code in `src/**`, forbidden APIs).
+- **warning** — should fix soon (e.g., missing PR description/tests, major dep bump, large assets).
+- **info** — suggestions/style (typos, architecture improvements).
+
+**Auto-labels** (by highest severity and change type):  
+`security`, `needs-review`, `tests`, `enhancement`, `performance`, `localization`.
+
+---
+
+## Canonical regex library (reference)
 ```
+# Conventional commits
+^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-z0-9-./]+\))?(!)?: .{1,72}$
 
-### Build Commands That Must Work:
-- `npm install` - Must complete without errors
-- `pbiviz package` - Must compile successfully  
-- `npm audit` - Must not return high or moderate warnings
-- `npm run eslint` - Must pass without lint errors
+# Unsafe DOM / HTML injection
+\binnerHTML\s*=
+\.html\s*\(
 
-## Data Handling Guidelines
+# Dynamic scripts / code eval
+createElement\s*\(\s*['"]script['"]\s*\)|appendChild\s*\([^)]*script[^)]*\)
+\beval\s*\(
+\bnew\s+Function\s*\(
+set(?:Timeout|Interval)\s*\(\s*(['"]).*?\1
 
-### capabilities.json Configuration:
-- Define clear dataRoles with appropriate displayName, name, and kind
-- Implement proper dataViewMappings for your visual type
-- Use objects section for formatting properties
-- Set appropriate privileges (usually empty for certified visuals)
-- Support tooltips, highlighting, and other Power BI features
+# Network APIs
+\bXMLHttpRequest\b|\bWebSocket\b|\bfetch\s*\(
 
-### Data Processing:
-- Handle empty or null data gracefully
-- Implement proper data validation and type checking
-- Support dynamic data updates through the update() method
-- Respect data view mappings and transformations
-- Test with various data sizes and edge cases
-
-## Visual Implementation Standards
-
-### Main Visual Class Structure:
-```typescript
-export class Visual implements IVisual {
-    private target: HTMLElement;
-    private updateCount: number;
-    private settings: VisualSettings;
-    private host: IVisualHost;
-
-    constructor(options: VisualConstructorOptions) {
-        // Initialize visual components safely
-    }
-
-    public update(options: VisualUpdateOptions) {
-        // Handle data updates and rendering
-        // Always check for data availability
-        // Implement proper error handling
-    }
-
-    public destroy(): void {
-        // Clean up resources properly
-    }
-}
+# Secrets (subset)
+AKIA[0-9A-Z]{16}
+ghp_[A-Za-z0-9]{36,}
+xox[baprs]-[A-Za-z0-9-]{10,48}
+eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}
+(AccountKey|SharedAccessKey|SAS|Sig|se=|sp=|sr=|spr=|sv=|st=|sk=|connection\s*string)\s*=\s*[^;'\n]+
+npm_[A-Za-z0-9]{36,}
 ```
-
-### Rendering Best Practices:
-- Use D3.js for safe data binding and DOM manipulation
-- Implement proper enter/update/exit patterns for data joins
-- Handle viewport changes and resizing gracefully
-- Support accessibility features (ARIA labels, keyboard navigation)
-- Optimize performance for large datasets
-
-## Testing and Quality Assurance
-
-### Testing Requirements:
-- Test with sample report data
-- Verify behavior with empty datasets
-- Test cross-filtering and highlighting functionality
-- Validate formatting options work correctly
-- Test in both Power BI Desktop and Service
-- Ensure no console errors or warnings
-
-### Performance Considerations:
-- Optimize rendering for large datasets
-- Implement efficient data processing algorithms
-- Avoid memory leaks in event handlers
-- Use requestAnimationFrame for smooth animations
-- Profile and optimize critical code paths
-
-## Repository Management for Certification
-
-### Branch Structure:
-- Maintain a `certification` branch (lowercase required)
-- Source code in certification branch must match submitted package
-- Only update certification branch during resubmission process
-
-### Git Best Practices:
-- Use meaningful commit messages
-- Keep commits atomic and focused
-- Include proper .gitignore for Node.js projects
-- Tag releases with version numbers
-- Document changes in commit history
-
-## Code Review Guidelines
-
-### Before Committing:
-- Run all build commands successfully
-- Execute eslint without errors
-- Test visual with various data scenarios
-- Verify no forbidden patterns are used
-- Check for proper error handling
-- Validate accessibility compliance
-
-### Code Quality Checks:
-- Ensure TypeScript strict mode compliance
-- Verify proper type annotations
-- Check for unused imports or variables
-- Validate proper resource cleanup
-- Review security implications of all code changes
-
-## Common Patterns to Watch For
-
-### Replace These Unsafe Patterns:
-- `element.innerHTML = userData` → Use `element.textContent = userData`
-- `fetch(url)` → Remove external API calls entirely
-- `eval(code)` → Refactor to avoid dynamic code execution
-- `setTimeout(userFunction)` → Use fixed, safe timeout functions only
-
-### Preferred Safe Alternatives:
-- Use D3's data binding instead of direct DOM manipulation
-- Use Power BI's built-in formatting instead of external libraries
-- Use capabilities.json objects for user customization
-- Use IVisualHost services for Power BI integration
-
-Remember: Certification requires passing Microsoft's security review, code analysis, and functional testing. Every piece of code will be scrutinized for security vulnerabilities and compliance with Power BI standards.

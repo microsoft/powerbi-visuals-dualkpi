@@ -83,5 +83,5 @@
     "Visual_Description_MatchTopChartOptions":"Apply top chart's visual settings to the bottom chart for consistent appearance",
     "Visual_Description_FontSizeAutoFormatting":"Automatically adjust the text size to fit the visual",
     "Visual_Description_StaleDataThreshold":"Defines the time limit to warn if data becomes outdated",
-    "Visual_Description_AbbreviateValues_On": "This setting is disabled because 'Abbreviate values' is already enabled."
+    "Visual_Description_AbbreviateValues_On": "Disabled when 'Properties -> Abbreviate values' is turned on"
 }

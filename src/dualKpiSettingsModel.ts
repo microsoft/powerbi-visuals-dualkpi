@@ -71,15 +71,9 @@ export class DualKpiSettingsModel extends Model {
         
         // Disable display units when abbreviate values is on
         if (this.properties.generalGroup.abbreviateValues.value) {
-            this.valueFormatting.displayUnits.value = 1;
             this.valueFormatting.displayUnits.disabled = true;
-            this.valueFormatting.displayUnits.disabledReasonKey = "Visual_Description_AbbreviateValues_On";
-            this.valueFormatting.displayUnits.disabledReason = "Visual_Description_AbbreviateValues_On";
 
-            this.valueFormatting.precision.value = 0;
             this.valueFormatting.precision.disabled = true;
-            this.valueFormatting.precision.disabledReason = "Visual_Description_AbbreviateValues_On";
-            this.valueFormatting.precision.disabledReasonKey = "Visual_Description_AbbreviateValues_On";
         }
     }
 

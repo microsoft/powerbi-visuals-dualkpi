@@ -238,7 +238,7 @@ export class DualKpi implements IVisual {
     };
 
     private static INVISIBLE: string = "invisible";
-    private static readonly VISUAL_BORDER_AREA_PADDING_RATIO = 0.9
+    private static readonly VISUAL_BORDER_AREA_PADDING_RATIO = 0.9;
 
     private static OPACITY_MIN: number = 0;
     private static OPACITY_MAX: number = 100;

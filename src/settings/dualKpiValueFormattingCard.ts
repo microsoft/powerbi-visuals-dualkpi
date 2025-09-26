@@ -78,6 +78,8 @@ export class DualKpiValueFormattingCard extends Card {
         displayName: "Display units",
         displayNameKey: "Visual_DisplayUnits",
         value: 1,
+        disabled: false,
+        disabledReasonKey: "Visual_Description_AbbreviateValues_On"
     });
 
     precision = new formattingSettings.NumUpDown({
@@ -90,6 +92,8 @@ export class DualKpiValueFormattingCard extends Card {
             minValue: { value: 0, type: powerbi.visuals.ValidatorType.Min },
             maxValue: { value: 17, type: powerbi.visuals.ValidatorType.Max },
         },
+        disabled: false,
+        disabledReasonKey: "Visual_Description_AbbreviateValues_On"
     });
 
     name = "dualKpiValueFormatting";

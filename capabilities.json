@@ -58,9 +58,11 @@
             "conditions": [
                 {
                     "axis": {
+                        "min": 1,
                         "max": 1
                     },
                     "topvalues": {
+                        "min": 1,
                         "max": 1
                     },
                     "bottomvalues": {
@@ -74,6 +76,88 @@
                     },
                     "bottompercentdate": {
                         "max": 1
+                    }
+                },
+                {
+                    "axis": {
+                        "min": 1,
+                        "max": 1
+                    },
+                    "topvalues": {
+                        "max": 1
+                    },
+                    "bottomvalues": {
+                        "min": 1,
+                        "max": 1
+                    },
+                    "warningstate": {
+                        "max": 1
+                    },
+                    "toppercentdate": {
+                        "max": 1
+                    },
+                    "bottompercentdate": {
+                        "max": 1
+                    }
+                },
+                {
+                    "axis": {
+                        "max": 0
+                    },
+                    "topvalues": {
+                        "max": 1
+                    },
+                    "bottomvalues": {
+                        "max": 1
+                    },
+                    "warningstate": {
+                        "max": 0
+                    },
+                    "toppercentdate": {
+                        "max": 0
+                    },
+                    "bottompercentdate": {
+                        "max": 0
+                    }
+                },
+                {
+                    "axis": {
+                        "max": 1
+                    },
+                    "topvalues": {
+                        "max": 0
+                    },
+                    "bottomvalues": {
+                        "max": 1
+                    },
+                    "warningstate": {
+                        "max": 0
+                    },
+                    "toppercentdate": {
+                        "max": 0
+                    },
+                    "bottompercentdate": {
+                        "max": 0
+                    }
+                },
+                {
+                    "axis": {
+                        "max": 1
+                    },
+                    "topvalues": {
+                        "max": 1
+                    },
+                    "bottomvalues": {
+                        "max": 0
+                    },
+                    "warningstate": {
+                        "max": 0
+                    },
+                    "toppercentdate": {
+                        "max": 0
+                    },
+                    "bottompercentdate": {
+                        "max": 0
                     }
                 }
             ],

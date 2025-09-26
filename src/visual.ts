@@ -1506,7 +1506,7 @@ export class DualKpi implements IVisual {
             text: element.text(),
             fontSize: element.style("font-size"),
             fontFamily: element.style("font-family"),
-        }, options.width * DualKpi.VISUAL_BORDER_AREA_PADDING_RATIO); // allow for some padding
+        }, options.width * DualKpi.VISUAL_BORDER_AREA_PADDING_RATIO);
 
         element.text(tailoredText);
 

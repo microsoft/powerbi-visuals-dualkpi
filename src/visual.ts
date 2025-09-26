@@ -1502,10 +1502,12 @@ export class DualKpi implements IVisual {
         element.attr("text-decoration", isUnderline ? "underline" : "none");
         element.attr("font-family", fontFamily);
 
+        const effectiveFontSize = fontSizeAutoFormatting ? element.style("font-size") : fontSize + "px";
+        const effectiveFontFamily = fontFamily;
         const tailoredText = textMeasurementService.getTailoredTextOrDefault({
             text: element.text(),
-            fontSize: element.style("font-size"),
-            fontFamily: element.style("font-family"),
+            fontSize: effectiveFontSize,
+            fontFamily: effectiveFontFamily,
         }, options.width * DualKpi.VISUAL_BORDER_AREA_PADDING_RATIO);
 
         element.text(tailoredText);

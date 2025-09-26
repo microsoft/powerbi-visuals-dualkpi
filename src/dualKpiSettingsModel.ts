@@ -68,12 +68,14 @@ export class DualKpiSettingsModel extends Model {
     public validateValues(): void {
         this.colors.opacity.value = this.validateOpacity(this.colors.opacity.value);
         this.colorsBottom.opacity.value = this.validateOpacity(this.colorsBottom.opacity.value);
-        
+
         // Disable display units when abbreviate values is on
         if (this.properties.generalGroup.abbreviateValues.value) {
             this.valueFormatting.displayUnits.disabled = true;
-
             this.valueFormatting.precision.disabled = true;
+        } else {
+            this.valueFormatting.displayUnits.disabled = false;
+            this.valueFormatting.precision.disabled = false;
         }
     }
 

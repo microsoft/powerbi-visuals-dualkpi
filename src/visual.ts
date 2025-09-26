@@ -491,9 +491,17 @@ export class DualKpi implements IVisual {
         this.eventService.renderingStarted(options)
         try {
             const dataView: DataView = this.dataView = options.dataViews && options.dataViews[0];
+            
+            const hasAxis = dataView?.categorical?.categories?.some(category => category.source.roles["axis"]);
+            const hasTopValues = dataView?.categorical?.values?.some(value => value.source.roles["topvalues"]);
+            const hasBottomValues = dataView?.categorical?.values?.some(value => value.source.roles["bottomvalues"]);
+
             if (!dataView ||
                 !dataView.metadata ||
-                !dataView.metadata.columns) {
+                !dataView.metadata.columns ||
+                (!hasBottomValues && !hasTopValues) ||
+                !hasAxis
+            ) {
 
                 this.displayRootElement(false);
 
@@ -534,7 +542,7 @@ export class DualKpi implements IVisual {
             this.eventService.renderingFinished(options)
         } catch (error) {
             this.eventService.renderingFailed(options, error);
-            console.error(error);
+            console.error("Rendering error", error);
         }
     }
 

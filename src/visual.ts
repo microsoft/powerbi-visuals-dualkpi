@@ -492,15 +492,10 @@ export class DualKpi implements IVisual {
         try {
             const dataView: DataView = this.dataView = options.dataViews && options.dataViews[0];
 
-            const hasAxis = dataView?.categorical?.categories?.some(category => category.source.roles["axis"]);
-            const hasTopValues = dataView?.categorical?.values?.some(value => value.source.roles["topvalues"]);
-            const hasBottomValues = dataView?.categorical?.values?.some(value => value.source.roles["bottomvalues"]);
-
             if (!dataView ||
                 !dataView.metadata ||
                 !dataView.metadata.columns ||
-                (!hasBottomValues && !hasTopValues) ||
-                !hasAxis
+                !dataView.categorical.values
             ) {
 
                 this.displayRootElement(false);

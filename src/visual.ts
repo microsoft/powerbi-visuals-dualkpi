@@ -492,14 +492,8 @@ export class DualKpi implements IVisual {
         try {
             const dataView: DataView = this.dataView = options.dataViews && options.dataViews[0];
 
-            if (!dataView ||
-                !dataView.metadata ||
-                !dataView.metadata.columns ||
-                !dataView.categorical.values
-            ) {
-
+            if (!dataView?.metadata?.columns || !dataView?.categorical?.values) {
                 this.displayRootElement(false);
-
                 return;
             }
 
@@ -1509,7 +1503,7 @@ export class DualKpi implements IVisual {
         const tailoredText = textMeasurementService.getTailoredTextOrDefault({
             text: element.text(),
             fontSize: effectiveFontSize,
-            fontFamily
+            fontFamily: fontFamily,
         }, options.width * DualKpi.VISUAL_BORDER_AREA_PADDING_RATIO);
 
         element.text(tailoredText);

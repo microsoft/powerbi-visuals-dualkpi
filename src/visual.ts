@@ -491,12 +491,9 @@ export class DualKpi implements IVisual {
         this.eventService.renderingStarted(options)
         try {
             const dataView: DataView = this.dataView = options.dataViews && options.dataViews[0];
-            if (!dataView ||
-                !dataView.metadata ||
-                !dataView.metadata.columns) {
 
+            if (!dataView?.metadata?.columns || !dataView?.categorical?.values) {
                 this.displayRootElement(false);
-
                 return;
             }
 
@@ -534,7 +531,7 @@ export class DualKpi implements IVisual {
             this.eventService.renderingFinished(options)
         } catch (error) {
             this.eventService.renderingFailed(options, error);
-            console.error(error);
+            console.error("Rendering error", error);
         }
     }
 
@@ -1503,11 +1500,10 @@ export class DualKpi implements IVisual {
         element.attr("font-family", fontFamily);
 
         const effectiveFontSize = fontSizeAutoFormatting ? element.style("font-size") : fontSize + "px";
-        const effectiveFontFamily = fontFamily;
         const tailoredText = textMeasurementService.getTailoredTextOrDefault({
             text: element.text(),
             fontSize: effectiveFontSize,
-            fontFamily: effectiveFontFamily,
+            fontFamily: fontFamily,
         }, options.width * DualKpi.VISUAL_BORDER_AREA_PADDING_RATIO);
 
         element.text(tailoredText);

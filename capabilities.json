@@ -125,7 +125,7 @@
                         "max": 1
                     }
                 }
-            ],  
+            ],
             "categorical": {
                 "categories": {
                     "dataReductionAlgorithm": {

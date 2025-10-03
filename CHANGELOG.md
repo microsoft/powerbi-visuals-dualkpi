@@ -1,3 +1,11 @@
+## 2.2.1
+### Visual changes
+* Fix bug with swapping buckets
+* Fix high contrast mode for title
+* Disabled display units setting when abbrebative values setting is on
+* Tailor chart title if it is too long
+
+
 ## 2.2.0
 ### Visual changes
 * Add rendering events. 

@@ -2,7 +2,7 @@
 ### Visual changes
 * Fix bug with swapping buckets
 * Fix high contrast mode for title
-* Disabled display units setting when abbrebative values setting is on
+* Disabled display units setting when abbreviative values setting is on
 * Tailor chart title if it is too long
 
 

@@ -51,7 +51,7 @@ export class DualKpiValueFormattingCard extends Card {
             name: "fontFamily",
             displayName: "Font family",
             displayNameKey: "Visual_TextFontFamily",
-            value: "helvetica, arial, sans-serif",
+            value: "SegoeUI, arial, sans-serif",
         }),
         bold: new formattingSettings.ToggleSwitch({
             name: "isBold",

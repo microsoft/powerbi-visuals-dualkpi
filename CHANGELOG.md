@@ -1,3 +1,8 @@
+## 2.2.2
+### Visual changes
+* Changed default font from helvetica to SegotUi
+
+
 ## 2.2.1
 ### Visual changes
 * Fix bug with swapping buckets

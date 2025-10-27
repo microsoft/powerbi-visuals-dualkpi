@@ -1,6 +1,6 @@
 ## 2.2.2
 ### Visual changes
-* Changed default font from helvetica to SegotUi
+* Changed default font from helvetica to SegoeUi
 
 
 ## 2.2.1

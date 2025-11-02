@@ -69,5 +69,19 @@
   "Visual_Uppercase": "Büyük harf",
   "Visual_ValueFormatting": "Dual KPI Değeri biçimlendirmesi",
   "Visual_VarianceType": "Varyans türü",
-  "Visual_WarningState": "Uyarı durumu"
+  "Visual_WarningState": "Uyarı durumu",
+  "Visual_General": "Genel",
+  "Visual_Title": "Başlık",
+  "Visual_Tooltip": "Araç ipucu",
+  "Visual_Description_TitleSettings": "Başlık metni biçimlendirme ayarları",
+  "Visual_Description_TooltipSetting": "Araç ipucu metni ve görüntüleme ayarları",
+  "Visual_Description_GeneralSetting": "Temel görsel ayarlar",
+  "Visual_Description_AbbreviateHoverValues": "Kısaltılmış değerleri yalnızca araç ipuçlarında göster",
+  "Visual_Description_ShowStaleDataWarning": "Veriler güncel olmadığında uyarı göster",
+  "Visual_Description_AbbreviateValues": "Standart kısaltmalar kullanarak büyük sayıları kısaltır (örneğin, 1K, 1M).",
+  "Visual_Description_TopChartDefaultKpiValue": "KPI değeri mevcut olmadığında varsayılan metin",
+  "Visual_Description_MatchTopChartOptions": "Tutarlı bir görünüm için üstteki grafiğin görsel ayarlarını alttaki grafiğe uygulayın",
+  "Visual_Description_FontSizeAutoFormatting": "Metin boyutunu görsele uyacak şekilde otomatik olarak ayarlayın",
+  "Visual_Description_StaleDataThreshold": "Verilerin geçerliliğini yitirmesi durumunda uyarı verilecek süreyi tanımlar",
+  "Visual_Description_AbbreviateValues_On": "'Özellikler -> Değerleri kısalt' seçeneği etkinleştirildiğinde devre dışı bırakılır"
 }

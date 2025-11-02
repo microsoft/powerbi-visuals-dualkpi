@@ -69,5 +69,19 @@
   "Visual_Uppercase": "Lielie burti",
   "Visual_ValueFormatting": "Dual KPI vērtības formatējums",
   "Visual_VarianceType": "Novirzes tips",
-  "Visual_WarningState": "Brīdinājuma stāvoklis"
+  "Visual_WarningState": "Brīdinājuma stāvoklis",
+  "Visual_General": "Vispārīgi",
+  "Visual_Title": "Nosaukums",
+  "Visual_Tooltip": "Rīka padoms",
+  "Visual_Description_TitleSettings": "Virsraksta teksta formatēšanas iestatījumi",
+  "Visual_Description_TooltipSetting": "Rīka padoma teksts un displeja iestatījumi",
+  "Visual_Description_GeneralSetting": "Pamata vizuālo datu iestatījumi",
+  "Visual_Description_AbbreviateHoverValues": "Rādīt saīsinātās vērtības tikai rīka padomos",
+  "Visual_Description_ShowStaleDataWarning": "Parādīt brīdinājumu, kad dati ir novecojuši",
+  "Visual_Description_AbbreviateValues": "Saīsina lielus skaitļus, izmantojot standarta saīsinājumus (piemēram, 1K, 1M).",
+  "Visual_Description_TopChartDefaultKpiValue": "Noklusējuma teksts, ja nav pieejama KPI vērtība",
+  "Visual_Description_MatchTopChartOptions": "Pielietot augšējās diagrammas vizuālo datu iestatījumus apakšējai diagrammai, lai nodrošinātu vienmērīgu izskatu",
+  "Visual_Description_FontSizeAutoFormatting": "Automātiski pielāgot teksta lielumu, lai tas ietilptu vizuālajos datos",
+  "Visual_Description_StaleDataThreshold": "Nosaka laika ierobežojumu, pēc kura jābrīdina, ja dati kļūst novecojuši",
+  "Visual_Description_AbbreviateValues_On": "Atspējots, ja ir ieslēgta opcija “Rekvizīti -> Vērtību saīsināšana”"
 }

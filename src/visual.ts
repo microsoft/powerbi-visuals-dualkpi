@@ -203,7 +203,7 @@ export class DualKpi implements IVisual {
     private target: HTMLElement;
     private size: DualKpiSize;
     private sizeCssClass: DualKpiSizeClass;
-    private eventService: IVisualEventService
+    private eventService: IVisualEventService;
 
     private svgRoot: d3Selection<SVGSVGElement, unknown, null, undefined>;
 
@@ -239,6 +239,7 @@ export class DualKpi implements IVisual {
 
     private static INVISIBLE: string = "invisible";
     private static readonly VISUAL_BORDER_AREA_PADDING_RATIO = 0.9;
+    private static readonly BOTTOM_TITLE_GAP: number = 8;
 
     private static OPACITY_MIN: number = 0;
     private static OPACITY_MAX: number = 100;
@@ -266,7 +267,7 @@ export class DualKpi implements IVisual {
 
     private init(options: VisualConstructorOptions): void {
         this.target = options.element;
-        this.eventService = options.host.eventService
+        this.eventService = options.host.eventService;
         this.size = DualKpiSize.small;
         this.sizeCssClass = "small";
         this.valueFormatter = d3Format(".3s");
@@ -488,12 +489,14 @@ export class DualKpi implements IVisual {
     }
 
     public update(options: VisualUpdateOptions) {
-        this.eventService.renderingStarted(options)
+        this.eventService.renderingStarted(options);
         try {
             const dataView: DataView = this.dataView = options.dataViews && options.dataViews[0];
 
             if (!dataView?.metadata?.columns || !dataView?.categorical?.values) {
+                // TODO: render a landing page prompting to add "Top values" / "Bottom values" instead of a blank visual
                 this.displayRootElement(false);
+                this.eventService.renderingFinished(options);
                 return;
             }
 
@@ -528,7 +531,7 @@ export class DualKpi implements IVisual {
             if (wasDataSetRendered) {
                 this.drawBottomContainer(chartWidth, chartHeight, chartTitleSpace, chartSpaceBetween, iconOffset);
             }
-            this.eventService.renderingFinished(options)
+            this.eventService.renderingFinished(options);
         } catch (error) {
             this.eventService.renderingFailed(options, error);
             console.warn("Rendering error", error);
@@ -1180,9 +1183,14 @@ export class DualKpi implements IVisual {
             iconWidth = 16;
         }
 
+        // shift the title to the right when the warning icon is shown, so they don't overlap
+        const hasWarning: boolean = this.data.warningState < 0;
+        const titleStartX: number = hasWarning ? (iconWidth + 6) : 0;
+        chartTitleElement.attr("transform", "translate(" + titleStartX + ",0)");
+
         // add warning icon
-        if (this.data.warningState < 0) {
-            this.createWarningMessage(chartTitleElement, iconY, iconScaleTransform, iconWidth);
+        if (hasWarning) {
+            this.createWarningMessage(iconY, iconScaleTransform);
         }
 
         // add info icon
@@ -1210,7 +1218,7 @@ export class DualKpi implements IVisual {
             }
             dayRangeElement.attr("transform", "translate(" + (dayRangeLeft) + ",0)");
 
-            const titleMaxWidth = dayRangeLeft - dayRangeElement.node().getBBox().width;
+            const titleMaxWidth = dayRangeLeft - dayRangeElement.node().getBBox().width - titleStartX - DualKpi.BOTTOM_TITLE_GAP;
             this.tailorTextByMaxWidth(chartTitleElement, titleMaxWidth);
         }
 
@@ -1228,7 +1236,7 @@ export class DualKpi implements IVisual {
         text.text(tailoredText);
     }
 
-    private createWarningMessage(chartTitleElement, iconY: number, iconScaleTransform: string, iconWidth: number) {
+    private createWarningMessage(iconY: number, iconScaleTransform: string) {
         const warning = this.bottomContainer.warning;
         warning.group
             .attr("transform", "translate(0," + (iconY) + ")");
@@ -1251,9 +1259,6 @@ export class DualKpi implements IVisual {
                     value: this.data.settings.properties.tooltipGroup.warningTooltipText.value
                 }];
             });
-
-        // move title over to account for icon
-        chartTitleElement.attr("transform", "translate(" + (iconWidth + 6) + ",0)");
     }
 
     private createInfoMessage(iconY: number, iconScaleTransform: string, iconWidth: number, chartWidth: number, dataDaysOld: number) {
@@ -1488,9 +1493,14 @@ export class DualKpi implements IVisual {
             fontFamily: string = isTitle ? options.fontFamilyTitle : options.fontFamilyValue;
 
 
+        // Text elements are reused across renders, so stale styling must be cleared explicitly.
+        // Auto mode sizes via the CSS class; an inline font-size attribute would win over the class (SVG precedence),
+        // so clear it. Manual mode sets the inline size; drop the auto class so the two modes never mix.
         if (fontSizeAutoFormatting) {
             element.classed(this.sizeCssClass, true);
+            element.attr("font-size", null);
         } else {
+            element.classed(this.sizeCssClass, false);
             element.attr("font-size", fontSize);
         }
 
@@ -1498,16 +1508,6 @@ export class DualKpi implements IVisual {
         element.attr("font-style", isItalic ? "italic" : "normal");
         element.attr("text-decoration", isUnderline ? "underline" : "none");
         element.attr("font-family", fontFamily);
-
-        const effectiveFontSize = fontSizeAutoFormatting ? element.style("font-size") : fontSize + "px";
-        const tailoredText = textMeasurementService.getTailoredTextOrDefault({
-            text: element.text(),
-            fontSize: effectiveFontSize,
-            fontFamily: fontFamily,
-        }, options.width * DualKpi.VISUAL_BORDER_AREA_PADDING_RATIO);
-
-        element.text(tailoredText);
-
     }
 
     private addOverlayText(options: IDualKpiOptions, latestValue: number, calcHeight: number, calcWidth: number, isTopChart: boolean): void {
@@ -1563,6 +1563,7 @@ export class DualKpi implements IVisual {
             .text(options.showDefaultTextOverlay ? "" : options.chartTitle + " (" + percentChange + ")");
 
         this.applyTextStyle(dataTitle, options, true);
+        this.tailorTextByMaxWidth(dataTitle, options.width * DualKpi.VISUAL_BORDER_AREA_PADDING_RATIO);
 
         const dataValue = chartOverlay.text;
         dataValue
@@ -1623,8 +1624,11 @@ export class DualKpi implements IVisual {
         const { fontFamily, bold, italic, underline } = settings.titleGroup.font;
         const textColor = settings.titleGroup.textColor.value;
         element.attr("class", "title");
+        // Title element is reused across renders. In auto mode the size comes from the CSS class,
+        // so clear any inline font-size left by a previous manual render (inline attr overrides the class in SVG).
         if (settings.titleGroup.fontSizeAutoFormatting.value) {
             element.classed(this.sizeCssClass, true);
+            element.attr("font-size", null);
         } else {
             element.attr("font-size", settings.titleGroup.font.fontSize.value);
         }

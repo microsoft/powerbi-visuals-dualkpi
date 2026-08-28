@@ -35,12 +35,17 @@ const srcOriginalRecursivePath = "src/**/*.ts";
 const coverageFolder = "coverage";
 
 process.env.CHROME_BIN = require("playwright-chromium").chromium.executablePath();
+const isCI = process.env.CI === "true";
 
 module.exports = (config) => {
     config.set({
         browserNoActivityTimeout: 100000,
-        browsers: ["ChromeHeadless"],
+        browsers: [isCI ? "ChromeHeadlessCI" : "ChromeHeadless"],
         customLaunchers: {
+            ChromeHeadlessCI: {
+                base: "ChromeHeadless",
+                flags: ["--no-sandbox", "--disable-setuid-sandbox"]
+            },
             ChromeDebugging: {
                 base: "ChromeHeadless",
                 flags: ["--remote-debugging-port=9333"]

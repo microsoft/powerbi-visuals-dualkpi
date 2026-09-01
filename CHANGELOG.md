@@ -1,3 +1,14 @@
+## 2.2.3
+### Fixes
+* Fixed rendering events not being completed when the visual has no data (could break export to PDF/PowerPoint and image rendering)
+* Fixed title and value font size not resetting when switching back to "Auto text size"
+* Fixed KPI values being truncated with an ellipsis; only the title is shortened when it doesn't fit
+* Fixed the chart title overlapping the date range label
+
+### Maintenance
+* Updated GitHub Actions workflows and copilot-instructions
+
+
 ## 2.2.2
 ### Visual changes
 * Changed default font from helvetica to Segoe UI

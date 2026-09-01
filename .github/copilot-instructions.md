@@ -1,6 +1,6 @@
 # Agent-oriented Copilot instructions for PR checks
 
-**Purpose.** Keep only the checks and guidance that an automated coding agent (Copilot-style) can perform reliably during a PR review for a Power BI custom visual repository. Interactive/manual steps live in `HUMAN-certification-checklist.md`.
+**Purpose.** Keep only the checks and guidance that an automated coding agent (Copilot-style) can perform reliably during a PR review for a Power BI custom visual repository. Interactive/manual certification steps are out of scope and left to human reviewers.
 
 **Context.** This repository contains a Microsoft custom visual for Power BI. All contributions must follow Microsoft coding standards and Power BI custom visual guidelines. The agent prioritizes checks that enforce those standards and flags deviations for human review.
 
@@ -9,14 +9,14 @@
 ## Summary of agent-capable checks (categories)
 
 - **PR metadata**: non-empty description; conventional commit title.
-- **Manifests & capabilities (Power BI)**: presence & schema sanity of `capabilities.json`, `pbiviz.json`, `package.json`, `tsconfig.json`, `src/visual.ts`; no `WebAccess`; version bump rules.
+- **Manifests & capabilities (Power BI)**: presence & schema sanity of `capabilities.json`, `pbiviz.json`, `package.json`, `tsconfig.json`, `src/visual.ts`; no `WebAccess`; backward-compatible capabilities structure; version bump rules.
 - **Security & forbidden patterns**: unsafe DOM, dynamic scripts, timers-with-strings, `eval/new Function`, network APIs, unsafe bindings.
 - **Secrets scanning**: common tokens/keys; urgent human review.
 - **Build artifacts & minification & assets**: `.min.*` in `src/`, overly large or minified-looking files.
 - **Linting, tests, CI**: scripts present; ESLint config; CI status present if `src/**` changed.
 - **Dependencies**: lockfile updated on dependency change; major version bumps flagged.
 - **Tests & localization**: unit tests reminder on logic changes; `stringResources/en-US/**` coverage; spellcheck.
-- **Documentation & changelog**: `changelog.md` on non-trivial changes; usage examples for public APIs.
+- **Documentation & changelog**: `CHANGELOG.md` on non-trivial changes; usage examples for public APIs.
 - **Code quality & architecture**: scope summary, performance & accessibility hints, state/event cleanup, error handling, maintainability notes.
 - **Reporting**: one-line summary counts; per-finding snippets; suggested fixes; auto-labels.
 
@@ -32,10 +32,13 @@
 - **Capabilities**:
   - No `WebAccess` or privileges that permit arbitrary network calls → `error`.
   - `dataRoles` and `dataViewMappings` must be present → `error`.
+  - **Backward-compatible structure**: do not rename, remove, or change the nesting of existing `objects.*` or their `properties.*`. Saved settings in existing reports are keyed by `objectName.propertyName`, so restructuring silently breaks them → renames/removals/re-nesting → `error`. Only additive changes (new objects/properties) are allowed.
+  - Formatting-model note: converting a `SimpleCard` to a `CompositeCard` (UI grouping) is safe **only if** the card `name` (= capabilities object name) and each slice `name` (= property name) stay unchanged — group names are UI-only and are not persisted.
 - **`pbiviz.json`**:
-  - `visual.version` must bump for functional changes (semver).  
-  - `visual.guid`, `visual.displayName`, `author`, `supportUrl`, `apiVersion` present.  
-  - `apiVersion` compatible with `@types/powerbi-visuals-api` (major alignment) → mismatch → `warning`.
+  - `visual.version` uses the 4-segment Power BI format `major.minor.patch.build` and must bump for functional changes.
+  - `visual.guid`, `visual.displayName`, `author`, `supportUrl`, `apiVersion` present.
+  - `apiVersion` compatible with the installed `powerbi-visuals-api` (major alignment) → mismatch → `warning`.
+- **Version bump must be applied consistently** across all of: `pbiviz.json` (`visual.version`), `package.json` (`version`), `package-lock.json` (root `version` and the root `packages.""` entry — regenerated via `npm install`), and a new `CHANGELOG.md` section. Any of these out of sync → `warning`.
 
 ### 2) Security & forbidden patterns (report file:line)
 - Unsafe DOM:
@@ -72,6 +75,7 @@
 ### 5) Linting, tests
 - `package.json` scripts must include:
   - `lint`, `test`, `package` (or `pbiviz package`) → missing → `warning`.
+  - CI (`.github/workflows/build.yml`) runs `npm run lint`, `npm run package`, and `npm test`.
 - ESLint configuration must exist at repo root:
   - Prefer `eslint.config.mjs`; if `.eslintrc.*` or `.eslintignore` or `eslintConfig` in `package.json` -> ask to migrate to `eslint.config.mjs`.
   - Missing → `warning` + suggest basic config for Power BI visuals.
@@ -89,10 +93,10 @@
   - Missing localization keys → `warning`.
 - Spellcheck (en-US as source):
   - Report probable typos with level (`info`/`warning`) and replacement suggestion.
-  - Exclude identifiers/acronyms/brand-names based on `.spellcheck-whitelist`.
+  - Exclude identifiers/acronyms/brand-names (maintain a `.spellcheck-whitelist` at repo root if false positives recur).
 
 ### 8) Documentation & changelog
-- For non-trivial changes — update `changelog.md` → `info`/`warning`.
+- For non-trivial changes — update `CHANGELOG.md` → `info`/`warning`.
 - For new public APIs — add usage examples → `info`.
 
 ### 9) Code quality & architecture (senior review mindset)

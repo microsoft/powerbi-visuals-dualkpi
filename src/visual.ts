@@ -1191,6 +1191,8 @@ export class DualKpi implements IVisual {
         // add warning icon
         if (hasWarning) {
             this.createWarningMessage(iconY, iconScaleTransform);
+        } else {
+            this.hideWarningMessage();
         }
 
         // add info icon
@@ -1249,7 +1251,8 @@ export class DualKpi implements IVisual {
             .attr("stroke-width", "5")
             .attr("class", "warning-icon")
             .attr("transform", iconScaleTransform)
-            .classed(this.sizeCssClass, true);
+            .classed(this.sizeCssClass, true)
+            .classed("hidden", false);
 
         this.tooltipServiceWrapper.addTooltip(
             warning.title,
@@ -1259,6 +1262,10 @@ export class DualKpi implements IVisual {
                     value: this.data.settings.properties.tooltipGroup.warningTooltipText.value
                 }];
             });
+    }
+
+    private hideWarningMessage() {
+        this.bottomContainer.warning.icon.classed("hidden", true);
     }
 
     private createInfoMessage(iconY: number, iconScaleTransform: string, iconWidth: number, chartWidth: number, dataDaysOld: number) {

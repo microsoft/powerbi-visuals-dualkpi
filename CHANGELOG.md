@@ -1,3 +1,8 @@
+## 2.2.4
+### Fixes
+* Fixed incorrect positioning of the KPI overlay tooltip.
+
+
 ## 2.2.3
 ### Fixes
 * Fixed rendering events not being completed when the visual has no data (could break export to PDF/PowerPoint and image rendering)

@@ -1,3 +1,9 @@
+## 2.2.5
+### Fixes
+* Fixed the warning icon staying on screen after the warning state is no longer negative
+* Fixed text overflowing the visual at the smallest size (under 215 x 110 px) by adding missing font sizes
+
+
 ## 2.2.4
 ### Fixes
 * Fixed incorrect positioning of the KPI overlay tooltip.
